@@ -6,4 +6,4 @@ services:
       - './web:/usr/share/nginx/html'
     restart: always
     ports:
-     - '8080:80'
+     - '8081:80'
