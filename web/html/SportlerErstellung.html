@@ -69,9 +69,10 @@
         // Wenn eine file da ist, nur file senden
         if(document.getElementById("csv").files.length > 0){
             console.log(".csv Datei senden...");
-            const responce = await axios({
+            const response = await axios({
                   method: 'post',
                   url: "https://localhost:8080/v1/athlete/bulk-create",
+                  cors: true,
                   data: files[0],
                 });
             // ToDo: Response auswerten
@@ -92,12 +93,10 @@
 
             try {
                 // POST-Anfrage an Backend senden
-                const response = await fetch('http://localhost:8080/v1/athlete/create', {
+                const response = await axios({
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    mode: 'cors',
+                    url: 'http://localhost:8080/v1/athlete/create',
+                    cors: true,
                     body: JSON.stringify({ birthDate, email, firstName, lastName, sex }),
                 });
 
