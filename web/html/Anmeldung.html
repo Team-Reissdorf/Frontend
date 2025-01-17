@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>ComPeteHub Anmelden</title>
+    <title>ComPeteHub</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
     integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
@@ -13,16 +13,16 @@
       <div class="jumbotron">
         <h1 class="display-4">Anmelden</h1>
         <p class="lead">Gib deine Email und dein Password unten ein, um dich als Trainer anzumelden!</p>
-      </div><!-- /.jumbotron -->
+      </div> <!-- /.jumbotron -->
 
       <form id="login-form">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Email">
+            <input type="email" class="form-control" id="email" placeholder="Email" required>
           </div>
           <div class="form-group">
             <label for="pwd">Passwort</label>
-            <input type="password" class="form-control" id="pwd" placeholder="Passwort">
+            <input type="password" class="form-control" id="pwd" placeholder="Passwort" required>
           </div>
           <!--div class="checkbox">
             <label>
@@ -30,45 +30,53 @@
             </label>
           </div-->
           <button type="submit" class="btn btn-default">Anmelden</button>
-      </form>
+      </form> <!-- /.login-form -->
 
-    </div><!-- /.container -->
+    </div> <!-- /.container -->
 
-  <script>
-    // Event-Listener für das Formular
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-      event.preventDefault(); // Verhindert das Standard-Submit-Verhalten
+    <script>
+      // Event-Listener für das Formular
+      document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Verhindert das Neuladen der Webseite
 
-      // Eingabewerte abrufen
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('pwd').value;
+        // Eingabewerte abrufen
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('pwd').value;
 
-      try {
-        // API-Anfrage mit fetch senden
-        const response = await fetch('http://localhost:8080/v1/user/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          mode: 'cors',
-          body: JSON.stringify({ email, password }),
-        });
-
-        if (response.status === 200) {
-            console.log("Successful login");
-            //window.location.href = "../index.html";
-          } else {
-            console.log("Login failed");
-          }
+        try {
+            // POST-Anfrage mit axios ans Backend senden
+            const response = await axios({
+              method: 'POST',
+              url: 'http://localhost:8080/v1/user/login',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              data: {
+                email: email,
+                password: password,
+              },
+              cors: true,
+            });
+    
+            // ToDo: Hier die Antwort verarbeiten
+            if (response.status === 200) {
+              console.log("Successful registration");
+              //window.location.href = "../index.html";
+            } else {
+              console.log("Registration failed");
+            }
         } catch (error) {
-          console.error('Fehler: ', error);
+            // ToDo: Hier den Fehler verarbeiten
+            console.error('Fehler: ', error);
         }
-    });
-  </script>
+      });
+    </script>
 
-  <!-- Need to have JQuery and Javascript for DropDown Actions to work -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <!-- Latest compiled and minified JavaScript -->
+    <!-- Need to have axios to have the post for bulk-request to work-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js" crossorigin="anonymous"></script>
+    <!-- Need to have JQuery and Javascript for DropDown Actions to work -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified JavaScript -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
   </body>
