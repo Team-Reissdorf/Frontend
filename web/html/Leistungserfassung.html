@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ComPeteHub</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron">
+        <h1 class="display-4">Leistungserfassung</h1>
+        <p class="lead">Gib Vorname, Nachname, Geschlecht, Geburtsjahr, Geburtstag, Übung, Kategorie Datum Ergebnis und Punkte ein um eine Leistung für einen Sportler zu erfassen, oder wähle eine gültige .csv-Datei aus, um dies für mehrere Sportler zutun</p>
+      </div><!-- /.jumbotron -->
+
+      <form id="submit-form">
+        <div class="form-row">
+          <div class="form-group col-md-6 col-sm-12 col-l-6">
+            <label for="fname">Vorname</label>
+            <input type="text" class="form-control" id="fname" placeholder="Vorname">
+          </div> 
+          <div class="form-group col-md-6 col-sm-12 col-l-6">
+            <label for="lname">Nachname</label>
+            <input type="text" class="form-control" id="lname" placeholder="Nachname">
+          </div> 
+        </div>
+        <div class="form-row">
+            <div class="form-group col-l-6 col-md-6 col-sm-12">
+                <label class="form-label">Geschlecht:</label>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="male" value="maenlich">
+                    <label class="form-check-label" for="male">Männlich</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="female" value="weiblich">
+                    <label class="form-check-label" for="female">Weiblich</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="gender" id="divers" value="divers">
+                    <label class="form-check-label" for="divers">Divers</label>
+                </div>
+            </div>
+            <div class="form-group col-md-6 col-sm-12 col-l-6">
+                <label for="year">Geburtsjahr</label>
+                <input type="text" class="form-control" id="year" placeholder="Geburtsjahr">
+              </div> 
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 col-l-6 col-sm-12">
+            <label for="birthday">Geburtstag</label>
+            <input type="date" class="form-control" id="birthday" min="17.01.2007">
+          </div>
+          <div class="form-group col-md-6 col-sm-12 col-l-6">
+            <label for="exercise">Übung</label>
+            <input type="text" class="form-control" id="exercise" placeholder="Übung">
+          </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 col-sm-12 col-l-6">
+                <label for="category">Kategorie</label>
+                <input type="text" class="form-control" id="category" placeholder="Kategorie">
+            </div> 
+            <div class="form-group col-md-6 col-l-6 col-sm-12">
+                <label for="date">Datum</label>
+                <input type="date" class="form-control" id="date" min="17.01.2007" max="17.01.2018">
+              </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 col-l-6 col-sm-12">
+                <label for="result">Ergebnis</label>
+                <input type="text" class="form-control" id="result" placeholder="Ergebnis">
+            </div>
+            <div class="form-group col-md-6 col-l-6 col-sm-12">
+                <label for="points">Punkte</label>
+                <input type="text" class="form-control" id="points" placeholder="Punkte">
+            </div>
+        </div>
+        <br>
+        <div class="form-row">
+          <div class="form-group col-l-12 col-md-12 col-sm-12">
+            <label for="csv">.csv-Datei</label>
+            <input type="file" class="form-control-file" id="csv" accept=".csv">
+          </div>
+        </div>
+          <button type="submit" class="btn btn-default">Erstellen</button>
+      </form>
+
+    </div><!-- /.container -->
+    <script>
+      document.getElementById('submit-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Wenn eine file da ist, nur file senden
+        if(document.getElementById("csv").files.length > 0){
+            console.log(".csv Datei senden...");
+            const response = await axios({
+                  method: 'post',
+                  url: "https://localhost:8080/v1/athlete/bulk-create",
+                  cors: true,
+                  data: files[0],
+                });
+            // ToDo: Response auswerten
+            if (response.status === 200) {
+                console.log("User created successfully");
+            } else {
+                console.log("User creation failed");
+            }
+        } else { // Wenn kein File da ist, dann athlete senden
+
+            // ToDo: - Überprüfen wie Backend die Daten haben will
+
+            // Eingabewerte für einzelnen Athleten abrufen
+            const firstName = document.getElementById("fname").value;
+            const lastName = document.getElementById("lname").value;
+            const sex = document.getElementsByTagName("gender").value;
+            const birthYear = document.getElementById("year").value;
+            const birthDate = document.getElementById("birthday").value;
+            const exercise = document.getElementById("exercise").value;
+            const category = document.getElementById("category").value;
+            const date = document.getElementById("date").value;
+            const result = document.getElementById("result").value;
+            const points = document.getElementById("points").value;
+            const files = document.getElementById("csv").files;
+
+            try {
+                // POST-Anfrage an Backend senden
+                const response = await axios({
+                    method: 'POST',
+                    url: 'http://localhost:8080/v1/athlete/create',
+                    cors: true,
+                    body: JSON.stringify({ firstName, lastName, sex, birthYear, birthDate, exercise, category, date, result, points}),
+                });
+
+                // To-Do: Response auswerten
+                if (response.status === 200) {
+                    console.log("User created successfully");
+                } else {
+                    console.log("User creation failed");
+                }
+            } catch(error) {
+                // Fehlerbehandlung
+                console.error('Fehler: ', error);
+            }
+        }
+      });
+    </script>
+  
+  <!-- Need to have axios to have the post for bulk-request to work-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.8/axios.min.js" crossorigin="anonymous"></script>
+  <!-- Need to have JQuery and Javascript for DropDown Actions to work -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  </body>
+</html>
