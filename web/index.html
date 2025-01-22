@@ -26,7 +26,7 @@
         try {
           // Athleten vom Server abrufen
           const response = await axios.get('http://localhost:8080/v1/get-all', {
-            withCredentials: true, // Falls Cookies benötigt werden
+            withCredentials: true,
           });
 
           const athletes = response.data; // Array mit Athleten-Daten
