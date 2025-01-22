@@ -8,32 +8,20 @@
   </head>
   <body>
     <!-- DOCUMENTATION NAVBAR-->
-
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
-      <a class="navbar-brand" href="#">
-        <img src="media/brandIcon.jpeg" width="30" height="30" class="d-inline-block align-top" alt="">
-        ComPeteHub
-      </a>
-
-      <!-- Brand and toggle get grouped for better mobile display -->
-      <!-- This is the actual code that creates the "hamburger icon" -->
-      <!-- The data-target grabs ids to put into the icon -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-controls="bs-example-navbar-collapse-1" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-
-      <!-- Anything inside of collapse navbar-collapse goes into the "hamburger" -->
-      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-        <!-- STUFF ON THE RIGHT -->
-        <div class="navbar-nav ml-auto btn btn-default">
-          <a class="nav-item nav-link" href="html/Anmeldung.html">Anmeldung</a>
-        </div> <!-- /.navbar-nav, right-hand content -->
-
-      </div> <!-- /.navbar-collapse -->
-    </nav>
+    <nav class="navbar navbar-expand-lg" style="background-color: darkgray;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">ComPeteHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
+          </ul>
+          <div class="flex-d"> <!-- Alles was rechts in die navabr soll-->
+              <a class="nav-item nav-link btn btn-light" href="html/Anmeldung.html">Anmeldung</a>
+          </div>
+      </div>
+  </nav>
 
     <div class="container my-5">
       <div class="p-5 text-center bg-body-tertiary rounded-3">
