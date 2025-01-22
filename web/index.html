@@ -48,7 +48,8 @@
     }
 
     // Überprüfen, ob der Zugriffstoken vorhanden ist
-    const accessToken = getCookie("access-token");
+    const accessToken = getCookie("ACCESS_TOKEN");
+    console.log(accessToken);
     if (!accessToken) {
       // Weiterleitung, falls kein Token vorhanden ist
       window.location.href = "html/Anmeldung.html";
