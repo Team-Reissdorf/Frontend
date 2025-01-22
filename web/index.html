@@ -6,67 +6,6 @@
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../node_modules/axios/dist/axios.js"></script>
-    <script>
-      // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
-
-      document.addEventListener("DOMContentLoaded", async () => {
-        // Funktion zum Auslesen eines Cookies
-        function getCookie(name) {
-          return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
-        }
-
-        // Überprüfen, ob der Zugriffstoken vorhanden ist
-        const accessToken = getCookie("access-token");
-        if (!accessToken) {
-          // Weiterleitung, falls kein Token vorhanden ist
-          window.location.href = "html/Anmeldung.html";
-          return;
-        }
-
-        try {
-          // Athleten vom Server abrufen
-          const response = await axios.get('http://localhost:8080/v1/get-all', {
-            withCredentials: true,
-          });
-
-          const athletes = response.data; // Array mit Athleten-Daten
-
-          // Zielcontainer, in dem die Athleten angezeigt werden
-          const container = document.querySelector('.athlete-cards');
-
-          // Für jeden Athleten eine Karte erstellen
-          athletes.forEach(athlete => {
-            // Äußeres div (.row)
-            const rowDiv = document.createElement('div');
-            rowDiv.className = 'row';
-            rowDiv.style.paddingBottom = '24px';
-
-            // Inneres div (Karte mit Inhalt)
-            const cardDiv = document.createElement('div');
-            cardDiv.className = 'p-5 text-center bg-body-tertiary rounded-4 border border-2';
-
-            // Inhalt der Karte
-            cardDiv.innerHTML = `
-              <h5>${athlete.firstname} ${athlete.lastname}</h5>
-              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
-                <button class="btn btn-light border border-2" style="font-weight: bold;">Leistungsnachweis erstellen</button>
-              </a>
-              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
-                <button class="btn btn-light border border-2" style="font-weight: bold;">Löschen</button>
-              </a>
-            `;
-
-            // Karte in das äußere div einfügen
-            rowDiv.appendChild(cardDiv);
-
-            // Äußeres div in den Zielcontainer einfügen
-            container.appendChild(rowDiv);
-          });
-        } catch (error) {
-          console.error("Fehler beim Abrufen der Athleten:", error);
-        }
-      });
-    </script>
   </head>
   <body>
 
@@ -87,7 +26,7 @@
     </nav>
     
     <div class="col-12 d-flex justify-content-end">
-      <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button></a>
+      <a href="html/SportlerErstellen.html" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button></a>
     </div>
     <div class="container athlete-cards">
       <div class="row" style="padding-bottom: 24px;">
@@ -98,3 +37,65 @@
     </div>
   </body>
 </html>
+
+<script>
+  // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Funktion zum Auslesen eines Cookies
+    function getCookie(name) {
+      return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+    }
+
+    // Überprüfen, ob der Zugriffstoken vorhanden ist
+    const accessToken = getCookie("access-token");
+    if (!accessToken) {
+      // Weiterleitung, falls kein Token vorhanden ist
+      window.location.href = "html/Anmeldung.html";
+      return;
+    }
+
+    try {
+      // Athleten vom Server abrufen
+      const response = await axios.get('http://localhost:8080/v1/get-all', {
+        withCredentials: true,
+      });
+
+      const athletes = response.data; // Array mit Athleten-Daten
+
+      // Zielcontainer, in dem die Athleten angezeigt werden
+      const container = document.querySelector('.athlete-cards');
+
+      // Für jeden Athleten eine Karte erstellen
+      athletes.forEach(athlete => {
+        // Äußeres div (.row)
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'row';
+        rowDiv.style.paddingBottom = '24px';
+
+        // Inneres div (Karte mit Inhalt)
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'p-5 text-center bg-body-tertiary rounded-4 border border-2';
+
+        // Inhalt der Karte
+        cardDiv.innerHTML = `
+          <h5>${athlete.firstname} ${athlete.lastname}</h5>
+          <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <button class="btn btn-light border border-2" style="font-weight: bold;">Leistungsnachweis erstellen</button>
+          </a>
+          <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
+            <button class="btn btn-light border border-2" style="font-weight: bold;">Löschen</button>
+          </a>
+        `;
+
+        // Karte in das äußere div einfügen
+        rowDiv.appendChild(cardDiv);
+
+        // Äußeres div in den Zielcontainer einfügen
+        container.appendChild(rowDiv);
+      });
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Athleten:", error);
+    }
+  });
+</script>
