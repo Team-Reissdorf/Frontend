@@ -8,7 +8,7 @@
   </head>
   <body>
     <!-- DOCUMENTATION NAVBAR-->
-    <nav class="navbar navbar-expand-lg" style="background-color: #292c33;">
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
       <div class="container-fluid">
         <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,7 +18,7 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
           </ul>
           <div class="flex-d"> <!-- Alles was rechts in die navabr soll-->
-
+            <a href="Anmeldung.html"><button class="btn btn-secondary" href="Registrierung.html">Registrierung</button></a>
           </div>
       </div>
     </nav>
@@ -31,7 +31,7 @@
 
       <div class="row justify-content-md-center">
         <div class="col-l-8 col-md-8 col-sm-12">
-          <form id="login-form">
+          <form id="login-form" autocomplete>
               <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" placeholder="Email" required>
@@ -61,11 +61,6 @@
         const email = document.getElementById('email').value;
         const password = document.getElementById('pwd').value;
         const loggedin = document.getElementById('loggedin').value;
-        if (loggedin === "") {
-          loggedin = false
-        } else {
-          loggedin = true
-        }
 
         try {
             // POST-Anfrage mit axios ans Backend senden
@@ -78,17 +73,16 @@
               data: {
                 email: email,
                 password: password,
-                loggedin: loggedin,
               },
               cors: true,
             });
     
             // ToDo: Hier die Antwort verarbeiten
             if (response.status === 200) {
-              console.log("Successful registration");
+              console.log("Successful login");
               //window.location.href = "../index.html";
             } else {
-              console.log("Registration failed");
+              console.log("Login failed");
             }
         } catch (error) {
             // ToDo: Hier den Fehler verarbeiten
