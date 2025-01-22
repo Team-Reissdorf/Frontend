@@ -61,28 +61,21 @@
         // Eingabewerte abrufen
         const email = document.getElementById('email').value;
         const password = document.getElementById('pwd').value;
+        /*
         const loggedin = document.getElementById('loggedin').value;
         if (loggedin === "") {
           loggedin = false
         } else {
           loggedin = true
         }
-  
+        */
+
         try {
           // POST-Anfrage mit axios ans Backend senden
-          const response = await axios({
-            method: 'POST',
-            url: 'http://localhost:8080/v1/user/register',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            data: {
+          const response = await axios.post('http://localhost:8080/v1/user/register', {
               email: email,
               password: password,
-              loggedin: loggedin,
-            },
-            cors: true,
-          });
+            });
   
           // ToDo: Hier die Antwort verarbeiten
           if (response.status === 200) {
