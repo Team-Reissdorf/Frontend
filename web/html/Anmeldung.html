@@ -70,19 +70,22 @@
         }
 */
         try {
-            // POST-Anfrage mit axios ans Backend senden
-            const response = await axios.post('http://localhost:8080/v1/user/login', {
-              email: email,
-              password: password,
-            });
-    
-            // ToDo: Hier die Antwort verarbeiten
-            if (response.status === 200) {
-              console.log("Successful registration");
-              //window.location.href = "../index.html";
-            } else {
-              console.log("Registration failed");
-            }
+          // POST-Anfrage mit axios ans Backend senden
+          const response = await axios.post('http://localhost:8080/v1/user/login', {
+            email: email,
+            password: password,
+          },
+          {
+            withCredentials: true,
+          },);
+  
+          // ToDo: Hier die Antwort verarbeiten
+          if (response.status === 200) {
+            console.log("Successful registration");
+            //window.location.href = "../index.html";
+          } else {
+            console.log("Registration failed");
+          }
         } catch (error) {
             // ToDo: Hier den Fehler verarbeiten
             console.error('Fehler: ', error);

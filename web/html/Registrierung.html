@@ -75,7 +75,10 @@
           const response = await axios.post('http://localhost:8080/v1/user/register', {
               email: email,
               password: password,
-            });
+            },
+            {
+              withCredentials: true,
+            },);
   
           // ToDo: Hier die Antwort verarbeiten
           if (response.status === 200) {
