@@ -43,26 +43,26 @@
 
   document.addEventListener("DOMContentLoaded", async () => {
     // Funktion zum Auslesen eines Cookies
-    function getCookie(name) {
-      return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
-    }
-
-    // Überprüfen, ob der Zugriffstoken vorhanden ist
-    const accessToken = getCookie("ACCESS_TOKEN");
-    console.log(accessToken);
-    if (!accessToken) {
-      // Weiterleitung, falls kein Token vorhanden ist
-      window.location.href = "html/Anmeldung.html";
-      return;
+    try{
+      const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
+      {withCredentials: true});
+      if(response.status === 401){
+        window.location.href = "html/Anmeldung.html"
+        return;
+      } else if (response.status === 500) {
+        alert("Internal Server Error");
+        return;
+      }
+    } catch(error) {
+      console.log("Error: " + error)
     }
 
     try {
       // Athleten vom Server abrufen
-      const response = await axios.get('http://localhost:8080/v1/get-all', {
+      const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
         withCredentials: true,
       });
-
-      const athletes = response.data; // Array mit Athleten-Daten
+      const athletes = response.data.athletes; // Array mit Athleten-Daten
 
       // Zielcontainer, in dem die Athleten angezeigt werden
       const container = document.querySelector('.athlete-cards');
