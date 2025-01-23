@@ -5,7 +5,7 @@
     <title>ComPeteHub</title>
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../node_modules/axios/dist/axios.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
   </head>
   <body>
     <!-- DOCUMENTATION NAVBAR-->
@@ -45,10 +45,15 @@
               <input type="checkbox" name="loggedin" id="loggedin" value="True">
               <div class="form-group">
                 <div class="row justify-content-md-center">
-                  <button type="submit" class="btn btn-light">Registrieren</button>
+                  <button type="submit" class="btn btn-light" >Registrieren</button>
                 </div>
               </div>
           </form> <!-- /.register-form -->
+          <p style="margin-bottom: 5px;"><br>Haben Sie bereits ein Konto?</p>
+          <div class="flex-d" > <!-- Alles was rechts in die navabr soll-->
+            <a href="Anmeldung.html">
+              <button class="btn btn-light" style="width: 150px; height: 40px">Anmelden</button></a>
+          </div>
         </div>
       </div>
     </div> <!-- /.container -->
@@ -69,7 +74,6 @@
           loggedin = true
         }
         */
-
         try {
           // POST-Anfrage mit axios ans Backend senden
           const response = await axios.post('http://localhost:8080/v1/user/register', {
