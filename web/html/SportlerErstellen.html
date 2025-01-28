@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ComPeteHub</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+  </head>
+  <body>
+    <!-- DOCUMENTATION NAVBAR-->
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
+          </ul>
+          <div class="flex-d"> <!-- Alles was rechts in die navabr soll-->
+            <a href="Registrierung.html"><button class="btn btn-secondary">Registrierung</button></a>
+          </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <h1 class="display-4">Sportlererstellung</h1>
+        <p class="lead">Gib Vorname, Nachname, Email, Geburtstag und Geschlecht ein um einen Sportler zu erstellen, oder wähle eine gültige .csv-Datei aus, um mehrere Sportler zu erstellen</p>
+      </div><!-- /.jumbotron -->
+
+      <form id="submit-form">
+        <div class="form-row">
+          <div class="form-group col-md-6 col-sm-12 col-l-6">
+            <label for="fname">Vorname</label>
+            <input type="text" class="form-control" id="fname" placeholder="Vorname">
+          </div> 
+          <div class="form-group col-md-6 col-sm-12 col-l-6">
+            <label for="lname">Nachname</label>
+            <input type="text" class="form-control" id="lname" placeholder="Nachname">
+          </div> 
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-12 col-sm-12 col-l-12">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Email">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-6 col-l-6 col-sm-12">
+            <label for="birthDate">Geburtstag</label>
+            <input type="date" class="form-control" id="birthDate" min="17.01.2007">
+          </div>
+
+          <label class="form-label">Geschlecht:</label>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="male" value="m">
+            <label class="form-check-label" for="male">Männlich</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="female" value="f">
+            <label class="form-check-label" for="female">Weiblich</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="gender" id="divers" value="d">
+            <label class="form-check-label" for="divers">Divers</label>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-l-12 col-md-12 col-sm-12">
+            <label for="csv">.csv-Datei</label>
+            <input type="file" class="form-control-file" id="csv" accept=".csv">
+          </div>
+        </div>
+          <button type="submit" class="btn btn-default">Erstellen</button>
+      </form>
+
+    </div><!-- /.container -->
+    <script>
+      document.getElementById('submit-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Wenn eine file da ist, nur file senden
+        if(document.getElementById("csv").files.length > 0){
+          const formData = new FormData();
+          formData.append('file', files[0]);
+          console.log(".csv Datei senden...");
+          const response = await axios.post(
+            'https://localhost:8080/v1/athlete/bulk-create',
+            formData,
+            {
+              withCredentials: true,
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
+          
+          // ToDo: Response auswerten
+          if (response.status === 200) {
+              console.log("User created successfully");
+          } else {
+              console.log("User creation failed");
+          }
+        } else { // Wenn kein File da ist, dann athlete senden
+
+            // Eingabewerte für einzelnen Athleten abrufen
+            const firstName = document.getElementById("fname").value;
+            const lastName = document.getElementById("lname").value;
+            const email = document.getElementById("email").value;
+            const birthDate = document.getElementById("birthDate").value;
+            const sex = document.querySelector('input[name="gender"]:checked')?.value;
+            const files = document.getElementById("csv").files;
+
+            try {
+                // POST-Anfrage an Backend senden
+                const response = await axios.post('http://localhost:8080/v1/athlete/create',
+                  {
+                    birth_date: birthDate,
+                    email: email,
+                    first_name: firstName,
+                    last_name: lastName,
+                    sex: sex
+                  },
+                  {
+                    withCredentials: true,
+                  },
+                );
+
+                // To-Do: Response auswerten
+                if (response.status === 200) {
+                    console.log("User created successfully");
+                } else {
+                    console.log("User creation failed");
+                }
+            } catch(error) {
+                // Fehlerbehandlung
+                console.error('Fehler: ', error);
+            }
+        }
+      });
+    </script>
+  </body>
+</html>
