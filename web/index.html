@@ -28,12 +28,8 @@
     <div class="col-12 d-flex justify-content-end">
       <a href="html/SportlerErstellen.html" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button></a>
     </div>
-    <div class="container athlete-cards">
-      <div class="row" style="padding-bottom: 24px;">
-        <div class="p-5 text-center bg-body-tertiary rounded-4 border border-2">
-
-        </div>
-      </div>
+    <div class="container my-5 athlete-cards">
+      <!-- Hier werden die Athleten angezeigt -->
     </div>
   </body>
 </html>
@@ -76,17 +72,18 @@
 
         // Inneres div (Karte mit Inhalt)
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'p-5 text-center bg-body-tertiary rounded-4 border border-2';
+        cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
 
         // Inhalt der Karte
         cardDiv.innerHTML = `
-          <h5>${athlete.athlete_id} ${athlete.first_name} ${athlete.last_name}</h5>
-          <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
-            <button class="btn btn-light border border-2" style="font-weight: bold;">Leistungsnachweis erstellen</button>
-          </a>
-          <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;">
-            <button class="btn btn-light border border-2" style="font-weight: bold;">Löschen</button>
-          </a>
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">${athlete.athlete_id}.</h5>
+            <h5 class="mb-0">${athlete.first_name} ${athlete.last_name}</h5>
+            <div>
+              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis erstellen</button></a>
+              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Löschen</button></a>
+            </div>
+          </div>
         `;
 
         // Karte in das äußere div einfügen
