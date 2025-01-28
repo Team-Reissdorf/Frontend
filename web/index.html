@@ -5,8 +5,10 @@
     <title>ComPeteHub</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../node_modules/axios/dist/axios.js"></script>
   </head>
   <body>
+
     <!-- DOCUMENTATION NAVBAR-->
     <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
       <div class="container-fluid">
@@ -21,20 +23,77 @@
             <a href="html/Anmeldung.html"><button class="btn btn-secondary">Anmeldung</button></a>
           </div>
       </div>
-  </nav>
-
-    <div class="container my-5">
-      <div class="p-5 text-center bg-body-tertiary rounded-3">
-        <h1 class="text-body-emphasis">Welcome to the</h1>
-        <h1 class="text-body-emphasis">ComPeteHub</h1>
-
-        <p class="lead" align="center">Wilkommen zu der besten und coolsten Webseite zum eintragen des Deutschen Sportabzeichens</p>
-      </div><!-- /.jumbotron -->
-    </div><!-- /.container -->
-
-    <div class="button" align="center">
-      <a href="html/Registrierung.html" class="btn btn-secondary btn-lg" role="button">Registrieren</a>
-      <a href="html/Anmeldung.html" class="btn btn-secondary btn-lg" role="button">Anmelden</a>
+    </nav>
+    
+    <div class="col-12 d-flex justify-content-end">
+      <a href="html/SportlerErstellen.html" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button></a>
+    </div>
+    <div class="container my-5 athlete-cards">
+      <!-- Hier werden die Athleten angezeigt -->
     </div>
   </body>
 </html>
+
+<script>
+  // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Funktion zum Auslesen eines Cookies
+    try{
+      const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
+      {withCredentials: true});
+      if(response.status === 401){
+        window.location.href = "html/Anmeldung.html"
+        return;
+      } else if (response.status === 500) {
+        alert("Internal Server Error");
+        return;
+      }
+    } catch(error) {
+      console.log("Error: " + error)
+    }
+
+    try {
+      // Athleten vom Server abrufen
+      const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
+        withCredentials: true,
+      });
+      const athletes = response.data.athletes; // Array mit Athleten-Daten
+
+      // Zielcontainer, in dem die Athleten angezeigt werden
+      const container = document.querySelector('.athlete-cards');
+
+      // Für jeden Athleten eine Karte erstellen
+      athletes.forEach(athlete => {
+        // Äußeres div (.row)
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'row';
+        rowDiv.style.paddingBottom = '24px';
+
+        // Inneres div (Karte mit Inhalt)
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
+
+        // Inhalt der Karte
+        cardDiv.innerHTML = `
+          <div class="d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">${athlete.athlete_id}.</h5>
+            <h5 class="mb-0">${athlete.first_name} ${athlete.last_name}</h5>
+            <div>
+              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis erstellen</button></a>
+              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Löschen</button></a>
+            </div>
+          </div>
+        `;
+
+        // Karte in das äußere div einfügen
+        rowDiv.appendChild(cardDiv);
+
+        // Äußeres div in den Zielcontainer einfügen
+        container.appendChild(rowDiv);
+      });
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Athleten:", error);
+    }
+  });
+</script>
