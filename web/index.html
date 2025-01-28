@@ -16,20 +16,28 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
+
+        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+          <!-- Alles was links in die navabr soll-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           </ul>
-          <div class="flex-d"> <!-- Alles was rechts in die navabr soll-->
-            <a href="html/Anmeldung.html"><button class="btn btn-secondary">Anmeldung</button></a>
+
+          <!-- Alles was rechts in die navabr soll-->
+          <div class="flex-d">
+            <button class="btn btn-secondary">Abmelden</button>
           </div>
       </div>
     </nav>
     
+    <!-- Sportler erstellen (Button) -->
     <div class="col-12 d-flex justify-content-end">
       <a href="html/SportlerErstellen.html" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button></a>
     </div>
+
+    <!-- Hier werden die Athleten angezeigt (Cards) -->
     <div class="container my-5 athlete-cards">
-      <!-- Hier werden die Athleten angezeigt -->
     </div>
   </body>
 </html>
@@ -45,15 +53,10 @@
       // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
     } catch(error) {
       if (error.response) {
-        // Statuscode aus der Serverantwort prüfen
-        if (error.response.status === 401) {
-          // Bei 401: Weiterleitung zur Anmeldung
-          window.location.href = "html/Anmeldung.html";
-        } else if (error.response.status === 500) {
-          alert("Internal Server Error");
-        }
+        // Bei Fehler mit Response gehe zu html/Anmeldung.html
+        window.location.href = "html/Anmeldung.html";
       } else {
-        // Andere Fehler (z. B. keine Verbindung zum Server)
+        // Andere Fehler
         console.error("Netzwerkfehler:", error.message);
       }
     }
