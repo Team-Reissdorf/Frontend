@@ -15,10 +15,17 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
 
+        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+          <!-- Alles was links in die navabr soll-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           </ul>
+
+          <!-- Alles was rechts in die navabr soll-->
+          <div class="flex-d">
+          </div>
       </div>
     </nav>
 
@@ -102,15 +109,10 @@
           // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
         } catch(error) {
           if (error.response) {
-            // Statuscode aus der Serverantwort prüfen
-            if (error.response.status === 401) {
-              // Bei 401: Weiterleitung zur Anmeldung
-              window.location.href = "Anmeldung.html";
-            } else if (error.response.status === 500) {
-              alert("Internal Server Error");
-            }
+            // Bei Fehler mit Response gehe zu html/Anmeldung.html
+            window.location.href = "html/Anmeldung.html";
           } else {
-            // Andere Fehler (z. B. keine Verbindung zum Server)
+            // Andere Fehler
             console.error("Netzwerkfehler:", error.message);
           }
         }
@@ -123,24 +125,44 @@
         if(document.getElementById("csv").files.length > 0){
           const formData = new FormData();
           formData.append('file', files[0]);
-          console.log(".csv Datei senden...");
-          const response = await axios.post(
-            'https://localhost:8080/v1/athlete/bulk-create',
-            formData,
-            {
-              withCredentials: true,
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
+
+          try {
+            const response = await axios.post(
+              'https://localhost:8080/v1/athlete/bulk-create',
+              formData,
+              {
+                withCredentials: true,
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                },
+              }
+            );
+
+            // ToDo: Response auswerten
+            if (response.status === 201) {
+              console.log("Users created successfully");
             }
-          );
-          
-          // ToDo: Response auswerten
-          if (response.status === 201) {
-              console.log("User created successfully");
-          } else {
-              console.log("User creation failed");
+          } catch (error) {
+            if (error.response) {
+              if (error.response.status === 400) {
+                console.log("Invalid request body");
+                alert("Invalid request body");
+              } else if (error.response.status === 401) {
+                console.log("The token is invalid");
+                alert("The token is invalid");
+              } else if (error.response.status === 409) {
+                console.log("One or more athlete(s) already exist");
+                alert("One or more athlete(s) already exist");
+              } else if (error.response.status === 500) {
+                console.log("Internal Server Error");
+                alert("Internal Server Error");
+              }
+            } else {
+              // Andere Fehler
+              console.error("Netzwerkfehler:", error.message);
+            }
           }
+          
         } else { // Wenn kein File da ist, dann athlete senden
 
             // Eingabewerte für einzelnen Athleten abrufen
@@ -166,16 +188,30 @@
                   },
                 );
 
-                // To-Do: Response auswerten
-                if (response.status === 200) {
-                    console.log("User created successfully");
-                } else {
-                    console.log("User creation failed");
-                }
-            } catch(error) {
-                // Fehlerbehandlung
-                console.error('Fehler: ', error);
+                // ToDo: Response auswerten
+            if (response.status === 201) {
+              console.log("User created successfully");
             }
+          } catch (error) {
+            if (error.response) {
+              if (error.response.status === 400) {
+                console.log("Invalid request body");
+                alert("Invalid request body");
+              } else if (error.response.status === 401) {
+                console.log("The token is invalid");
+                alert("The token is invalid");
+              } else if (error.response.status === 409) {
+                console.log("Athlete already exists");
+                alert("Athlete already exists");
+              } else if (error.response.status === 500) {
+                console.log("Internal Server Error");
+                alert("Internal Server Error");
+              }
+            } else {
+              // Andere Fehler
+              console.error("Netzwerkfehler:", error.message);
+            }
+          }
         }
       });
     </script>

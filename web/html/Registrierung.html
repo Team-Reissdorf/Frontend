@@ -15,9 +15,17 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
+
+        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+          <!-- Alles was links in die navabr soll-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           </ul>
+
+           <!-- Alles was rechts in die navabr soll-->
+           <div class="flex-d">
+           </div>
       </div>
     </nav>
 
@@ -32,14 +40,20 @@
       <div class="row justify-content-md-center">
         <div class="col-l-8 col-md-8 col-sm-12">
           <form id="register-form">
+            
+            <!-- Email -->
             <div class="form-group">
               <label for="email">Email</label>
               <input type="email" class="form-control" id="email" placeholder="Email" required autocomplete="email">
             </div>
+
+            <!-- Passwort -->
             <div class="form-group">
               <label for="pwd">Passwort</label>
               <input type="password" class="form-control" id="pwd" placeholder="Passwort" required autocomplete="new-password">
             </div>
+
+            <!-- Angemeldet bleiben (Checkbox) -->
             <label for="loggedin">Angemeldet bleiben?</label>
               <input type="checkbox" name="loggedin" id="loggedin" value="True">
               <div class="form-group">
@@ -48,7 +62,8 @@
                 </div>
               </div>
           </form> <!-- /.register-form -->
-          
+
+          <!-- Schon ein Account abfrage -->
           <hr class="my-4">
 
           <div class="row justify-content-center align-items-center text-center">
@@ -60,6 +75,19 @@
     </div> <!-- /.container -->
 
     <script>
+      // Überprüfung, ob User angemeldet ist
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Überprüfung, ob User angemeldet ist
+        try{
+          const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
+          {withCredentials: true});
+
+          // Wenn die Anfrage erfolgreich ist (200 OK), geh zur Overview-Seite
+          window.location.href = "../index.html";
+        } catch(error) {
+        }
+      });
+
       // Event-Listener für das Formular
       document.getElementById('register-form').addEventListener('submit', async function(event) {
         event.preventDefault(); // Verhindert das Neuladen der Webseite
@@ -89,12 +117,23 @@
           // ToDo: Hier die Antwort verarbeiten
           if (response.status === 200) {
             window.location.href = "../index.html";
-          } else {
-            console.log("Registration failed");
           }
         } catch (error) {
-          // ToDo: Hier den Fehler verarbeiten
-          console.error('Fehler: ', error);
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.log("Invalid request body");
+              alert("Invalid request body");
+            } else if (error.response.status === 409) {
+              console.log("User already exists");
+              alert("User already exists");
+            } else if (error.response.status === 500) {
+              console.log("Internal Server Error");
+              alert("Internal Server Error");
+            }
+          } else {
+            // Andere Fehler
+            console.error("Netzwerkfehler:", error.message);
+          }
         }
       });
     </script>
