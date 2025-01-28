@@ -2,74 +2,100 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>ComPeteHub Anmelden</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-    integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
+    <title>ComPeteHub</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../node_modules/axios/dist/axios.js"></script>
   </head>
   <body>
-    <div class="container">
-      <div class="jumbotron">
-        <h1 class="display-4">Anmelden</h1>
+    <!-- DOCUMENTATION NAVBAR-->
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
+          </ul>
+          <div class="flex-d"> <!-- Alles was rechts in die navabr soll-->
+            <a href="Registrierung.html"><button class="btn btn-secondary">Registrierung</button></a>
+          </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <h1 class="text-body-emphasis">Anmelden</h1>
         <p class="lead">Gib deine Email und dein Password unten ein, um dich als Trainer anzumelden!</p>
-      </div><!-- /.jumbotron -->
+      </div> <!-- /.jumbotron -->
 
-      <form id="login-form">
-          <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Email">
+      <div class="row justify-content-md-center">
+        <div class="col-l-8 col-md-8 col-sm-12">
+          <form id="login-form">
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Email" required>
+              </div>
+              <div class="form-group">
+                <label for="pwd">Passwort</label>
+                <input type="password" class="form-control" id="pwd" placeholder="Passwort" required>
+              </div>
+              <label for="loggedin">Angemeldet bleiben?</label>
+              <input type="checkbox" name="loggedin" id="loggedin" value="True">
+              <div class="form-group">
+                <div class="row justify-content-md-center">
+                  <button type="submit" class="btn btn-light">Anmelden</button>
+                </div>
+              </div>
+          </form> <!-- /.login-form -->
+          <p style="margin-bottom: 5px;"><br>Haben Sie bereits ein Konto?</p>
+          <div class="flex-d"> <!-- Alles was rechts in die navabr soll-->
+            <a href="Registrierung.html">
+              <button class="btn btn-light" style="width: 150px; height: 40px">Registrieren</button></a>
           </div>
-          <div class="form-group">
-            <label for="pwd">Passwort</label>
-            <input type="password" class="form-control" id="pwd" placeholder="Passwort">
-          </div>
-          <!--div class="checkbox">
-            <label>
-              <input type="checkbox"> Keep me Logged In
-            </label>
-          </div-->
-          <button type="submit" class="btn btn-default">Anmelden</button>
-      </form>
+        </div>
+      </div>
+    </div> <!-- /.container -->
 
-    </div><!-- /.container -->
+    <script>
+      // Event-Listener für das Formular
+      document.getElementById('login-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Verhindert das Neuladen der Webseite
 
-  <script>
-    // Event-Listener für das Formular
-    document.getElementById('login-form').addEventListener('submit', async function(event) {
-      event.preventDefault(); // Verhindert das Standard-Submit-Verhalten
-
-      // Eingabewerte abrufen
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('pwd').value;
-
-      try {
-        // API-Anfrage mit fetch senden
-        const response = await fetch('http://localhost:8080/v1/user/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        // Eingabewerte abrufen
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('pwd').value;
+  /*
+        const loggedin = document.getElementById('loggedin').value;
+        if (loggedin === "") {
+          loggedin = false
+        } else {
+          loggedin = true
+        }
+*/
+        try {
+          // POST-Anfrage mit axios ans Backend senden
+          const response = await axios.post('http://localhost:8080/v1/user/login', {
+            email: email,
+            password: password,
           },
-          mode: 'cors',
-          body: JSON.stringify({ email, password }),
-        });
-
-        if (response.status === 200) {
-            console.log("Successful login");
+          {
+            withCredentials: true,
+          },);
+  
+          // ToDo: Hier die Antwort verarbeiten
+          if (response.status === 200) {
+            console.log("Successful registration");
             //window.location.href = "../index.html";
           } else {
-            console.log("Login failed");
+            console.log("Registration failed");
           }
         } catch (error) {
-          console.error('Fehler: ', error);
+            // ToDo: Hier den Fehler verarbeiten
+            console.error('Fehler: ', error);
         }
-    });
-  </script>
-
-  <!-- Need to have JQuery and Javascript for DropDown Actions to work -->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
+      });
+    </script>
   </body>
 </html>
