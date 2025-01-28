@@ -38,19 +38,24 @@
   // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
 
   document.addEventListener("DOMContentLoaded", async () => {
-    // Funktion zum Auslesen eines Cookies
+    // Überprüfung, ob User angemeldet ist
     try{
       const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
       {withCredentials: true});
-      if(response.status === 401){
-        window.location.href = "html/Anmeldung.html"
-        return;
-      } else if (response.status === 500) {
-        alert("Internal Server Error");
-        return;
-      }
+      // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
     } catch(error) {
-      console.log("Error: " + error)
+      if (error.response) {
+        // Statuscode aus der Serverantwort prüfen
+        if (error.response.status === 401) {
+          // Bei 401: Weiterleitung zur Anmeldung
+          window.location.href = "html/Anmeldung.html";
+        } else if (error.response.status === 500) {
+          alert("Internal Server Error");
+        }
+      } else {
+        // Andere Fehler (z. B. keine Verbindung zum Server)
+        console.error("Netzwerkfehler:", error.message);
+      }
     }
 
     try {
