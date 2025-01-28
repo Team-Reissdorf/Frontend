@@ -5,7 +5,7 @@
     <title>ComPeteHub</title>
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../node_modules/axios/dist/axios.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
   </head>
   <body>
     <!-- DOCUMENTATION NAVBAR-->
@@ -18,9 +18,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent"> <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
           <ul class="navbar-nav me-auto mb-2 mb-lg-0"> <!-- Alles was links in die navabr soll-->
           </ul>
-          <div class="flex-d"> <!-- Alles was rechts in die navabr soll-->
-            <a href="Registrierung.html"><button class="btn btn-secondary">Registrierung</button></a>
-          </div>
       </div>
     </nav>
 
@@ -30,9 +27,11 @@
         <p class="lead">Gib deine Email und dein Password unten ein, um dich als Trainer anzumelden!</p>
       </div> <!-- /.jumbotron -->
 
+      <br>
+
       <div class="row justify-content-md-center">
         <div class="col-l-8 col-md-8 col-sm-12">
-          <form id="login-form" autocomplete>
+          <form id="login-form">
               <div class="form-group">
                 <label for="email">Email</label>
                 <input type="email" class="form-control" id="email" placeholder="Email" required>
@@ -45,10 +44,17 @@
               <input type="checkbox" name="loggedin" id="loggedin" value="True">
               <div class="form-group">
                 <div class="row justify-content-md-center">
-                  <button type="submit" class="btn btn-light">Anmelden</button>
+                  <button type="submit" class="btn btn-light" style="width: 150px; height: 40px">Anmelden</button>
                 </div>
               </div>
           </form> <!-- /.login-form -->
+          
+          <hr class="my-4">
+
+          <div class="row justify-content-center align-items-center text-center">
+            <p style="margin-bottom: 16px;">Haben Sie noch kein Konto?</p>
+            <a href="Registrierung.html"><button class="btn btn-light" style="width: 150px; height: 40px;">Registrieren</button></a>
+          </div>
         </div>
       </div>
     </div> <!-- /.container -->
@@ -61,32 +67,30 @@
         // Eingabewerte abrufen
         const email = document.getElementById('email').value;
         const password = document.getElementById('pwd').value;
-        /*
+  /*
         const loggedin = document.getElementById('loggedin').value;
         if (loggedin === "") {
           loggedin = false
         } else {
           loggedin = true
         }
-        */
-
+*/
         try {
           // POST-Anfrage mit axios ans Backend senden
-          const response = await axios.post('http://localhost:8080/v1/user/login',
-          {
+          const response = await axios.post('http://localhost:8080/v1/user/login', {
             email: email,
             password: password,
           },
           {
-            withCredentials: true
-          });
+            withCredentials: true,
+          },);
   
           // ToDo: Hier die Antwort verarbeiten
           if (response.status === 200) {
-            console.log("Successful login");
+            console.log("Successful registration");
             //window.location.href = "../index.html";
           } else {
-            console.log("Login failed");
+            console.log("Registration failed");
           }
         } catch (error) {
             // ToDo: Hier den Fehler verarbeiten
