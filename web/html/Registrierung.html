@@ -70,7 +70,7 @@
 
           <div class="row justify-content-center align-items-center text-center">
             <p style="margin-bottom: 16px;">Haben Sie bereits ein Konto?</p>
-            <!-- a href="Anmeldung.html"><button class="btn btn-light" style="width: 150px; height: 40px;">Anmelden</button></a -->
+            <a href="Anmeldung.html"><button class="btn btn-light" style="width: 150px; height: 40px;">Anmelden</button></a>
           </div>
         </div>
       </div>
@@ -111,7 +111,7 @@
             },);
   
           // ToDo: Hier die Antwort verarbeiten
-          if (response.status === 200) {
+          if (response.status === 201) {
             window.location.href = "../index.html";
           }
         } catch (error) {

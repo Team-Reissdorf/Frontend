@@ -52,20 +52,19 @@
         </div>
         <div class="row">
           <!-- Email -->
-          <div class="form-group col-md-12 col-sm-12 col-lg-12">
+          <div class="form-group col-md-6 col-sm-12 col-lg-6">
             <label for="email">Email</label>
             <input type="email" class="form-control" id="email" placeholder="Email">
           </div>
-        </div>
-
-        <div class="row align-items-center">
-        
+          
           <!-- Geburtstag -->
           <div class="form-group col-md-6 col-lg-6 col-sm-12">
             <label for="birthDate">Geburtstag</label>
             <input type="date" class="form-control" id="birthDate">
           </div>
-        
+        </div>
+
+        <div class="row">
           <!-- Gender (Radio) -->
           <div class="col-md-6 col-lg-6 col-sm-12">
             <label class="form-label">Geschlecht:</label>
@@ -86,17 +85,11 @@
           </div>
         </div>
 
-        <div class="row mt-4">
-        
-          <!-- CSV-Datei (File) -->
-          <div class="form-group col-lg-12 col-md-12 col-sm-12">
-            <label for="csv">.csv-Datei</label>
-            <input type="file" class="form-control-file" id="csv" accept=".csv">
+        <div class="row justify-content-center align-items-center text-center mt-4">
+          <div class="d-flex justify-content-between gap-3" style="width: 400px;">
+            <button type="submit" class="btn btn-light" style="width: 150px; height: 40px; padding: 0px 20px;">Speichern</button>
+            <a class="btn btn-light" href="../index.html" style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</a>
           </div>
-        </div>
-        
-        <div class="row justify-content-center align-items-center text-center">
-          <button type="submit" class="btn btn-light" style="width: 150px; height: 40px;">Erstellen</button>
         </div>
       </form>
 
@@ -119,109 +112,87 @@
         }
       
         try {
-          // id aus url-parameter bekommen
+          // Daten vom Backend abrufen
+          const athleteId = new URLSearchParams(window.location.search).get("id");
+          const response = await axios.get(`http://localhost:8080/v1/athlete/get-one/${athleteId}`, {
+            withCredentials: true,
+          });
 
-          // Get anfrage an backend senden mit id
-          const response = await axios.post('http://localhost:8080/v1/athlete/get-one/:id', {}, 
-          {withCredentials: true});
+          const athlete = response.data.athlete;
+
+          // Input-Felder automatisch ausfüllen
+          document.getElementById("fname").value = athlete.first_name;
+          document.getElementById("lname").value = athlete.last_name;
+          document.getElementById("email").value = athlete.email;
+          document.getElementById("birthDate").value = athlete.birth_date.split("T")[0];
+          if (athlete.sex === "m") {
+            document.getElementById("male").checked = true;
+          } else if (athlete.sex === "f") {
+            document.getElementById("female").checked = true;
+          } else if (athlete.sex === "d") {
+            document.getElementById("divers").checked = true;
+          }
         } catch (error) {
-
+          console.error("Fehler beim Laden der Daten:", error);
+          alert("Athlet konnte nicht geladen werden.");
+          window.location.href = "../index.html";
         }
       });
 
       document.getElementById('submit-form').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        // Wenn eine file da ist, nur file senden
-        if(document.getElementById("csv").files.length > 0){
-          const formData = new FormData();
-          formData.append('file', files[0]);
+        // Eingabewerte für einzelnen Athleten abrufen
+        const firstName = document.getElementById("fname").value;
+        const lastName = document.getElementById("lname").value;
+        const email = document.getElementById("email").value;
+        const birthDate = document.getElementById("birthDate").value;
+        const sex = document.querySelector('input[name="gender"]:checked')?.value;
+        const athleteId = new URLSearchParams(window.location.search).get("id");
 
-          try {
-            const response = await axios.post(
-              'https://localhost:8080/v1/athlete/bulk-create',
-              formData,
-              {
-                withCredentials: true,
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              }
-            );
+        try {
+          // PUT-Anfrage an Backend senden
+          const response = await axios.put('http://localhost:8080/v1/athlete/edit',
+            {
+              athlete_id: parseInt(athleteId),
+              birth_date: birthDate,
+              email: email,
+              first_name: firstName,
+              last_name: lastName,
+              sex: sex
+            },
+            {
+              withCredentials: true,
+            },
+          );
 
-            // ToDo: Response auswerten
-            if (response.status === 201) {
-              console.log("Users created successfully");
-            }
-          } catch (error) {
-            if (error.response) {
-              if (error.response.status === 400) {
-                console.log("Invalid request body");
-                alert("Invalid request body");
-              } else if (error.response.status === 401) {
-                console.log("The token is invalid");
-                alert("The token is invalid");
-              } else if (error.response.status === 409) {
-                console.log("One or more athlete(s) already exist");
-                alert("One or more athlete(s) already exist");
-              } else if (error.response.status === 500) {
-                console.log("Internal Server Error");
-                alert("Internal Server Error");
-              }
-            } else {
-              // Andere Fehler
-              console.error("Netzwerkfehler:", error.message);
-            }
+          // ToDo: Response auswerten
+          if (response.status === 200) {
+            console.log("User updated successfully");
+            alert("User updated successfully");
+            window.location.href = "../index.html";
           }
-          
-        } else { // Wenn kein File da ist, dann athlete senden
-
-            // Eingabewerte für einzelnen Athleten abrufen
-            const firstName = document.getElementById("fname").value;
-            const lastName = document.getElementById("lname").value;
-            const email = document.getElementById("email").value;
-            const birthDate = document.getElementById("birthDate").value;
-            const sex = document.querySelector('input[name="gender"]:checked')?.value;
-            const files = document.getElementById("csv").files;
-
-            try {
-                // POST-Anfrage an Backend senden
-                const response = await axios.post('http://localhost:8080/v1/athlete/create',
-                  {
-                    birth_date: birthDate,
-                    email: email,
-                    first_name: firstName,
-                    last_name: lastName,
-                    sex: sex
-                  },
-                  {
-                    withCredentials: true,
-                  },
-                );
-
-                // ToDo: Response auswerten
-            if (response.status === 201) {
-              console.log("User created successfully");
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.log("Invalid request body");
+              alert("Invalid request body");
+            } else if (error.response.status === 401) {
+              console.log("The token is invalid");
+              alert("The token is invalid");
+            } else if (error.response.status === 404) {
+              console.log("Athlete could not be found for this trainer");
+              alert("Athlete could not be found for this trainer");
+            } else if (error.response.status === 409) {
+              console.log("Athlete already exists");
+              alert("Athlete already exists");
+            } else if (error.response.status === 500) {
+              console.log("Internal Server Error");
+              alert("Internal Server Error");
             }
-          } catch (error) {
-            if (error.response) {
-              if (error.response.status === 400) {
-                console.log("Invalid request body");
-                alert("Invalid request body");
-              } else if (error.response.status === 401) {
-                console.log("The token is invalid");
-                alert("The token is invalid");
-              } else if (error.response.status === 409) {
-                console.log("Athlete already exists");
-                alert("Athlete already exists");
-              } else if (error.response.status === 500) {
-                console.log("Internal Server Error");
-                alert("Internal Server Error");
-              }
-            } else {
-              // Andere Fehler
-              console.error("Netzwerkfehler:", error.message);
-            }
+          } else {
+            // Andere Fehler
+            console.error("Netzwerkfehler:", error.message);
           }
         }
       });
