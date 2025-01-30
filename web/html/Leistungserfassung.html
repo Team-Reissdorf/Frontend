@@ -30,60 +30,19 @@
     </nav>
 
     <div class="container my-5">
-      <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <div class="p-5 text-center bg-body-tertiary rounded-3 jumbomumbo">
         <h1 class="text-body-emphasis">Leistungserfassung</h1>
-        <p class="lead">Gib Vorname, Nachname, Geschlecht, Geburtsjahr, Geburtstag, Übung, Kategorie Datum Ergebnis und Punkte ein um eine Leistung für einen Sportler zu erfassen, oder wähle eine gültige .csv-Datei aus, um dies für mehrere Sportler zutun</p>
+        <br>
       </div> <!-- /.jumbotron -->
 
       <br>
+      
       <form id="submit-form">
         <div class="row">
-
-          <!-- Vorname -->
+          <!-- Kategorie -->
           <div class="form-group col-md-6 col-sm-12 col-lg-6">
-            <label for="fname">Vorname</label>
-            <input type="text" class="form-control" id="fname" placeholder="Vorname">
-          </div> 
-
-          <!-- Nachname -->
-          <div class="form-group col-md-6 col-sm-12 col-lg-6">
-            <label for="lname">Nachname</label>
-            <input type="text" class="form-control" id="lname" placeholder="Nachname">
-          </div> 
-        </div>
-        <div class="row">
-
-          <!-- Gender (Radio) -->
-          <div class="col-md-6 col-lg-6 col-sm-12">
-            <label class="form-label">Geschlecht:</label>
-            <div class="d-flex">
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="male" value="m">
-                <label class="form-check-label" for="male">Männlich</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="female" value="f">
-                <label class="form-check-label" for="female">Weiblich</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="gender" id="divers" value="d">
-                <label class="form-check-label" for="divers">Divers</label>
-              </div>
-            </div>
-          </div>
-
-          <!-- Geburtsjahr -->
-          <div class="form-group col-md-6 col-sm-12 col-lg-6">
-            <label for="year">Geburtsjahr</label>
-            <input type="text" class="form-control" id="year" placeholder="Geburtsjahr">
-          </div> 
-        </div>
-        <div class="row">
-
-          <!-- Geburtstag -->
-          <div class="form-group col-md-6 col-lg-6 col-sm-12">
-            <label for="birthday">Geburtstag</label>
-            <input type="date" class="form-control" id="birthday" min="17.01.2007">
+            <label for="category">Kategorie</label>
+            <input type="text" class="form-control" id="category" placeholder="Kategorie">
           </div>
 
           <!-- Übung -->
@@ -94,41 +53,28 @@
         </div>
         <div class="row">
 
-          <!-- Kategorie -->
-            <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                <label for="category">Kategorie</label>
-                <input type="text" class="form-control" id="category" placeholder="Kategorie">
-            </div> 
+          <!-- Datum -->
+          <div class="form-group col-md-6 col-lg-6 col-sm-12">
+              <label for="date">Datum</label>
+              <input type="date" class="form-control" id="date" min="17.01.2007" max="17.01.2018">
+          </div>
 
-            <!-- Datum -->
-            <div class="form-group col-md-6 col-lg-6 col-sm-12">
-                <label for="date">Datum</label>
-                <input type="date" class="form-control" id="date" min="17.01.2007" max="17.01.2018">
-              </div>
+          <!-- Ergebnis -->
+          <div class="form-group col-md-6 col-lg-6 col-sm-12">
+            <label for="result">Ergebnis</label>
+            <input type="text" class="form-control" id="result" placeholder="Ergebnis">
+          </div>
         </div>
         <div class="row">
 
-          <!-- Ergebnis -->
-            <div class="form-group col-md-6 col-lg-6 col-sm-12">
-                <label for="result">Ergebnis</label>
-                <input type="text" class="form-control" id="result" placeholder="Ergebnis">
-            </div>
-
-            <!-- Punkte -->
-            <div class="form-group col-md-6 col-lg-6 col-sm-12">
-                <label for="points">Punkte</label>
-                <input type="text" class="form-control" id="points" placeholder="Punkte">
-            </div>
-        </div>
-        <div class="row mt-4">
-        
-          <!-- CSV-Datei (File) -->
-          <div class="form-group col-lg-12 col-md-12 col-sm-12">
-            <label for="csv">.csv-Datei</label>
-            <input type="file" class="form-control-file" id="csv" accept=".csv">
+          <!-- Punkte -->
+          <div class="form-group col-md-6 col-lg-6 col-sm-12">
+              <label for="points">Punkte</label>
+              <input type="text" class="form-control" id="points" placeholder="Punkte">
           </div>
         </div>
         
+        <!-- Submit (Button) -->
         <div class="row justify-content-center align-items-center text-center">
           <button type="submit" class="btn btn-light" style="width: 150px; height: 40px;">Erstellen</button>
         </div>
@@ -149,113 +95,97 @@
           } else {
             // Andere Fehler
             alert(error.message);
-            //window.location.href = "html/Anmeldung.html";
+            window.location.href = "html/Anmeldung.html";
           }
+        }
+
+        try {
+          // Daten vom Backend abrufen
+          const athleteId = new URLSearchParams(window.location.search).get("id");
+          console.log("ID: " + athleteId);
+          const response = await axios.get(`http://localhost:8080/v1/athlete/get-one/${athleteId}`, {
+            withCredentials: true,
+          });
+          const athlete = response.data.athlete;
+          var sex = "";
+          if (athlete.sex === "m") {
+            sex = 'Männlich';
+          } else if (athlete.sex === "f") {
+            sex = 'Weiblich';
+          } else if (athlete.sex === "d") {
+            sex = 'Divers';
+          }
+
+          const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+
+          console.log(birthdate);
+          // Zielcontainer, in dem die Athleten angezeigt werden
+          const container = document.querySelector('.jumbomumbo');
+          // Inneres div (Karte mit Inhalt)
+          const cardDiv = document.createElement('div');
+          cardDiv.innerHTML = `
+            <h2>${athlete.first_name} ${athlete.last_name}</h2>
+            <h4>${birthdate} ${sex}</h4>
+        `;
+
+          container.appendChild(cardDiv)
+
+        } catch (error) {
+          console.error("Fehler beim Laden der Daten:", error);
+          alert("Athlet konnte nicht geladen werden.");
+          //window.location.href = "../index.html";
         }
       });
 
       document.getElementById('submit-form').addEventListener('submit', async function(event) {
         event.preventDefault();
 
-        // Wenn eine file da ist, nur file senden
-        if(document.getElementById("csv").files.length > 0){
-          const formData = new FormData();
-          formData.append('file', files[0]);
+        // Eingabewerte für einzelnen Athleten abrufen
+        const athleteId = new URLSearchParams(window.location.search).get("id");
+        const exercise = document.getElementById("exercise").value;
+        const category = document.getElementById("category").value;
+        const date = document.getElementById("date").value;
+        const result = document.getElementById("result").value;
+        const points = document.getElementById("points").value;
 
-          try {
-            const response = await axios.post(
-              'https://localhost:8080/v1/athlete/bulk-create', // Falscher Endpunkt sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
-              formData,
-              {
-                withCredentials: true,
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                },
-              }
-            );
+        try {
+          // POST-Anfrage an Backend senden
+          const response = await axios.post('http://localhost:8080/v1/athlete/create', // Falscher Endpunkt sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
+          {
+            athlete_id: parseInt(athleteId),
+            exercise: exercise,
+            category: category,
+            date: date,
+            result: result,
+            points: points,
+          },
+          {
+            withCredentials: true,    
+          });
 
-            // ToDo: Response auswerten  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
-            if (response.status === 201) {
-              console.log("Users created successfully");
-            }
-          } catch (error) {
-            if (error.response) {
-              if (error.response.status === 400) {
-                console.log("Invalid request body");
-                alert("Invalid request body");
-              } else if (error.response.status === 401) {
-                console.log("The token is invalid");
-                alert("The token is invalid");
-              } else if (error.response.status === 409) {
-                console.log("One or more athlete(s) already exist");
-                alert("One or more athlete(s) already exist");
-              } else if (error.response.status === 500) {
-                console.log("Internal Server Error");
-                alert("Internal Server Error");
-              }
-            } else {
-              // Andere Fehler
-              console.error("Netzwerkfehler:", error.message);
-            }
+          
+          // ToDo: Response auswerten  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
+          if (response.status === 201) {
+            console.log("User created successfully");
           }
-        } else { // Wenn kein File da ist, dann athlete senden
-
-          // Eingabewerte für einzelnen Athleten abrufen
-          const firstName = document.getElementById("fname").value;
-          const lastName = document.getElementById("lname").value;
-          const sex = document.querySelector('input[name="gender"]:checked')?.value;
-          const birthYear = document.getElementById("year").value;
-          const birthDate = document.getElementById("birthday").value;
-          const exercise = document.getElementById("exercise").value;
-          const category = document.getElementById("category").value;
-          const date = document.getElementById("date").value;
-          const result = document.getElementById("result").value;
-          const points = document.getElementById("points").value;
-
-          try {
-            // POST-Anfrage an Backend senden
-            const response = await axios.post('http://localhost:8080/v1/athlete/create', // Falscher Endpunkt sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
-            {
-              // Überprüfen, ob die Namen mit den Namen im Backend übereinstimmen sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
-              birth_date: birthDate,
-              first_name: firstName,
-              last_name: lastName,
-              sex: sex,
-              birthYear: birthYear,
-              exercise: exercise,
-              category: category,
-              date: date,
-              result: result,
-              points: points,
-            },
-            {
-              withCredentials: true,    
-            });
-
-            
-            // ToDo: Response auswerten  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
-            if (response.status === 201) {
-              console.log("User created successfully");
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.log("Invalid request body");
+              alert("Invalid request body");
+            } else if (error.response.status === 401) {
+              console.log("The token is invalid");
+              alert("The token is invalid");
+            } else if (error.response.status === 409) {
+              console.log("Athlete already exists");
+              alert("Athlete already exists");
+            } else if (error.response.status === 500) {
+              console.log("Internal Server Error");
+              alert("Internal Server Error");
             }
-          } catch (error) {
-            if (error.response) {
-              if (error.response.status === 400) {
-                console.log("Invalid request body");
-                alert("Invalid request body");
-              } else if (error.response.status === 401) {
-                console.log("The token is invalid");
-                alert("The token is invalid");
-              } else if (error.response.status === 409) {
-                console.log("Athlete already exists");
-                alert("Athlete already exists");
-              } else if (error.response.status === 500) {
-                console.log("Internal Server Error");
-                alert("Internal Server Error");
-              }
-            } else {
-              // Andere Fehler
-              console.error("Netzwerkfehler:", error.message);
-            }
+          } else {
+            // Andere Fehler
+            console.error("Netzwerkfehler:", error.message);
           }
         }
       });
