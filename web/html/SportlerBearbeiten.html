@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ComPeteHub</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+  </head>
+  <body>
+    <!-- DOCUMENTATION NAVBAR-->
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+          <!-- Alles was links in die navabr soll-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          </ul>
+
+          <!-- Alles was rechts in die navabr soll-->
+          <div class="flex-d">
+          </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <div class="p-5 text-center bg-body-tertiary rounded-3">
+        <h1 class="display-4">Sportler Bearbeiten</h1>
+      </div><!-- /.jumbotron -->
+
+      <br>
+
+      <form id="submit-form">
+        <div class="row">
+          <!-- Vorname -->
+          <div class="form-group col-md-6 col-sm-12 col-lg-6">
+            <label for="fname">Vorname</label>
+            <input type="text" class="form-control" id="fname" placeholder="Vorname">
+          </div> 
+
+          <!-- Nachname -->
+          <div class="form-group col-md-6 col-sm-12 col-lg-6">
+            <label for="lname">Nachname</label>
+            <input type="text" class="form-control" id="lname" placeholder="Nachname">
+          </div> 
+        </div>
+        <div class="row">
+          <!-- Email -->
+          <div class="form-group col-md-6 col-sm-12 col-lg-6">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Email">
+          </div>
+          
+          <!-- Geburtstag -->
+          <div class="form-group col-md-6 col-lg-6 col-sm-12">
+            <label for="birthDate">Geburtstag</label>
+            <input type="date" class="form-control" id="birthDate">
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Gender (Radio) -->
+          <div class="col-md-6 col-lg-6 col-sm-12">
+            <label class="form-label">Geschlecht:</label>
+            <div class="d-flex">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="m">
+                <label class="form-check-label" for="male">Männlich</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="f">
+                <label class="form-check-label" for="female">Weiblich</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="gender" id="divers" value="d">
+                <label class="form-check-label" for="divers">Divers</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center text-center mt-4">
+          <div class="d-flex justify-content-between gap-3" style="width: 400px;">
+            <button type="submit" class="btn btn-light" style="width: 150px; height: 40px; padding: 0px 20px;">Speichern</button>
+            <a class="btn btn-light" href="../index.html" style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</a>
+          </div>
+        </div>
+      </form>
+
+    </div><!-- /.container -->
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Überprüfung, ob User angemeldet ist
+        try{
+          const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
+          {withCredentials: true});
+          // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
+        } catch(error) {
+          if (error.response) {
+            // Bei Fehler mit Response gehe zu html/Anmeldung.html
+            window.location.href = "html/Anmeldung.html";
+          } else {
+            // Andere Fehler
+            console.error("Netzwerkfehler:", error.message);
+          }
+        }
+      
+        try {
+          // Daten vom Backend abrufen
+          const athleteId = new URLSearchParams(window.location.search).get("id");
+          const response = await axios.get(`http://localhost:8080/v1/athlete/get-one/${athleteId}`, {
+            withCredentials: true,
+          });
+
+          const athlete = response.data.athlete;
+
+          // Input-Felder automatisch ausfüllen
+          document.getElementById("fname").value = athlete.first_name;
+          document.getElementById("lname").value = athlete.last_name;
+          document.getElementById("email").value = athlete.email;
+          document.getElementById("birthDate").value = athlete.birth_date.split("T")[0];
+          if (athlete.sex === "m") {
+            document.getElementById("male").checked = true;
+          } else if (athlete.sex === "f") {
+            document.getElementById("female").checked = true;
+          } else if (athlete.sex === "d") {
+            document.getElementById("divers").checked = true;
+          }
+        } catch (error) {
+          console.error("Fehler beim Laden der Daten:", error);
+          alert("Athlet konnte nicht geladen werden.");
+          window.location.href = "../index.html";
+        }
+      });
+
+      document.getElementById('submit-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Eingabewerte für einzelnen Athleten abrufen
+        const firstName = document.getElementById("fname").value;
+        const lastName = document.getElementById("lname").value;
+        const email = document.getElementById("email").value;
+        const birthDate = document.getElementById("birthDate").value;
+        const sex = document.querySelector('input[name="gender"]:checked')?.value;
+        const athleteId = new URLSearchParams(window.location.search).get("id");
+
+        try {
+          // PUT-Anfrage an Backend senden
+          const response = await axios.put('http://localhost:8080/v1/athlete/edit',
+            {
+              athlete_id: parseInt(athleteId),
+              birth_date: birthDate,
+              email: email,
+              first_name: firstName,
+              last_name: lastName,
+              sex: sex
+            },
+            {
+              withCredentials: true,
+            },
+          );
+
+          // ToDo: Response auswerten
+          if (response.status === 200) {
+            console.log("User updated successfully");
+            alert("User updated successfully");
+            window.location.href = "../index.html";
+          }
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.log("Invalid request body");
+              alert("Invalid request body");
+            } else if (error.response.status === 401) {
+              console.log("The token is invalid");
+              alert("The token is invalid");
+            } else if (error.response.status === 404) {
+              console.log("Athlete could not be found for this trainer");
+              alert("Athlete could not be found for this trainer");
+            } else if (error.response.status === 409) {
+              console.log("Athlete already exists");
+              alert("Athlete already exists");
+            } else if (error.response.status === 500) {
+              console.log("Internal Server Error");
+              alert("Internal Server Error");
+            }
+          } else {
+            // Andere Fehler
+            console.error("Netzwerkfehler:", error.message);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
