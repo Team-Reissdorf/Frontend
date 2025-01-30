@@ -169,7 +169,7 @@
           // ToDo: Response auswerten
           if (response.status === 200) {
             console.log("User updated successfully");
-            alert("User updated successfully");
+            alert("Bearbeitung gespeichert!");
             window.location.href = "../index.html";
           }
         } catch (error) {
@@ -182,7 +182,7 @@
               alert("The token is invalid");
             } else if (error.response.status === 404) {
               console.log("Athlete could not be found for this trainer");
-              alert("Athlete could not be found for this trainer");
+              alert("Der Sportler gehört nicht zu diesem Trainer");
             } else if (error.response.status === 409) {
               console.log("Athlete already exists");
               alert("Athlete already exists");

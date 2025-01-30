@@ -141,6 +141,8 @@
             // ToDo: Response auswerten
             if (response.status === 201) {
               console.log("Users created successfully");
+              alert("Sportler erstellt");
+              window.location.href = "../index.html";
             }
           } catch (error) {
             if (error.response) {
@@ -152,7 +154,7 @@
                 alert("The token is invalid");
               } else if (error.response.status === 409) {
                 console.log("One or more athlete(s) already exist");
-                alert("One or more athlete(s) already exist");
+                alert("Einer order mehrere Sportler existieren bereits!");
               } else if (error.response.status === 500) {
                 console.log("Internal Server Error");
                 alert("Internal Server Error");
@@ -190,7 +192,9 @@
 
                 // ToDo: Response auswerten
             if (response.status === 201) {
-              console.log("User created successfully");
+              console.log("Users created successfully");
+              alert("Sportler erstellt!");
+              window.location.href = "../index.html";
             }
           } catch (error) {
             if (error.response) {
@@ -202,7 +206,7 @@
                 alert("The token is invalid");
               } else if (error.response.status === 409) {
                 console.log("Athlete already exists");
-                alert("Athlete already exists");
+                alert("Sportler existiert bereits!");
               } else if (error.response.status === 500) {
                 console.log("Internal Server Error");
                 alert("Internal Server Error");
