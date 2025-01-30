@@ -122,10 +122,10 @@
               alert("Invalid request body");
             } else if (error.response.status === 401) {
               console.log("Wrong credentials");
-              alert("Wrong credentials");
+              alert("Email oder Passwort falsch!");
             } else if (error.response.status === 404) {
               console.log("User not found");
-              alert("User not found");
+              alert("Trainer wurde nicht gefunden");
             } else if (error.response.status === 500) {
               console.log("Internal Server Error");
               alert("Internal Server Error");
