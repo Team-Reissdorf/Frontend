@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ComPeteHub</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+  </head>
+  <body>
+    <!-- DOCUMENTATION NAVBAR-->
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+          <!-- Alles was links in die navabr soll-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          </ul>
+
+           <!-- Alles was rechts in die navabr soll-->
+           <div class="flex-d">
+           </div>
+      </div>
+    </nav>
+
+    <!--Überschrift & Beschreibung-->
+    <div class="Überschrift">
+      <div class="container my- 5">
+        <div class="p-1 text-center bg-body-tertiary rounded-3">
+          <h1 class="display-4">Leistungsübersicht</h1>
+          <p class="lead"> Hier können aktuelle und vergangene Leistungen des ausgewählten Sportlers angesehen werden. 
+            <br> Für weitere Informationen auf die einzelnen Kategorien klicken!
+          </p>
+        </div>
+    </div>
+
+    <!--Sportlerinfos Name, etc.-->
+    <div class="Sportlerinfos">
+      <div class="container my-5 ">
+        <div class="p-1 text-center bg-body-tertiary rounded-3 ">
+          <h1 class="display-4" > <b> Vorname Nachname </b>  </h1>
+          <p class="lead"> 30.01.2025 - 10 Jahre - Männlich </p>
+        </div>
+    </div>
+
+    <!--Kategorien + Aufklappbare Details-->
+    <!--Kategorie 1 Ausdauer-->
+    <div class="container my-1">
+      <div class="p-2 text-center bg-body-tertiary rounded-3">        
+          <div id="ausdauer-kopfzeile-gesamt" class="d-flex mx-5  justify-content-around align-items-center" onclick="toggleDetails('ausdauer-tabelle')"> 
+            <div id="ausdauer-kopfzeile-lW"> 
+              <h6 class="lead"> letzter Wert</h4>
+              <p style="font-size: 30px;"> 123,89s</p>
+            </div>            
+            <h2>Ausdauer</h3>  
+            <div id="ausdauer-kopfzeile-m"> 
+              <h6 class="lead"> Medaille </h4>
+              <p style="font-size: 30px;">🥉</p>     
+            </div>
+          </div>
+          <table class="table table-bordered d-none" id="ausdauer-tabelle" >
+            <tr>
+              <th>Disziplin</th>
+              <th>Datum</th>
+              <th>Wert</th>
+              <th>Medaille</th>   
+            </tr>
+                 
+            <!-- wird mit passenden Einträgen befüllt-->
+          </table>
+      </div>
+    </div>
+
+    <!--Kategorie 2 Schnelligkeit-->
+    <!--TODO-->
+    <div class="container my-1">
+      <div class="p-2 text-center bg-body-tertiary rounded-3">        
+          <div id="schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5  justify-content-around align-items-center" onclick="toggleDetails('schnelligkeit-tabelle')"> 
+            <div id="schnelligkeit-kopfzeile-lW"> 
+              <h6 class="lead"> letzter Wert</h4>
+              <p style="font-size: 30px;"> 123,89s</p>
+            </div>            
+            <h2>Schnelligkeit</h3>  
+            <div id="schnelligkeit-kopfzeile-m"> 
+              <h6 class="lead"> Medaille </h4>
+              <p style="font-size: 30px;">🥉</p>     
+            </div>
+          </div>
+          <table class="table table-bordered d-none" id="schnelligkeit-tabelle" >              
+            <!-- wird mit passenden Einträgen befüllt-->
+          </table>
+      </div>
+    </div>
+
+
+
+    <script>
+      
+      //Tabellen mit Infos anzeigen/verbergen
+      function toggleDetails(id) {
+            let details = document.getElementById(id); 
+            details.classList.toggle("d-none");
+        }
+      
+      //Tabellen befüllen testen 
+      testDaten = [ {"disziplin": "300m Sprint", "datum": "30.01.2025", "wert": "30,89s", "medaille": "gold"},
+                    {"disziplin": "100m Sprint", "datum": "19.01.2025", "wert": "45,89s", "medaille": "bronze"}]
+      
+      tabelleFüllen("ausdauer-tabelle", testDaten);
+      tabelleFüllen("schnelligkeit-tabelle", testDaten);
+
+      function tabelleFüllen(id, daten){
+        //Fügt Tabelle id die daten hinzu.
+        const table = document.getElementById(id);
+
+        for (var i =0; i<daten.length; i++){
+          let eintragStr = `
+                  <td> ${daten[i]["disziplin"]}</td>
+                  <td> ${daten[i]["datum"]} </td>
+                  <td> ${daten[i]["wert"]}</td>
+                  <td> ${daten[i]["medaille"]}</td>
+                  `;
+          //neue Tabellenreihe erstellen & td einfügen
+          let aktReihe = document.createElement("tr");
+          aktReihe.innerHTML = eintragStr;
+
+          table.appendChild(aktReihe);   //fügt neu erstellte Reihe in Tabelle ein
+        }
+        
+      }
+
+      
+    </script>
+  </body>
+</html>
