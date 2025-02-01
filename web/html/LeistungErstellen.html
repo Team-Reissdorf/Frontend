@@ -39,16 +39,29 @@
       
       <form id="submit-form">
         <div class="row">
+          
+        </div>
+        <div class="row">
           <!-- Kategorie -->
           <div class="form-group col-md-6 col-sm-12 col-lg-6">
             <label for="category">Kategorie</label>
-            <input type="text" class="form-control" id="category" placeholder="Kategorie">
+            <select id="category" class="form-select kategorien">
+              <option selected>-------</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
           </div>
 
           <!-- Übung -->
           <div class="form-group col-md-6 col-sm-12 col-lg-6">
             <label for="exercise">Übung</label>
-            <input type="text" class="form-control" id="exercise" placeholder="Übung">
+            <select id="exercise" class="form-select uebungen">
+              <option selected>-------</option>
+              <option value="1">One</option>
+              <option value="2">Two</option>
+              <option value="3">Three</option>
+            </select>
           </div>
         </div>
         <div class="row">
@@ -73,7 +86,8 @@
               <input type="text" class="form-control" id="points" placeholder="Punkte">
           </div>
         </div>
-        
+        <br>
+
         <!-- Submit (Button) -->
         <div class="row justify-content-center align-items-center text-center">
           <button type="submit" class="btn btn-light" style="width: 150px; height: 40px;">Erstellen</button>
@@ -115,17 +129,22 @@
           } else if (athlete.sex === "d") {
             sex = 'Divers';
           }
+          const currentDate = new Date().toJSON().slice(0, 10)
+          
+          var age = currentDate.split('-')[0]-athlete.birth_date.split('T')[0].split('-')[0];
+          if((currentDate.split('-')[1]<athlete.birth_date.split('T')[0].split('-')[1]) || (currentDate.split('-')[2]===athlete.birth_date.split('T')[0].split('-')[2])){
+            age--;
+          }
 
           const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
 
-          console.log(birthdate);
           // Zielcontainer, in dem die Athleten angezeigt werden
           const container = document.querySelector('.jumbomumbo');
           // Inneres div (Karte mit Inhalt)
           const cardDiv = document.createElement('div');
           cardDiv.innerHTML = `
             <h2>${athlete.first_name} ${athlete.last_name}</h2>
-            <h4>${birthdate} ${sex}</h4>
+            <h4>${birthdate} | ${age} Jahre | ${sex}</h4>
         `;
 
           container.appendChild(cardDiv)
@@ -134,6 +153,25 @@
           console.error("Fehler beim Laden der Daten:", error);
           alert("Athlet konnte nicht geladen werden.");
           //window.location.href = "../index.html";
+        }
+
+        try {
+          // Nachschauen, wie Backend URL ist ajsdioasjdihwiuhdhaskcnlasdkwopeiqwughidckqkjwopeiqwüei0pguhicqowjpkdqü0igppovjoqjpwekdüwoqkpüokb
+          const response = await axios.get('http://localhost:8080/v1/', {}, {withCredentials:true})
+          
+          const category = response.data.category;
+          const exercise = response.data.exercise;
+
+          const kategorien = document.querySelector('.kategorien');
+          kategorien.innerHTML = `
+          
+          `
+
+          const uebungen = document.querySelector('.uebungen');
+
+
+        } catch (error) {
+
         }
       });
 
