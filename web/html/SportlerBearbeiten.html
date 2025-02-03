@@ -114,7 +114,7 @@
         try {
           // Daten vom Backend abrufen
           const athleteId = new URLSearchParams(window.location.search).get("id");
-          const response = await axios.get(`http://localhost:8080/v1/athlete/get-one/${athleteId}`, {
+          const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
             withCredentials: true,
           });
 
