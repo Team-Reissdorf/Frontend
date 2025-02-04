@@ -45,14 +45,14 @@
           <!-- Kategorie -->
           <div class="form-group col-md-6 col-sm-12 col-lg-6">
             <label for="category">Kategorie</label>
-            <select id="category" class="form-select kategorien">
+            <select id="category" class="form-select kategorien" required>
             </select>
           </div>
 
           <!-- Übung -->
           <div class="form-group col-md-6 col-sm-12 col-lg-6">
             <label for="exercise">Übung</label>
-            <select id="exercise" class="form-select uebungen">
+            <select id="exercise" class="form-select uebungen" required>
             </select>
           </div>
         </div>
@@ -61,21 +61,21 @@
           <!-- Datum -->
           <div class="form-group col-md-6 col-lg-6 col-sm-12">
               <label for="date">Datum</label>
-              <input type="date" class="form-control" id="date" min="17.01.2007" max="17.01.2018">
+              <input type="date" class="form-control" id="date" min="01.01.2020" required>
           </div>
 
           <!-- Ergebnis -->
-          <div class="form-group col-md-6 col-lg-6 col-sm-12">
+          <!-- <div class="form-group col-md-6 col-lg-6 col-sm-12">
             <label for="result">Ergebnis</label>
-            <input type="text" class="form-control" id="result" placeholder="Ergebnis">
-          </div>
+            <input type="text" class="form-control" id="result" placeholder="Ergebnis" required>
+          </div> -->
         </div>
         <div class="row">
 
           <!-- Punkte -->
           <div class="form-group col-md-6 col-lg-6 col-sm-12">
               <label for="points">Punkte</label>
-              <input type="text" class="form-control" id="points" placeholder="Punkte">
+              <input type="text" class="form-control" id="points" placeholder="Punkte" required>
           </div>
         </div>
         <br>
@@ -91,8 +91,9 @@
 
     </div><!-- /.container -->
     <script>
-      // Überprüfung, ob User angemeldet ist
+      // Lade alles notwendige vor
       document.addEventListener("DOMContentLoaded", async () => {
+        // Überprüfung, ob User angemeldet ist
         try{
           const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
           {withCredentials: true});
@@ -149,6 +150,7 @@
           //window.location.href = "../index.html";
         }
 
+        // GET Kategorien und Dropdowns auffüllen
         try {
           // Kategorie-Daten vom Backend abrufen
           const categoryResponse = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
@@ -167,17 +169,13 @@
             await loadExercises(firstCategory);
           }
 
-          // Event Listener hinzufügen für die Änderung der Kategorie
-          kategorien.addEventListener("change", async function (event) {
-            await loadExercises(event.target.value);
-          });
-
         } catch (error) {
           console.error("Fehler beim Laden der Kategorien:", error);
           alert("Kategorien konnten nicht geladen werden.");
         }
       });
 
+      // Submit Eventlistener für das Erstellen der Leistung
       document.getElementById('submit-form').addEventListener('submit', async function(event) {
         event.preventDefault();
 
@@ -188,24 +186,22 @@
         const date = document.getElementById("date").value;
         // const result = document.getElementById("result").value;
         const points = document.getElementById("points").value;
-
         try {
           // POST-Anfrage an Backend senden
           const response = await axios.post('http://localhost:8080/v1/performance/create',
           {
             athlete_id: parseInt(athleteId),
-            exercise_id: exercise,
+            exercise_id: parseInt(exercise),
             date: date,
-            points: points,
+            points: parseInt(points),
           },
           {
             withCredentials: true,    
           });
 
-          
           // ToDo: Übersetzen  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
           if (response.status === 201) {
-            console.log("User created successfully");
+            console.log("Creation successfully");
           }
         } catch (error) {
           if (error.response) {
@@ -213,8 +209,7 @@
               console.log("Invalid request body");
               alert("Invalid request body");
             } else if (error.response.status === 401) {
-              console.log("The token is invalid");
-              alert("The token is invalid");
+              window.location.href = "Anmeldung.html";
             } else if (error.response.status === 404) {
               console.log("Athlete or exercise does not exist");
               alert("Athlete or exercise does not exist");
@@ -227,26 +222,53 @@
             }
           } else {
             // Andere Fehler
-            console.error("Netzwerkfehler:", error.message);
+            console.error("Error:", error.message);
           }
         }
       });
 
-      // Funktion zum Laden und Befüllen der Übungen
+      // Event Listener hinzufügen für die Änderung der Kategorie
+      kategorien = document.querySelector(".kategorien");
+      kategorien.addEventListener("change", async function (event) {
+        await loadExercises(event.target.value);
+      });
+
+      let exercisesList = [];  // Liste für Übungen
+
       async function loadExercises(category) {
         try {
           const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}`, { withCredentials: true });
-          const exercises = exerciseResponse.data.exercises;
+          exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
 
           // Übungen Dropdown befüllen
           const uebungen = document.querySelector('.uebungen');
           uebungen.innerHTML = "";  // Vorherige Optionen löschen
-          exercises.forEach(element => {
+          exercisesList.forEach(element => {
             uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
           });
+
+          // Überprüfen, ob eine Übung direkt ausgewählt werden kann
+          if (exercisesList.length > 0) {
+            updatePlaceholder(exercisesList[0].exercise_id);
+          }
+
         } catch (error) {
           console.error("Fehler beim Laden der Übungen:", error);
           alert("Übungen konnten nicht geladen werden.");
+        }
+      }
+
+      // Event Listener für das Ändern der Übung
+      document.querySelector(".uebungen").addEventListener("change", function(event) {
+        const selectedExerciseId = parseInt(event.target.value);
+        updatePlaceholder(selectedExerciseId);
+      });
+
+      // Funktion zum Aktualisieren des Placeholder-Textes
+      function updatePlaceholder(exerciseId) {
+        const selectedExercise = exercisesList.find(exercise => exercise.exercise_id === exerciseId);
+        if (selectedExercise) {
+          document.getElementById("points").placeholder = `Punkte in ${selectedExercise.unit}`;
         }
       }
     </script>
