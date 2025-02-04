@@ -50,91 +50,114 @@
     </div>
 
     <!--Kategorien + Aufklappbare Details-->
-    <!--Kategorie 1 Ausdauer-->
-    <div class="container my-1">
-      <div class="p-2 text-center bg-body-tertiary rounded-3">        
-          <div id="ausdauer-kopfzeile-gesamt" class="d-flex mx-5  justify-content-around align-items-center" onclick="toggleDetails('ausdauer-tabelle')"> 
-            <div id="ausdauer-kopfzeile-lW"> 
-              <h6 class="lead"> letzter Wert</h4>
-              <p style="font-size: 30px;"> 123,89s</p>
+    <div class="my-5">
+      <!--Kategorie 1 Ausdauer-->
+      <div class="container my-1">
+        <div class="p-2 text-center bg-body-tertiary rounded-3">        
+          <div id="ausdauer-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center position-relative" onclick="toggleDetails('ausdauer-tabelle')"> 
+            <div id="ausdauer-kopfzeile-lW" class="flex-shrink-0"> 
+              <h6 class="lead">letzter Wert</h6>
+              <p class="wert" style="font-size: 30px;">123,89s</p>
             </div>            
-            <h2>Ausdauer</h3>  
-            <div id="ausdauer-kopfzeile-m"> 
-              <h6 class="lead"> Medaille </h4>
-              <p style="font-size: 30px;">🥉</p>     
+            
+            <h2 class="display-4 position-absolute start-50 translate-middle-x">Ausdauer</h2>  
+          
+            <div id="ausdauer-kopfzeile-m" class="flex-shrink-0"> 
+              <h6 class="lead">Medaille</h6>
+              <p class="wert" style="font-size: 30px;">🥉</p>     
             </div>
           </div>
-          <table class="table table-bordered d-none" id="ausdauer-tabelle" >
-            <tr>
-              <th>Disziplin</th>
-              <th>Datum</th>
-              <th>Wert</th>
-              <th>Medaille</th>   
-            </tr>
-                 
-            <!-- wird mit passenden Einträgen befüllt-->
-          </table>
+          
+            <table class="table d-none" id="ausdauer-tabelle" >
+              <tr>
+                <th>Disziplin</th>
+                <th>Datum</th>
+                <th>Wert</th>
+                <th>Medaille</th>   
+              </tr>                 
+              <!-- wird mit passenden Einträgen befüllt-->
+            </table>
+        </div>
       </div>
-    </div>
 
-    <!--Kategorie 2 Schnelligkeit-->
-    <!--TODO-->
-    <div class="container my-1">
-      <div class="p-2 text-center bg-body-tertiary rounded-3">        
-          <div id="schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5  justify-content-around align-items-center" onclick="toggleDetails('schnelligkeit-tabelle')"> 
-            <div id="schnelligkeit-kopfzeile-lW"> 
-              <h6 class="lead"> letzter Wert</h4>
-              <p style="font-size: 30px;"> 123,89s</p>
-            </div>            
-            <h2>Schnelligkeit</h3>  
-            <div id="schnelligkeit-kopfzeile-m"> 
-              <h6 class="lead"> Medaille </h4>
-              <p style="font-size: 30px;">🥉</p>     
+      <!--Kategorie 2 schnelligkeit-->
+      <div class="container my-1">
+        <div class="p-2 text-center bg-body-tertiary rounded-3">        
+            <div id="schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center position-relative" onclick="toggleDetails('schnelligkeit-tabelle')"> 
+              <div id="schnelligkeit-kopfzeile-lW" class="flex-shrink-0"> 
+                <h6 class="lead">letzter Wert</h4>
+                <p class="wert" style="font-size: 30px;">123,89s</p>
+              </div>            
+              <h2 class="display-4 position-absolute start-50 translate-middle-x">Schnelligkeit</h3>  
+              <div id="schnelligkeit-kopfzeile-m" class="flex-shrink-0">  
+                <h6 class="lead">Medaille</h4>
+                <p class="wert" style="font-size: 30px;">🥉</p>     
+              </div>
             </div>
-          </div>
-          <table class="table table-bordered d-none" id="schnelligkeit-tabelle" >              
-            <!-- wird mit passenden Einträgen befüllt-->
-          </table>
+            <table class="table d-none" id="schnelligkeit-tabelle" >
+              <tr>
+                <th>Disziplin</th>
+                <th>Datum</th>
+                <th>Wert</th>
+                <th>Medaille</th>   
+              </tr>                 
+              <!-- wird mit passenden Einträgen befüllt-->
+            </table>
+        </div>
       </div>
-    </div>
-
 
 
     <script>
       
+      
+      
+      //Tabellen befüllen testen 
+      const testDaten = [ {"disziplin": "300m Sprint", "datum": "30.01.2025", "wert": "30,89s", "medaille": "gold"},
+                          {"disziplin": "100m Sprint", "datum": "19.01.2025", "wert": "45,89s", "medaille": "bronze"}]
+      
+      tabelleFüllen("ausdauer-tabelle", testDaten);
+      tabelleFüllen("schnelligkeit-tabelle", testDaten);      
+      
+
+      //Kopfzeile pro Kategorie füllen...
+      const testKopfDaten = {"wert": "123879m", "medaille":"🥉"}
+      kategorieKopfzeileFüllen("ausdauer-kopfzeile-gesamt", testKopfDaten);
+
       //Tabellen mit Infos anzeigen/verbergen
       function toggleDetails(id) {
             let details = document.getElementById(id); 
             details.classList.toggle("d-none");
         }
       
-      //Tabellen befüllen testen 
-      testDaten = [ {"disziplin": "300m Sprint", "datum": "30.01.2025", "wert": "30,89s", "medaille": "gold"},
-                    {"disziplin": "100m Sprint", "datum": "19.01.2025", "wert": "45,89s", "medaille": "bronze"}]
-      
-      tabelleFüllen("ausdauer-tabelle", testDaten);
-      tabelleFüllen("schnelligkeit-tabelle", testDaten);
 
+      //Fügt den jeweiligen Kategorie-Tabellen die Daten hinzu.
       function tabelleFüllen(id, daten){
-        //Fügt Tabelle id die daten hinzu.
         const table = document.getElementById(id);
 
-        for (var i =0; i<daten.length; i++){
-          let eintragStr = `
-                  <td> ${daten[i]["disziplin"]}</td>
-                  <td> ${daten[i]["datum"]} </td>
-                  <td> ${daten[i]["wert"]}</td>
-                  <td> ${daten[i]["medaille"]}</td>
-                  `;
-          //neue Tabellenreihe erstellen & td einfügen
-          let aktReihe = document.createElement("tr");
-          aktReihe.innerHTML = eintragStr;
+        for (let i =0; i<daten.length; i++){ //alle Daten durchgehen 
+          //in Zellen packen, die in eine Zeile und die dann am Ende in Tabelle
+          let row = table.insertRow(-1);
+          let cell1 = row.insertCell(0);
+          let cell2 = row.insertCell(1);
+          let cell3 = row.insertCell(2);
+          let cell4 = row.insertCell(3);
 
-          table.appendChild(aktReihe);   //fügt neu erstellte Reihe in Tabelle ein
+          cell1.innerHTML = daten[i]["disziplin"];
+          cell2.innerHTML = daten[i]["datum"];
+          cell3.innerHTML = daten[i]["wert"];
+          cell4.innerHTML = daten[i]["medaille"];
+          
         }
-        
       }
+      
+      //Für die Kategorien die letzten Werte + Medaille befüllen
+      function kategorieKopfzeileFüllen(id, daten){
+        const div = document.getElementById(id)
 
+        const pWerte = div.getElementsByClassName("wert")
+        pWerte[0].innerHTML = daten["wert"]
+        pWerte[1].innerHTML = daten["medaille"]
+      }
       
     </script>
   </body>
