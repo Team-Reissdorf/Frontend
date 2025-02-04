@@ -47,9 +47,6 @@
             <label for="category">Kategorie</label>
             <select id="category" class="form-select kategorien">
               <option selected>-------</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
             </select>
           </div>
 
@@ -58,9 +55,6 @@
             <label for="exercise">Übung</label>
             <select id="exercise" class="form-select uebungen">
               <option selected>-------</option>
-              <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option>
             </select>
           </div>
         </div>
@@ -88,9 +82,12 @@
         </div>
         <br>
 
-        <!-- Submit (Button) -->
-        <div class="row justify-content-center align-items-center text-center">
-          <button type="submit" class="btn btn-light" style="width: 150px; height: 40px;">Erstellen</button>
+        <!-- Submit and abort (Button) -->
+        <div class="row justify-content-center align-items-center text-center mt-4">
+          <div class="d-flex justify-content-between gap-3" style="width: 400px;">
+            <button type="submit" class="btn btn-light" style="width: 150px; height: 40px; padding: 0px 20px;">Speichern</button>
+            <a href="../index.html"><button type="button" class="btn btn-light" style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</button></a>
+          </div>
         </div>
       </form>
 
@@ -104,12 +101,12 @@
           // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
         } catch(error) {
           if (error.response) {
-            // Bei Fehler mit Response gehe zu html/Anmeldung.html
-            window.location.href = "html/Anmeldung.html";
+            // Bei Fehler mit Response gehe zu Anmeldung.html
+            window.location.href = "Anmeldung.html";
           } else {
             // Andere Fehler
             alert(error.message);
-            window.location.href = "html/Anmeldung.html";
+            window.location.href = "Anmeldung.html";
           }
         }
 
@@ -117,7 +114,7 @@
           // Daten vom Backend abrufen
           const athleteId = new URLSearchParams(window.location.search).get("id");
           console.log("ID: " + athleteId);
-          const response = await axios.get(`http://localhost:8080/v1/athlete/get-one/${athleteId}`, {
+          const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
             withCredentials: true,
           });
           const athlete = response.data.athlete;
@@ -144,7 +141,7 @@
           const cardDiv = document.createElement('div');
           cardDiv.innerHTML = `
             <h2>${athlete.first_name} ${athlete.last_name}</h2>
-            <h4>${birthdate} | ${age} Jahre | ${sex}</h4>
+            <h4>${birthdate} - ${age} Jahre - ${sex}</h4>
         `;
 
           container.appendChild(cardDiv)
@@ -157,18 +154,23 @@
 
         try {
           // Nachschauen, wie Backend URL ist ajsdioasjdihwiuhdhaskcnlasdkwopeiqwughidckqkjwopeiqwüei0pguhicqowjpkdqü0igppovjoqjpwekdüwoqkpüokb
-          const response = await axios.get('http://localhost:8080/v1/', {}, {withCredentials:true})
+          const response = await axios.get('http://localhost:8080/v1/discipline/get-all', {}, {withCredentials:true})
           
-          const category = response.data.category;
+          const disciplines = response.data.discipline_names;
           const exercise = response.data.exercise;
 
           const kategorien = document.querySelector('.kategorien');
-          kategorien.innerHTML = `
-          
+          category.forEach(element => {
+            kategorien.innerHTML = `
+            <option value="${element.id}">${element.name}</option>
           `
-
+          });
           const uebungen = document.querySelector('.uebungen');
-
+          exercise.forEach(element => {
+            uebungen.innerHTML = `
+            <option value="${element.id}">${element.name}</option>
+          `
+          });
 
         } catch (error) {
 
@@ -181,20 +183,18 @@
         // Eingabewerte für einzelnen Athleten abrufen
         const athleteId = new URLSearchParams(window.location.search).get("id");
         const exercise = document.getElementById("exercise").value;
-        const category = document.getElementById("category").value;
+        // const category = document.getElementById("category").value;
         const date = document.getElementById("date").value;
-        const result = document.getElementById("result").value;
+        // const result = document.getElementById("result").value;
         const points = document.getElementById("points").value;
 
         try {
           // POST-Anfrage an Backend senden
-          const response = await axios.post('http://localhost:8080/v1/athlete/create', // Falscher Endpunkt sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
+          const response = await axios.post('http://localhost:8080/v1/performance/create',
           {
             athlete_id: parseInt(athleteId),
-            exercise: exercise,
-            category: category,
+            exercise_id: exercise,
             date: date,
-            result: result,
             points: points,
           },
           {
@@ -202,7 +202,7 @@
           });
 
           
-          // ToDo: Response auswerten  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
+          // ToDo: Übersetzen  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
           if (response.status === 201) {
             console.log("User created successfully");
           }
@@ -214,9 +214,12 @@
             } else if (error.response.status === 401) {
               console.log("The token is invalid");
               alert("The token is invalid");
+            } else if (error.response.status === 404) {
+              console.log("Athlete or exercise does not exist");
+              alert("Athlete or exercise does not exist");
             } else if (error.response.status === 409) {
-              console.log("Athlete already exists");
-              alert("Athlete already exists");
+              console.log("Performance limit reached");
+              alert("Performance limit reached");
             } else if (error.response.status === 500) {
               console.log("Internal Server Error");
               alert("Internal Server Error");
