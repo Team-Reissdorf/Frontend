@@ -46,7 +46,6 @@
           <div class="form-group col-md-6 col-sm-12 col-lg-6">
             <label for="category">Kategorie</label>
             <select id="category" class="form-select kategorien">
-              <option selected>-------</option>
             </select>
           </div>
 
@@ -54,7 +53,6 @@
           <div class="form-group col-md-6 col-sm-12 col-lg-6">
             <label for="exercise">Übung</label>
             <select id="exercise" class="form-select uebungen">
-              <option selected>-------</option>
             </select>
           </div>
         </div>
@@ -113,7 +111,6 @@
         try {
           // Daten vom Backend abrufen
           const athleteId = new URLSearchParams(window.location.search).get("id");
-          console.log("ID: " + athleteId);
           const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
             withCredentials: true,
           });
@@ -153,27 +150,31 @@
         }
 
         try {
-          // Nachschauen, wie Backend URL ist ajsdioasjdihwiuhdhaskcnlasdkwopeiqwughidckqkjwopeiqwüei0pguhicqowjpkdqü0igppovjoqjpwekdüwoqkpüokb
-          const response = await axios.get('http://localhost:8080/v1/discipline/get-all', {}, {withCredentials:true})
-          
-          const disciplines = response.data.discipline_names;
-          const exercise = response.data.exercise;
+          // Kategorie-Daten vom Backend abrufen
+          const categoryResponse = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+          const disciplines = categoryResponse.data.discipline_names;
 
+          // Kategorien Dropdown befüllen
           const kategorien = document.querySelector('.kategorien');
-          category.forEach(element => {
-            kategorien.innerHTML = `
-            <option value="${element.id}">${element.name}</option>
-          `
+          kategorien.innerHTML = "";
+          disciplines.forEach(element => {
+            kategorien.innerHTML += `<option value="${element}">${element}</option>`;
           });
-          const uebungen = document.querySelector('.uebungen');
-          exercise.forEach(element => {
-            uebungen.innerHTML = `
-            <option value="${element.id}">${element.name}</option>
-          `
+
+          // Übungen für die erste Kategorie direkt laden
+          if (disciplines.length > 0) {
+            const firstCategory = disciplines[0];
+            await loadExercises(firstCategory);
+          }
+
+          // Event Listener hinzufügen für die Änderung der Kategorie
+          kategorien.addEventListener("change", async function (event) {
+            await loadExercises(event.target.value);
           });
 
         } catch (error) {
-
+          console.error("Fehler beim Laden der Kategorien:", error);
+          alert("Kategorien konnten nicht geladen werden.");
         }
       });
 
@@ -230,6 +231,24 @@
           }
         }
       });
+
+      // Funktion zum Laden und Befüllen der Übungen
+      async function loadExercises(category) {
+        try {
+          const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}`, { withCredentials: true });
+          const exercises = exerciseResponse.data.exercises;
+
+          // Übungen Dropdown befüllen
+          const uebungen = document.querySelector('.uebungen');
+          uebungen.innerHTML = "";  // Vorherige Optionen löschen
+          exercises.forEach(element => {
+            uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
+          });
+        } catch (error) {
+          console.error("Fehler beim Laden der Übungen:", error);
+          alert("Übungen konnten nicht geladen werden.");
+        }
+      }
     </script>
   </body>
 </html>
