@@ -61,7 +61,7 @@
           <!-- Datum -->
           <div class="form-group col-md-6 col-lg-6 col-sm-12">
               <label for="date">Datum</label>
-              <input type="date" class="form-control" id="date" min="01.01.2020" required>
+              <input type="date" class="form-control" id="date" min="2020-01-01" required>
           </div>
 
           <!-- Ergebnis -->
@@ -75,7 +75,8 @@
           <!-- Punkte -->
           <div class="form-group col-md-6 col-lg-6 col-sm-12">
               <label for="points">Punkte</label>
-              <input type="text" class="form-control" id="points" placeholder="Punkte" required>
+              <div class="input-group mb-3 responsive-input">
+              </div>
           </div>
         </div>
         <br>
@@ -91,6 +92,10 @@
 
     </div><!-- /.container -->
     <script>
+
+      let exercisesList = [];  // Liste der Übungen
+      let points = null;       // Punktewert zur Übergabe ans Backend
+
       // Lade alles notwendige vor
       document.addEventListener("DOMContentLoaded", async () => {
         // Überprüfung, ob User angemeldet ist
@@ -165,14 +170,22 @@
 
           // Übungen für die erste Kategorie direkt laden
           if (disciplines.length > 0) {
-            const firstCategory = disciplines[0];
-            await loadExercises(firstCategory);
+            await loadExercises(disciplines[0]);
           }
-
         } catch (error) {
           console.error("Fehler beim Laden der Kategorien:", error);
           alert("Kategorien konnten nicht geladen werden.");
         }
+
+        // Event Listener für Kategorieänderung
+        document.querySelector(".kategorien").addEventListener("change", async (event) => {
+          await loadExercises(event.target.value);
+        });
+
+        // Event Listener für Übungsänderung
+        document.querySelector(".uebungen").addEventListener("change", function (event) {
+          updateFieldByUnit(parseInt(event.target.value));
+        });
       });
 
       // Submit Eventlistener für das Erstellen der Leistung
@@ -181,19 +194,18 @@
 
         // Eingabewerte für einzelnen Athleten abrufen
         const athleteId = new URLSearchParams(window.location.search).get("id");
-        const exercise = document.getElementById("exercise").value;
-        // const category = document.getElementById("category").value;
+        const exerciseId = parseInt(document.getElementById("exercise").value);
         const date = document.getElementById("date").value;
         // const result = document.getElementById("result").value;
-        const points = document.getElementById("points").value;
+        const points = preparePointsForBackend();
         try {
           // POST-Anfrage an Backend senden
           const response = await axios.post('http://localhost:8080/v1/performance/create',
           {
             athlete_id: parseInt(athleteId),
-            exercise_id: parseInt(exercise),
+            exercise_id: exerciseId,
             date: date,
-            points: parseInt(points),
+            points: points,
           },
           {
             withCredentials: true,    
@@ -201,7 +213,7 @@
 
           // ToDo: Übersetzen  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
           if (response.status === 201) {
-            console.log("Creation successfully");
+            alert("Leistung erfolgreich erstellt!");
           }
         } catch (error) {
           if (error.response) {
@@ -233,43 +245,89 @@
         await loadExercises(event.target.value);
       });
 
-      let exercisesList = [];  // Liste für Übungen
-
       async function loadExercises(category) {
         try {
           const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}`, { withCredentials: true });
           exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
-
           // Übungen Dropdown befüllen
           const uebungen = document.querySelector('.uebungen');
           uebungen.innerHTML = "";  // Vorherige Optionen löschen
           exercisesList.forEach(element => {
             uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
           });
-
           // Überprüfen, ob eine Übung direkt ausgewählt werden kann
           if (exercisesList.length > 0) {
-            updatePlaceholder(exercisesList[0].exercise_id);
+            updateFieldByUnit(exercisesList[0].exercise_id);
           }
-
         } catch (error) {
           console.error("Fehler beim Laden der Übungen:", error);
           alert("Übungen konnten nicht geladen werden.");
         }
       }
 
-      // Event Listener für das Ändern der Übung
-      document.querySelector(".uebungen").addEventListener("change", function(event) {
-        const selectedExerciseId = parseInt(event.target.value);
-        updatePlaceholder(selectedExerciseId);
-      });
-
-      // Funktion zum Aktualisieren des Placeholder-Textes
-      function updatePlaceholder(exerciseId) {
+      // Dynamisch das Eingabefeld nach der Einheit rendern
+      function updateFieldByUnit(exerciseId) {
         const selectedExercise = exercisesList.find(exercise => exercise.exercise_id === exerciseId);
+        const felder = document.querySelector(".responsive-input");
         if (selectedExercise) {
-          document.getElementById("points").placeholder = `Punkte in ${selectedExercise.unit}`;
+          switch (selectedExercise.unit) {
+            case "second":
+              renderInputField(felder, "number", "Sekunden", "1");
+              break;
+            case "minute":
+              renderInputField(felder, "time", "Minuten", "");
+              break;
+            case "centimeter":
+              renderInputField(felder, "number", "Zentimeter", "1");
+              break;
+            case "meter":
+              renderInputField(felder, "number", "Meter", "0.1");
+              break;
+            case "bool":
+              renderCheckboxField(felder, "Geschafft");
+              break;
+            default:
+              renderInputField(felder, "number", "Punkte", "1");
+          }
         }
+      }
+
+      // Eingabefeld rendern
+      function renderInputField(container, type, label, step) {
+        container.innerHTML = `
+          <input type="${type}" class="form-control" step="${step}" id="points" min="0" required>
+          <span class="input-group-text">${label}</span>
+        `;
+      }
+
+      // Checkbox rendern
+      function renderCheckboxField(container) {
+        container.innerHTML = `
+          <div class="d-flex align-items-center gap-2">
+            <label for="points_bool">Bestanden?</label>
+            <input class="form-check-input" type="checkbox" id="points_bool" value="0">
+          </div>
+        `;
+      }
+
+
+      // Punktewert für Backend vorbereiten
+      function preparePointsForBackend() {
+        const selectedExercise = exercisesList.find(exercise => exercise.exercise_id === parseInt(document.getElementById("exercise").value));
+        let pointsValue = null;
+
+        if (selectedExercise.unit === "minute") {
+          const timeValue = document.getElementById("points").value.split(":");
+          pointsValue = parseInt(timeValue[0]) * 60 + parseInt(timeValue[1]);
+        } else if (selectedExercise.unit === "bool") {
+          pointsValue = document.getElementById("points_bool").checked ? 1 : 0;
+        } else if (selectedExercise.unit === "meter") {
+          pointsValue = Number(document.getElementById("points").value)*100;
+        } else {
+          pointsValue = parseInt(document.getElementById("points").value);
+        }
+        console.log("Points: " + pointsValue);
+        return pointsValue;
       }
     </script>
   </body>
