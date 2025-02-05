@@ -62,7 +62,7 @@
           <!-- Geburtstag -->
           <div class="form-group col-md-6 col-lg-6 col-sm-12">
             <label for="birthDate">Geburtstag</label>
-            <input type="date" class="form-control" id="birthDate">
+            <input type="date" class="form-control" min=minAlter max=maxAlter id="birthDate">
           </div>
         
           <!-- Gender (Radio) -->
@@ -119,8 +119,13 @@
             console.error("Netzwerkfehler:", error.message);
           }
         }
-      });
 
+        const player = document.getElementById("birthDate");
+        player.setAttribute("min", getDateYearsAgo(19, 1));
+        const player2 = document.getElementById("birthDate");
+        player.setAttribute("max", getDateYearsAgo(6));
+      });
+      
       document.getElementById('submit-form').addEventListener('submit', async function(event) {
         event.preventDefault();
 
@@ -221,6 +226,29 @@
           }
         }
       });
+
+      function getDateYearsAgo(years, extraDays = 0) {
+        // Aktuelles Datum erstellen
+        let currentDate = new Date();
+
+        // Jahre subtrahieren
+        currentDate.setFullYear(currentDate.getFullYear() - years);
+
+        // Zusätzliche Tage hinzufügen
+        currentDate.setDate(currentDate.getDate() + extraDays);
+
+        // Jahr, Monat und Tag extrahieren
+        const year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1;
+        let day = currentDate.getDate();
+
+        // Monat und Tag auf zwei Ziffern formatieren
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+
+        // Datum im Format yyyy-mm-dd zurückgeben
+        return `${year}-${month}-${day}`;
+      }
     </script>
   </body>
 </html>

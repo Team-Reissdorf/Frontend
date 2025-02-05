@@ -196,6 +196,36 @@
           }
         }
       });
+
+      document.getElementById('birthDate').addEventListener('change', async function(event) {
+        const player = document.getElementById("birthDate");
+        player.setAttribute("min", getDateYearsAgo(19, 1));
+        const player2 = document.getElementById("birthDate");
+        player.setAttribute("max", getDateYearsAgo(6));
+      });
+
+      function getDateYearsAgo(years, extraDays = 0) {
+        // Aktuelles Datum erstellen
+        let currentDate = new Date();
+
+        // Jahre subtrahieren
+        currentDate.setFullYear(currentDate.getFullYear() - years);
+
+        // Zusätzliche Tage hinzufügen
+        currentDate.setDate(currentDate.getDate() + extraDays);
+
+        // Jahr, Monat und Tag extrahieren
+        const year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1;
+        let day = currentDate.getDate();
+
+        // Monat und Tag auf zwei Ziffern formatieren
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+
+        // Datum im Format yyyy-mm-dd zurückgeben
+        return `${year}-${month}-${day}`;
+      }
     </script>
   </body>
 </html>
