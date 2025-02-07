@@ -53,6 +53,12 @@
               <input type="password" class="form-control" id="pwd" placeholder="Passwort" required autocomplete="new-password">
             </div>
 
+            <!-- Passwort bestätigung -->
+            <div class="form-group">
+              <label for="pwd">Passwort Bestätigen</label>
+              <input type="password" class="form-control" id="pwd_2" placeholder="Passwort" required autocomplete="new-password">
+            </div>
+
             <div class="form-group">
               <!-- Angemeldet bleiben (Checkbox) -->
               <label for="remember_me">Angemeldet bleiben?</label>
@@ -97,8 +103,9 @@
         // Eingabewerte abrufen
         const email = document.getElementById('email').value;
         const password = document.getElementById('pwd').value;
+        const password_2 = document.getElementById('pwd_2').value;
         const remember_me = document.getElementById('remember_me').checked;
-
+        if (password === password_2){
         try {
           // POST-Anfrage mit axios ans Backend senden
           const response = await axios.post('http://localhost:8080/v1/user/register', {
@@ -130,6 +137,10 @@
             // Andere Fehler
             console.error("Netzwerkfehler:", error.message);
           }
+        }
+        }else{
+          alert("Passwort nicht gleich!")
+          console.log("Password not equal")
         }
       });
     </script>
