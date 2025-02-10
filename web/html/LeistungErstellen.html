@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>ComPeteHub</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+  </head>
+  <body>
+    <!-- DOCUMENTATION NAVBAR-->
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          
+          <!-- Alles was links in die navabr soll-->
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          </ul>
+
+           <!-- Alles was rechts in die navabr soll-->
+           <div class="flex-d">
+           </div>
+      </div>
+    </nav>
+
+    <div class="container my-5">
+      <div class="p-5 text-center bg-body-tertiary rounded-3 jumbomumbo">
+        <h1 class="text-body-emphasis">Leistungserfassung</h1>
+        <br>
+      </div> <!-- /.jumbotron -->
+
+      <br>
+      
+      <form id="submit-form">
+        <div class="row">
+          
+        </div>
+        <div class="row">
+          <!-- Kategorie -->
+          <div class="form-group col-md-6 col-sm-12 col-lg-6">
+            <label for="category">Kategorie</label>
+            <select id="category" class="form-select kategorien" required>
+            </select>
+          </div>
+
+          <!-- Übung -->
+          <div class="form-group col-md-6 col-sm-12 col-lg-6">
+            <label for="exercise">Übung</label>
+            <select id="exercise" class="form-select uebungen" required>
+            </select>
+          </div>
+        </div>
+        <div class="row">
+
+          <!-- Datum -->
+          <div class="form-group col-md-6 col-lg-6 col-sm-12">
+              <label for="date">Datum</label>
+              <input type="date" class="form-control" id="date" min="2020-01-01" required>
+          </div>
+
+          <!-- Ergebnis -->
+          <!-- <div class="form-group col-md-6 col-lg-6 col-sm-12">
+            <label for="result">Ergebnis</label>
+            <input type="text" class="form-control" id="result" placeholder="Ergebnis" required>
+          </div> -->
+        </div>
+        <div class="row">
+
+          <!-- Punkte -->
+          <div class="form-group col-md-6 col-lg-6 col-sm-12">
+              <label for="points">Punkte</label>
+              <div class="input-group mb-3 responsive-input">
+              </div>
+          </div>
+        </div>
+        <br>
+
+        <!-- Submit and abort (Button) -->
+        <div class="row justify-content-center align-items-center text-center mt-4">
+          <div class="d-flex justify-content-between gap-3" style="width: 400px;">
+            <button type="submit" class="btn btn-light" style="width: 150px; height: 40px; padding: 0px 20px;">Speichern</button>
+            <a href="../index.html"><button type="button" class="btn btn-light" style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</button></a>
+          </div>
+        </div>
+      </form>
+
+    </div><!-- /.container -->
+    <script>
+
+      let exercisesList = [];  // Liste der Übungen
+      let points = null;       // Punktewert zur Übergabe ans Backend
+
+      // Lade alles notwendige vor
+      document.addEventListener("DOMContentLoaded", async () => {
+        // Überprüfung, ob User angemeldet ist
+        try{
+          const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
+          {withCredentials: true});
+          // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
+        } catch(error) {
+          if (error.response) {
+            // Bei Fehler mit Response gehe zu Anmeldung.html
+            window.location.href = "Anmeldung.html";
+          } else {
+            // Andere Fehler
+            alert(error.message);
+            window.location.href = "Anmeldung.html";
+          }
+        }
+
+        try {
+          // Daten vom Backend abrufen
+          const athleteId = new URLSearchParams(window.location.search).get("id");
+          const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
+            withCredentials: true,
+          });
+          const athlete = response.data.athlete;
+          var sex = "";
+          if (athlete.sex === "m") {
+            sex = 'Männlich';
+          } else if (athlete.sex === "f") {
+            sex = 'Weiblich';
+          } else if (athlete.sex === "d") {
+            sex = 'Divers';
+          }
+          const currentDate = new Date().toJSON().slice(0, 10)
+          
+          var age = currentDate.split('-')[0]-athlete.birth_date.split('T')[0].split('-')[0];
+          if((currentDate.split('-')[1]<athlete.birth_date.split('T')[0].split('-')[1]) || (currentDate.split('-')[2]===athlete.birth_date.split('T')[0].split('-')[2])){
+            age--;
+          }
+
+          const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+
+          // Zielcontainer, in dem die Athleten angezeigt werden
+          const container = document.querySelector('.jumbomumbo');
+          // Inneres div (Karte mit Inhalt)
+          const cardDiv = document.createElement('div');
+          cardDiv.innerHTML = `
+            <h2>${athlete.first_name} ${athlete.last_name}</h2>
+            <h4>${birthdate} - ${age} Jahre - ${sex}</h4>
+        `;
+
+          container.appendChild(cardDiv)
+
+        } catch (error) {
+          console.error("Fehler beim Laden der Daten:", error);
+          alert("Athlet konnte nicht geladen werden.");
+          //window.location.href = "../index.html";
+        }
+
+        // GET Kategorien und Dropdowns auffüllen
+        try {
+          // Kategorie-Daten vom Backend abrufen
+          const categoryResponse = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+          const disciplines = categoryResponse.data.discipline_names;
+
+          // Kategorien Dropdown befüllen
+          const kategorien = document.querySelector('.kategorien');
+          kategorien.innerHTML = "";
+          disciplines.forEach(element => {
+            kategorien.innerHTML += `<option value="${element}">${element}</option>`;
+          });
+
+          // Übungen für die erste Kategorie direkt laden
+          if (disciplines.length > 0) {
+            await loadExercises(disciplines[0]);
+          }
+        } catch (error) {
+          console.error("Fehler beim Laden der Kategorien:", error);
+          alert("Kategorien konnten nicht geladen werden.");
+        }
+
+        // Event Listener für Kategorieänderung
+        document.querySelector(".kategorien").addEventListener("change", async (event) => {
+          await loadExercises(event.target.value);
+        });
+
+        // Event Listener für Übungsänderung
+        document.querySelector(".uebungen").addEventListener("change", function (event) {
+          updateFieldByUnit(parseInt(event.target.value));
+        });
+      });
+
+      // Submit Eventlistener für das Erstellen der Leistung
+      document.getElementById('submit-form').addEventListener('submit', async function(event) {
+        event.preventDefault();
+
+        // Eingabewerte für einzelnen Athleten abrufen
+        const athleteId = new URLSearchParams(window.location.search).get("id");
+        const exerciseId = parseInt(document.getElementById("exercise").value);
+        const date = document.getElementById("date").value;
+        // const result = document.getElementById("result").value;
+        const points = preparePointsForBackend();
+        try {
+          // POST-Anfrage an Backend senden
+          const response = await axios.post('http://localhost:8080/v1/performance/create',
+          {
+            athlete_id: parseInt(athleteId),
+            exercise_id: exerciseId,
+            date: date,
+            points: points,
+          },
+          {
+            withCredentials: true,    
+          });
+
+          // ToDo: Übersetzen  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
+          if (response.status === 201) {
+            alert("Leistung erfolgreich erstellt!");
+          }
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.log("Invalid request body");
+              alert("Invalid request body");
+            } else if (error.response.status === 401) {
+              window.location.href = "Anmeldung.html";
+            } else if (error.response.status === 404) {
+              console.log("Athlete or exercise does not exist");
+              alert("Athlete or exercise does not exist");
+            } else if (error.response.status === 409) {
+              console.log("Performance limit reached");
+              alert("Performance limit reached");
+            } else if (error.response.status === 500) {
+              console.log("Internal Server Error");
+              alert("Internal Server Error");
+            }
+          } else {
+            // Andere Fehler
+            console.error("Error:", error.message);
+          }
+        }
+      });
+
+      // Event Listener hinzufügen für die Änderung der Kategorie
+      kategorien = document.querySelector(".kategorien");
+      kategorien.addEventListener("change", async function (event) {
+        await loadExercises(event.target.value);
+      });
+
+      async function loadExercises(category) {
+        try {
+          const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}`, { withCredentials: true });
+          exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
+          // Übungen Dropdown befüllen
+          const uebungen = document.querySelector('.uebungen');
+          uebungen.innerHTML = "";  // Vorherige Optionen löschen
+          exercisesList.forEach(element => {
+            uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
+          });
+          // Überprüfen, ob eine Übung direkt ausgewählt werden kann
+          if (exercisesList.length > 0) {
+            updateFieldByUnit(exercisesList[0].exercise_id);
+          }
+        } catch (error) {
+          console.error("Fehler beim Laden der Übungen:", error);
+          alert("Übungen konnten nicht geladen werden.");
+        }
+      }
+
+      // Dynamisch das Eingabefeld nach der Einheit rendern
+      function updateFieldByUnit(exerciseId) {
+        const selectedExercise = exercisesList.find(exercise => exercise.exercise_id === exerciseId);
+        const felder = document.querySelector(".responsive-input");
+        if (selectedExercise) {
+          switch (selectedExercise.unit) {
+            case "second":
+              renderInputField(felder, "number", "Sekunden", "1");
+              break;
+            case "minute":
+              renderInputField(felder, "time", "Minuten", "");
+              break;
+            case "centimeter":
+              renderInputField(felder, "number", "Zentimeter", "1");
+              break;
+            case "meter":
+              renderInputField(felder, "number", "Meter", "0.01");
+              break;
+            case "bool":
+              renderCheckboxField(felder, "Geschafft");
+              break;
+            default:
+              renderInputField(felder, "number", "Punkte", "1");
+          }
+        }
+      }
+
+      // Eingabefeld rendern
+      function renderInputField(container, type, label, step) {
+        container.innerHTML = `
+          <input type="${type}" class="form-control" step="${step}" id="points" min="0" required>
+          <span class="input-group-text">${label}</span>
+        `;
+      }
+
+      // Checkbox rendern
+      function renderCheckboxField(container) {
+        container.innerHTML = `
+          <div class="d-flex align-items-center gap-2">
+            <label for="points_bool">Bestanden?</label>
+            <input class="form-check-input" type="checkbox" id="points_bool" value="0">
+          </div>
+        `;
+      }
+
+
+      // Punktewert für Backend vorbereiten
+      function preparePointsForBackend() {
+        const selectedExercise = exercisesList.find(exercise => exercise.exercise_id === parseInt(document.getElementById("exercise").value));
+        let pointsValue = null;
+
+        if (selectedExercise.unit === "minute") {
+          const timeValue = document.getElementById("points").value.split(":");
+          pointsValue = parseInt(timeValue[0]) * 60 + parseInt(timeValue[1]);
+        } else if (selectedExercise.unit === "bool") {
+          pointsValue = document.getElementById("points_bool").checked ? 1 : 0;
+        } else if (selectedExercise.unit === "meter") {
+          pointsValue = Number(document.getElementById("points").value)*100;
+        } else {
+          pointsValue = parseInt(document.getElementById("points").value);
+        }
+        console.log("Points: " + pointsValue);
+        return pointsValue;
+      }
+    </script>
+  </body>
+</html>
