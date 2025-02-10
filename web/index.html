@@ -85,11 +85,11 @@
         // Inhalt der Karte
         cardDiv.innerHTML = `
           <div class="d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">${athlete.athlete_id}.</h5>
-            <h5 class="mb-0">${athlete.first_name} ${athlete.last_name}</h5>
+            <h4 class="mb-0" style="margin-left: 24px;">${athlete.first_name} ${athlete.last_name}</h4>
             <div>
-              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis erstellen</button></a>
-              <a href="#" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Löschen</button></a>
+              <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
+              <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis</button></a>
+              <button class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px">Löschen</button>
             </div>
           </div>
         `;
@@ -99,6 +99,28 @@
 
         // Äußeres div in den Zielcontainer einfügen
         container.appendChild(rowDiv);
+      });
+      
+      // Event-Listener für alle Löschen-Buttons hinzufügen
+      document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', async (event) => {
+          const athleteId = button.getAttribute('data-id');
+
+          if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
+            try {
+              // DELETE-Anfrage an das Backend senden
+              await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, {
+                withCredentials: true,
+              });
+
+              // Sportler erfolgreich gelöscht, Karte entfernen
+              button.closest('.row').remove();
+            } catch (error) {
+              console.error('Fehler beim Löschen des Sportlers:', error);
+              alert('Löschen des Sportlers fehlgeschlagen.');
+            }
+          }
+        });
       });
     } catch (error) {
       console.error("Fehler beim Abrufen der Athleten:", error);
