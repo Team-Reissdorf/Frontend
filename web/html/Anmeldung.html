@@ -34,12 +34,6 @@
         <h1 class="text-body-emphasis">Anmelden</h1>
         <p class="lead">Gib deine Email und dein Password unten ein, um dich als Trainer anzumelden!</p>
       </div> <!-- /.jumbotron -->
-      <!-- Warnblock wenn Backend nicht erreichbar ist-->
-      <div id="alertBox" class="alert alert-warning alert-dismissible fade" role="alert" style="display: none;">
-        <strong>Server leider nicht Erreichbar!!</strong> Bitte versuchen Sie es später...
-        <div class="position-relative">
-        </div>
-      </div>
       <br>
 
       <div class="row justify-content-md-center">
@@ -96,11 +90,8 @@
         } catch(error) {
           if(error.code === "ERR_NETWORK"){
             console.log("Backend nicht erreichbar:" + error)
-            let alertBox = document.getElementById('alertBox');
-            // Alert sichtbar machen
-            alertBox.style.display = 'block';
-            // Bootstrap fade in Effekt hinzufügen
-            alertBox.classList.add('show'); // Bootstrap Klasse 'show' hinzufügen
+            //Falls Server nicht erreichbar ist
+            window.location.href = "BackendDown.html";
           }
         }
       });
