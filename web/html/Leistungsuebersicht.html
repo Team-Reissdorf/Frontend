@@ -43,24 +43,33 @@
     <div class="Sportlerinfos">
       <div class="container my-5">
         <div class="text-center bg-body-tertiary rounded-3">
-
           <h1 class="display-4" id="sportlerinfos-name"> <b> Vorname Nachname </b>  </h1>
-          <p class="lead" id="sportlerinfos-alter-ges"> 99.99.9999 - 99 Jahre - Geschlecht </p>
-          
-          <!--TODO-->
-          <div class="optionen">
-            <div class="d-flex justify-content-center align-items-center gap-3">
-              <a href="test.html" style="text-decoration: none;">
-                <button class="btn btn-light border border-2 my-1" id="button-eintragen" style="font-weight: bold;">Leistungen eintragen</button>
-              </a>
-              <a href="test2.html" style="text-decoration: none;">
-                <button class="btn btn-light border border-2 my-1" id="button-bearbeiten" style="font-weight: bold;">Leistungen bearbeiten</button>
-              </a>
-            </div>            
-          </div>
-
+          <p class="lead" id="sportlerinfos-alter-ges"> 99.99.9999 - 99 Jahre - Geschlecht </p> 
         </div>        
       </div>      
+    </div>
+
+    <!--Optionen-->
+    <!--TODO-->
+    <div class="container">
+      <div class="d-flex justify-content-center gap-3 align-items-end  ">
+        <!-- Button: Leistungen eintragen -->
+        <a href="test.html" class="text-decoration-none ">
+          <button class="btn btn-light border border-2 fw-bold py-2 px-3">Leistungen eintragen</button>
+        </a>
+
+        <!-- Datum für Datenabfrage  -->
+        <div class="text-center">
+          <label for="datenAbfragenAb" class="form-label d-block" >Leistungen anzeigen ab</label>
+          <input type="date" class="form-control btn btn-light border border-2 fw-bold py-2 px-3" id="datenAbfragenAb" value="2025-01-01" style="max-width: 180px; font-weight: bold;">
+        </div>
+    
+        <!-- Button: Leistungen bearbeiten -->
+        <a href="test2.html" class="text-decoration-none">
+          <button class="btn btn-light border border-2 fw-bold py-2 px-3">Leistungen bearbeiten</button>
+        </a>    
+        
+      </div>
     </div>
 
     
@@ -79,12 +88,12 @@
             <div id="ausdauer-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('ausdauer-tabelle')"> 
               <div id="ausdauer-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
-                <p class="wert" style="font-size: 30px;"></p>
+                <p class="wert" style="font-size: 30px;">999</p>
               </div>            
                 <h2 class="display-4 position-absolute start-50 translate-middle-x">Ausdauer</h2>  
               <div id="ausdauer-kopfzeile-m" class="flex-shrink-0">  
-                <h6 class="lead">Medaille</h4>
-                <p class="wert" style="font-size: 30px;"></p>     
+                <h6 class="lead">letzte Medaille</h4>
+                <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
             <table class="table d-none" id="ausdauer-tabelle" >
@@ -105,12 +114,12 @@
             <div id="schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('schnelligkeit-tabelle')"> 
               <div id="schnelligkeit-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
-                <p class="wert" style="font-size: 30px;"></p>
+                <p class="wert" style="font-size: 30px;">999</p>
               </div>            
               <h2 class="display-4 position-absolute start-50 translate-middle-x">Schnelligkeit</h2>  
               <div id="schnelligkeit-kopfzeile-m" class="flex-shrink-0">  
-                <h6 class="lead">Medaille</h4>
-                <p class="wert" style="font-size: 30px;"></p>     
+                <h6 class="lead">letzte Medaille</h4>
+                <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
             <table class="table d-none" id="schnelligkeit-tabelle" >
@@ -132,12 +141,12 @@
             <div id="kraft-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('kraft-tabelle')"> 
               <div id="kraft-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
-                <p class="wert" style="font-size: 30px;"></p>
+                <p class="wert" style="font-size: 30px;">999</p>
               </div>            
               <h2 class="display-4 position-absolute start-50 translate-middle-x">Kraft</h2>  
               <div id="kraft-kopfzeile-m" class="flex-shrink-0">  
-                <h6 class="lead">Medaille</h4>
-                <p class="wert" style="font-size: 30px;"></p>     
+                <h6 class="lead">letzte Medaille</h4>
+                <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
             <table class="table d-none" id="kraft-tabelle" >
@@ -158,12 +167,12 @@
             <div id="koordination-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('koordination-tabelle')"> 
               <div id="koordination-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
-                <p class="wert" style="font-size: 30px;"></p>
+                <p class="wert" style="font-size: 30px;">999</p>
               </div>            
               <h2 class="display-4 position-absolute start-50 translate-middle-x">Koordination</h2>  
               <div id="koordination-kopfzeile-m" class="flex-shrink-0">  
-                <h6 class="lead">Medaille</h4>
-                <p class="wert" style="font-size: 30px;"></p>     
+                <h6 class="lead">letzte Medaille</h4>
+                <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
             <table class="table d-none" id="koordination-tabelle" >
@@ -178,11 +187,9 @@
         </div>
       </div>
 
-    <script>
-      //TODO
+      
 
-      let exercisesList = [];  // Liste der Übungen
-      let points = null;       // Punktewert zur Übergabe ans Backend
+    <script>
 
       // Lade alles notwendige vor
       document.addEventListener("DOMContentLoaded", async () => {
@@ -200,8 +207,7 @@
             alert(error.message);
             window.location.href = "Anmeldung.html";
           }
-        }
-      
+        }      
 
         try {
           // Daten vom Backend abrufen & vorbereiten
@@ -230,30 +236,90 @@
           //Sportlerinfos (Name, Alter, etc.) befüllen
           const sportlerInfoDaten = {"vorname": athlete.first_name, "nachname": athlete.last_name, "geburtstag": birthdate, "alter": age, "geschlecht": sex};
           sportlerInfosFüllen(sportlerInfoDaten);
+          
+          //Disziplin Kopfzeilen füllen
+          //TODO 
+
+          //Tabellen aller Disziplinen füllen 
+          updateAlleKategorieTabellen();
         }
         catch (error) {
           console.error("Fehler beim Laden der Daten:", error);
           alert("Athlet konnte nicht geladen werden.");
         }
-        
-        //Letzte Performanceeinträge in Kategorienkopfzeilen eintragen
-        try{
-        const athleteId = new URLSearchParams(window.location.search).get("id");
-        const response =  await axios.get(`/v1/performance/get-latest/{AthleteId}${athleteId}`);
-
-        console.log(response)
-        }
-        catch (error){
-          
-          console.error("Fehler beim Laden der Daten:", error);
-            alert("Einträge des Athleten konnten nicht geladen werden.");
-        }
-      
       })
 
+
+
+      //Beim ändern des DatenabfragenAb-Input alle Tabellen aktualisieren
+      document.getElementById("datenAbfragenAb").addEventListener("input", async function () {
+        await updateAlleKategorieTabellen();
+      });
+      
+      async function updateAlleKategorieTabellen(){
+        //Performance-Einträge ab dem Wert vom Dateinput abfragen
+        try{
+        const athleteId = new URLSearchParams(window.location.search).get("id");
+        const abrufenAb = document.getElementById("datenAbfragenAb").value
+        const responsePerformance =  await axios.get(`http://localhost:8080/v1/performance/get-all/${athleteId}?since=${abrufenAb}`, {
+          withCredentials: true});        
+        const performanceEinträge = responsePerformance.data.performance_entries
+        
+        //Kategorien für spätere Zuordnung bekommen
+        const responseDisziplinen =  await axios.get(`http://localhost:8080/v1/discipline/get-all`, {
+          withCredentials: true});          
+        const alleKategorien = responseDisziplinen.data.discipline_names
+        
+        //Alle Kategorien durchgehen und Kopfzeilen + Tabellen füllen
+        for (const aktKategorie of alleKategorien) {
+          try {
+            const responseExercises = await axios.get(`http://localhost:8080/v1/exercise/get/${aktKategorie}`, {
+              withCredentials: true
+            });
+
+            const alleExercisesFürAktKategorie = responseExercises.data.exercises
+            
+            //Für jede Kategorie die Performanceeinträge durchgehen & wenn passende Exercise gefunden (weil Name + Einheit benötigt)
+            // alles eintragen
+            //So ein bisschen umständlich, da bei performances der Name + Einheit fehlt, aber gebraucht wird... 
+            for (const performance in performanceEinträge){
+              for (const exercise in alleExercisesFürAktKategorie){
+                if (exercise.exercise_id == performance.exercise_id){
+                  try{ 
+                    let neueTabZeile = {"disziplin": exercise.name, "datum": performance.date, 
+                                      "wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal} 
+                    tabelleFüllen(`${aktKategorie}-tabelle`, [neueTabZeile]); //!!! schauen, ob Kategorien von backend mit Id von HTML-Elementen übereinstimmen
+                  }
+                  catch (error){} //Wenn Kategoriename nicht als Tabelle existiert/gefunden wurde... 
+
+                  break;
+
+                }
+
+              }  
+              //Kopfzeile mit letztem Wert füllen
+              //!!!nicht sicher, ob wirklich "letzter" Wert...
+              kategorieKopfzeileFüllen(`${aktKategorie}-kopfzeile-gesamt`, {"wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal});
+            }
+          
+          } catch (error) {
+            console.error(`Fehler beim Abrufen der Übungen für ${element}:`, error);
+          }
+          
+          console.log("test")
+        }
+
+        }
+        catch (error){          
+          console.error("Fehler beim Abrufen:", error);
+          alert("Einträge des Athleten konnten nicht geladen werden.");
+        }
+      
+      }
       
 
-      
+      /*
+      //Testaufrufe fürs Befüllen der Kategorie Kopfzeilen + Wertetabellen
 
       //Kopfzeile pro Kategorie füllen...
       const testKopfDaten = {"wert": "123879m", "medaille":"🥉"};
@@ -272,9 +338,9 @@
       tabelleFüllen("ausdauer-tabelle", testDaten);
       tabelleFüllen("schnelligkeit-tabelle", testDaten);   
       tabelleFüllen("kraft-tabelle", testDaten);
-      tabelleFüllen("koordination-tabelle", testDaten);     
-      
-      //TODO
+      tabelleFüllen("koordination-tabelle", testDaten);  
+
+      */
       
 
       function sportlerInfosFüllen(daten){
@@ -292,7 +358,22 @@
 
         const pWerte = div.getElementsByClassName("wert")
         pWerte[0].innerHTML = daten["wert"]
-        pWerte[1].innerHTML = daten["medaille"]
+
+        let aktMed;
+          switch (daten[i]["medaille"]){
+            case "gold": 
+              aktMed = "🥇"; 
+              break;
+            case "silver": 
+              aktMed = "🥈";
+              break;
+            case "bronze": 
+              aktMed = "🥉";
+              break
+            default: 
+              aktMed = "❌";
+          }
+        pWerte[1].innerHTML = aktMed;
       }
 
       //Tabellen mit Infos anzeigen/verbergen
@@ -317,7 +398,25 @@
           cell1.innerHTML = daten[i]["disziplin"];
           cell2.innerHTML = daten[i]["datum"];
           cell3.innerHTML = daten[i]["wert"];
-          cell4.innerHTML = daten[i]["medaille"];
+
+          
+          //Medaille von Text zu Emoji
+          let aktMed;
+          switch (daten[i]["medaille"]){
+            case "gold": 
+              aktMed = "🥇"; 
+              break;
+            case "silver": 
+              aktMed = "🥈";
+              break;
+            case "bronze": 
+              aktMed = "🥉";
+              break
+            default: 
+              aktMed = "❌";
+
+          }
+          cell4.innerHTML = aktMed;
           
         }
       }
