@@ -31,13 +31,26 @@
       </div>
     </nav>
     
-    <!-- Sportler erstellen (Button) -->
-    <div class="col-12 d-flex justify-content-end">
-      <a href="html/SportlerErstellen.html" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button></a>
+    <!-- Sortieren Dropdown und Sportler erstellen Button -->
+    <div class="d-flex justify-content-between align-items-center m-4">
+      <!-- Dropdown für Sortieren -->
+      <div class="d-flex align-items-center">
+        <label for="sorter" class="me-2">Sortieren:</label>
+        <select id="sorter" class="form-select sorter" style="width: 200px;" required>
+          <option value="fname">Vorname</option>
+          <option value="lname">Nachname</option>
+          <option value="birthdate">Geburtstag</option>
+        </select>
+      </div>
+
+      <!-- Sportler erstellen Button -->
+      <a href="html/SportlerErstellen.html">
+        <button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button>
+      </a>
     </div>
 
     <!-- Hier werden die Athleten angezeigt (Cards) -->
-    <div class="container my-5 athlete-cards">
+    <div class="container my-4 athlete-cards">
     </div>
   </body>
 </html>
@@ -46,6 +59,8 @@
   // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
 
   document.addEventListener("DOMContentLoaded", async () => {
+    let athletes = [];
+
     // Überprüfung, ob User angemeldet ist
     try{
       const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
@@ -66,64 +81,110 @@
       const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
         withCredentials: true,
       });
-      const athletes = response.data.athletes; // Array mit Athleten-Daten
-
-      // Zielcontainer, in dem die Athleten angezeigt werden
-      const container = document.querySelector('.athlete-cards');
-
-      // Für jeden Athleten eine Karte erstellen
-      athletes.forEach(athlete => {
-        // Äußeres div (.row)
-        const rowDiv = document.createElement('div');
-        rowDiv.className = 'row';
-        rowDiv.style.paddingBottom = '24px';
-
-        // Inneres div (Karte mit Inhalt)
-        const cardDiv = document.createElement('div');
-        cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
-
-        // Inhalt der Karte
-        cardDiv.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center">
-            <h4 class="mb-0" style="margin-left: 24px;">${athlete.first_name} ${athlete.last_name}</h4>
-            <div>
-              <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
-              <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis</button></a>
-              <button class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px">Löschen</button>
-            </div>
-          </div>
-        `;
-
-        // Karte in das äußere div einfügen
-        rowDiv.appendChild(cardDiv);
-
-        // Äußeres div in den Zielcontainer einfügen
-        container.appendChild(rowDiv);
-      });
-      
-      // Event-Listener für alle Löschen-Buttons hinzufügen
-      document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', async (event) => {
-          const athleteId = button.getAttribute('data-id');
-
-          if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
-            try {
-              // DELETE-Anfrage an das Backend senden
-              await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, {
-                withCredentials: true,
-              });
-
-              // Sportler erfolgreich gelöscht, Karte entfernen
-              button.closest('.row').remove();
-            } catch (error) {
-              console.error('Fehler beim Löschen des Sportlers:', error);
-              alert('Löschen des Sportlers fehlgeschlagen.');
-            }
-          }
-        });
-      });
+    
+      athletes = response.data.athletes;
+      sortCards(athletes, "fname");
+      renderCards(athletes);
+    
     } catch (error) {
       console.error("Fehler beim Abrufen der Athleten:", error);
     }
+
+    // Event Listener für Übungsänderung
+    document.querySelector(".sorter").addEventListener("change", function (event) {
+      const sortBy = event.target.value;
+      sortCards(athletes, sortBy);
+      renderCards(athletes);
+    });
   });
+
+// Sortierfunktion
+function sortCards(athletes, criterion) {
+  athletes.sort((a, b) => {
+    if (criterion === 'birthdate') {
+      return new Date(a.birth_date) - new Date(b.birth_date);
+    } else if (criterion === 'fname') {
+      return a.first_name.localeCompare(b.first_name);
+    } else if (criterion === 'lname') {
+      return a.last_name.localeCompare(b.last_name);
+    }
+  });
+}
+
+// Funktion zum Rendern der Karten
+function renderCards(athletes) {
+  // Zielcontainer, in dem die Athleten angezeigt werden
+  const container = document.querySelector('.athlete-cards');
+  container.innerHTML = "";  // Vorherige Karten löschen
+  
+  // Für jeden Athleten eine Karte erstellen
+  athletes.forEach(athlete => {
+    var sex = "";
+    if (athlete.sex === "m") {
+      sex = 'Männlich';
+    } else if (athlete.sex === "f") {
+      sex = 'Weiblich';
+    } else if (athlete.sex === "d") {
+      sex = 'Divers';
+    }
+    const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+
+
+    // Äußeres div (.row)
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'row';
+    rowDiv.style.paddingBottom = '24px';
+
+    // Inneres div (Karte mit Inhalt)
+    const cardDiv = document.createElement('div');
+    cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
+
+    // Inhalt der Karte
+    cardDiv.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <h4 class="mb-0" style="margin-left: 24px;">${athlete.first_name} ${athlete.last_name}</h4>
+          <h6 class="mb-0" style="margin-left: 24px;">${birthdate} ${sex}</h6>
+        </div>
+        <div>
+          <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
+          <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis</button></a>
+          <button class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px">Löschen</button>
+        </div>
+      </div>
+    `;
+
+    // Karte in das äußere div einfügen
+    rowDiv.appendChild(cardDiv);
+    container.appendChild(rowDiv);
+  });
+
+  // Event-Listener für die Löschen-Buttons erneut hinzufügen
+  document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', async (event) => {
+      const athleteId = button.getAttribute('data-id');
+
+      if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
+        try {
+          // DELETE-Anfrage an das Backend senden
+          await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, {
+            withCredentials: true,
+          });
+
+          // Aus der Liste entfernen
+          const athleteIndex = athletes.findIndex(athlete => athlete.athlete_id === parseInt(athleteId));
+          if (athleteIndex !== -1) {
+            athletes.splice(athleteIndex, 1);  // Entfernt den Eintrag direkt aus der Liste
+          }
+
+          // Die Karten neu rendern
+          renderCards(athletes);
+        } catch (error) {
+          console.error('Fehler beim Löschen des Sportlers:', error);
+          alert('Löschen des Sportlers fehlgeschlagen.');
+        }
+      }
+    });
+  });
+}
 </script>
