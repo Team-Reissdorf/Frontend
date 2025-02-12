@@ -26,7 +26,7 @@
 
           <!-- Alles was rechts in die navabr soll-->
           <div class="flex-d">
-            <button class="btn btn-secondary">Abmelden</button>
+            <button class="btn btn-secondary" id ="logout-button">Abmelden</button>
           </div>
       </div>
     </nav>
@@ -125,5 +125,20 @@
     } catch (error) {
       console.error("Fehler beim Abrufen der Athleten:", error);
     }
+
+    // Abmelden-Funktionalität
+    document.getElementById("logout-button").addEventListener("click", async () => {
+      try {
+        //Anfrage an Logout-Endpoint
+        await axios.post('http://localhost:8080/v1/user/logout', {}, { withCredentials: true });
+        alert("Abgemeldet.");
+
+        //Weiterleitung zur Anmeldeseite
+        window.location.href = "html/Anmeldung.html";
+      } catch (error) {
+        console.error("Logout fehlgeschlagen.");
+        alert("Irgendwas ist schiefgelaufen.");
+      }
+    });
   });
 </script>
