@@ -123,7 +123,14 @@
         });
       });
     } catch (error) {
+      if(error.code === "ERR_NETWORK"){
+        console.log("Backend nicht erreichbar:" + error)
+        //Falls Server nicht erreichbar ist
+        window.location.href = "/html/BackendDown.html";
+      }
+      else{
       console.error("Fehler beim Abrufen der Athleten:", error);
+      }
     }
   });
 </script>

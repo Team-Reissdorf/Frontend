@@ -113,6 +113,11 @@
             window.location.href = "html/Anmeldung.html";
           } else {
             // Andere Fehler
+            //Falls Server nicht erreichbar ist
+            if(error.code === "ERR_NETWORK"){
+              console.log("Backend nicht erreichbar:" + error)
+              window.location.href = "BackendDown.html";// Andere Fehler
+            }
             console.error("Netzwerkfehler:", error.message);
           }
         }
@@ -212,8 +217,7 @@
                 alert("Internal Server Error");
               }
             } else {
-              // Andere Fehler
-              console.error("Netzwerkfehler:", error.message);
+                console.error("Netzwerkfehler:", error.message);
             }
           }
         }

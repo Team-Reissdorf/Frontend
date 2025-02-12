@@ -102,6 +102,11 @@
           {withCredentials: true});
           // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
         } catch(error) {
+          if(error.code === "ERR_NETWORK"){
+            console.log("Backend nicht erreichbar:" + error)
+            //Falls Server nicht erreichbar ist
+            window.location.href = "/html/BackendDown.html";
+          }
           if (error.response) {
             // Bei Fehler mit Response gehe zu html/Anmeldung.html
             window.location.href = "html/Anmeldung.html";
