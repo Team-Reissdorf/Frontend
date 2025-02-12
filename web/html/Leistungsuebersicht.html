@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../node_modules/axios/dist/axios.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   </head>
   <body>
     <!-- DOCUMENTATION NAVBAR-->
@@ -85,18 +86,18 @@
       <!--Kategorie 1 Ausdauer-->
       <div class="container my-1">
         <div class="p-2 text-center bg-body-tertiary rounded-3">        
-            <div id="ausdauer-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('ausdauer-tabelle')"> 
-              <div id="ausdauer-kopfzeile-lW" class="flex-shrink-0 text-center"> 
+            <div id="Ausdauer-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('Ausdauer-tabelle')"> 
+              <div id="Ausdauer-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
                 <p class="wert" style="font-size: 30px;">999</p>
               </div>            
                 <h2 class="display-4 position-absolute start-50 translate-middle-x">Ausdauer</h2>  
-              <div id="ausdauer-kopfzeile-m" class="flex-shrink-0">  
+              <div id="Ausdauer-kopfzeile-m" class="flex-shrink-0">  
                 <h6 class="lead">letzte Medaille</h4>
                 <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
-            <table class="table d-none" id="ausdauer-tabelle" >
+            <table class="table d-none" id="Ausdauer-tabelle" >
               <tr>
                 <th>Disziplin</th>
                 <th>Datum</th>
@@ -108,21 +109,21 @@
         </div>
       </div>
 
-      <!--Kategorie 2 schnelligkeit-->
+      <!--Kategorie 2 Schnelligkeit-->
       <div class="container my-1">
         <div class="p-2 text-center bg-body-tertiary rounded-3">        
-            <div id="schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('schnelligkeit-tabelle')"> 
-              <div id="schnelligkeit-kopfzeile-lW" class="flex-shrink-0 text-center"> 
+            <div id="Schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('Schnelligkeit-tabelle')"> 
+              <div id="Schnelligkeit-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
                 <p class="wert" style="font-size: 30px;">999</p>
               </div>            
               <h2 class="display-4 position-absolute start-50 translate-middle-x">Schnelligkeit</h2>  
-              <div id="schnelligkeit-kopfzeile-m" class="flex-shrink-0">  
+              <div id="Schnelligkeit-kopfzeile-m" class="flex-shrink-0">  
                 <h6 class="lead">letzte Medaille</h4>
                 <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
-            <table class="table d-none" id="schnelligkeit-tabelle" >
+            <table class="table d-none" id="Schnelligkeit-tabelle" >
               <tr>
                 <th>Disziplin</th>
                 <th>Datum</th>
@@ -135,21 +136,21 @@
       </div>
 
 
-      <!--Kategorie 3 kraft-->
+      <!--Kategorie 3 Kraft-->
       <div class="container my-1">
         <div class="p-2 text-center bg-body-tertiary rounded-3">        
-            <div id="kraft-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('kraft-tabelle')"> 
-              <div id="kraft-kopfzeile-lW" class="flex-shrink-0 text-center"> 
+            <div id="Kraft-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('Kraft-tabelle')"> 
+              <div id="Kraft-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
                 <p class="wert" style="font-size: 30px;">999</p>
               </div>            
               <h2 class="display-4 position-absolute start-50 translate-middle-x">Kraft</h2>  
-              <div id="kraft-kopfzeile-m" class="flex-shrink-0">  
+              <div id="Kraft-kopfzeile-m" class="flex-shrink-0">  
                 <h6 class="lead">letzte Medaille</h4>
                 <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
-            <table class="table d-none" id="kraft-tabelle" >
+            <table class="table d-none" id="Kraft-tabelle" >
               <tr>
                 <th>Disziplin</th>
                 <th>Datum</th>
@@ -161,21 +162,21 @@
         </div>
       </div>
 
-      <!--Kategorie 4 koordination-->
+      <!--Kategorie 4 Koordination-->
       <div class="container my-1">
         <div class="p-2 text-center bg-body-tertiary rounded-3">        
-            <div id="koordination-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('koordination-tabelle')"> 
-              <div id="koordination-kopfzeile-lW" class="flex-shrink-0 text-center"> 
+            <div id="Koordination-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center " onclick="toggleDetails('Koordination-tabelle')"> 
+              <div id="Koordination-kopfzeile-lW" class="flex-shrink-0 text-center"> 
                 <h6 class="lead">letzter Wert</h4>
                 <p class="wert" style="font-size: 30px;">999</p>
               </div>            
               <h2 class="display-4 position-absolute start-50 translate-middle-x">Koordination</h2>  
-              <div id="koordination-kopfzeile-m" class="flex-shrink-0">  
+              <div id="Koordination-kopfzeile-m" class="flex-shrink-0">  
                 <h6 class="lead">letzte Medaille</h4>
                 <p class="wert" style="font-size: 30px;">🛑</p>     
               </div>
             </div>
-            <table class="table d-none" id="koordination-tabelle" >
+            <table class="table d-none" id="Koordination-tabelle" >
               <tr>
                 <th>Disziplin</th>
                 <th>Datum</th>
@@ -250,7 +251,6 @@
       })
 
 
-
       //Beim ändern des DatenabfragenAb-Input alle Tabellen aktualisieren
       document.getElementById("datenAbfragenAb").addEventListener("input", async function () {
         await updateAlleKategorieTabellen();
@@ -258,37 +258,64 @@
       
       async function updateAlleKategorieTabellen(){
         //Performance-Einträge ab dem Wert vom Dateinput abfragen
+        let performanceEinträge = [];
         try{
-        const athleteId = new URLSearchParams(window.location.search).get("id");
-        const abrufenAb = document.getElementById("datenAbfragenAb").value
-        const responsePerformance =  await axios.get(`http://localhost:8080/v1/performance/get-all/${athleteId}?since=${abrufenAb}`, {
-          withCredentials: true});        
-        const performanceEinträge = responsePerformance.data.performance_entries
-        
+          const athleteId = new URLSearchParams(window.location.search).get("id");
+          const abrufenAb = document.getElementById("datenAbfragenAb").value
+          const responsePerformance =  await axios.get(`http://localhost:8080/v1/performance/get-all/${athleteId}?since=${abrufenAb}`, {
+            withCredentials: true});        
+          performanceEinträge = responsePerformance.data.performance_entries
+          console.log(responsePerformance)
+
+        }catch (error){          
+          console.error("Fehler beim Abrufen der Performances:", error);
+        }
+          
         //Kategorien für spätere Zuordnung bekommen
+        let alleKategorien = [] 
+        try{
         const responseDisziplinen =  await axios.get(`http://localhost:8080/v1/discipline/get-all`, {
           withCredentials: true});          
-        const alleKategorien = responseDisziplinen.data.discipline_names
-        
-        //Alle Kategorien durchgehen und Kopfzeilen + Tabellen füllen
-        for (const aktKategorie of alleKategorien) {
-          try {
-            const responseExercises = await axios.get(`http://localhost:8080/v1/exercise/get/${aktKategorie}`, {
-              withCredentials: true
-            });
+        alleKategorien = responseDisziplinen.data.discipline_names
+        }
+        catch (error){
+          console.error("Fehler beim Abrufen der Disziplinen." , error)
+        }
 
-            const alleExercisesFürAktKategorie = responseExercises.data.exercises
+        try{
+          //Alle Kategorien durchgehen und Kopfzeilen + Tabellen füllen
+          let alleExercisesFürAktKategorie = []
+          for (const aktKategorie of alleKategorien) {
+            try {
+              const responseExercises = await axios.get(`http://localhost:8080/v1/exercise/get/${aktKategorie}`, {
+                withCredentials: true
+              });
+              
+              alleExercisesFürAktKategorie = responseExercises.data.exercises
+
+            } catch (error) {
+              //irgendwas beim Abrufen und/oder Eintragen in Felder fehlgeschlagen
+              console.error(`Fehler beim Abrufen der Übungen für ${element}:`, error);
+            }
             
-            //Für jede Kategorie die Performanceeinträge durchgehen & wenn passende Exercise gefunden (weil Name + Einheit benötigt)
-            // alles eintragen
+            //Tabelleninhalte leeren, um danach neu hinzuzufügen         
+            let tab = document.getElementById(`${aktKategorie}-tabelle`).getElementsByTagName("tr")
+            tab.innerHTML = ""
+
+
+
+            //Für jede Kategorie die Performanceeinträge durchgehen & wenn passende Exercise gefunden (weil Name + Einheit benötigt) alles eintragen
             //So ein bisschen umständlich, da bei performances der Name + Einheit fehlt, aber gebraucht wird... 
-            for (const performance in performanceEinträge){
-              for (const exercise in alleExercisesFürAktKategorie){
+            
+            for (let  performance of performanceEinträge){
+              for (let exercise of alleExercisesFürAktKategorie){
                 if (exercise.exercise_id == performance.exercise_id){
                   try{ 
                     let neueTabZeile = {"disziplin": exercise.name, "datum": performance.date, 
                                       "wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal} 
                     tabelleFüllen(`${aktKategorie}-tabelle`, [neueTabZeile]); //!!! schauen, ob Kategorien von backend mit Id von HTML-Elementen übereinstimmen
+                    kategorieKopfzeileFüllen(`${aktKategorie}-kopfzeile-gesamt`, {"wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal});
+           
                   }
                   catch (error){} //Wenn Kategoriename nicht als Tabelle existiert/gefunden wurde... 
 
@@ -297,23 +324,19 @@
                 }
 
               }  
+            }
+            
               //Kopfzeile mit letztem Wert füllen
               //!!!nicht sicher, ob wirklich "letzter" Wert...
-              kategorieKopfzeileFüllen(`${aktKategorie}-kopfzeile-gesamt`, {"wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal});
-            }
-          
-          } catch (error) {
-            console.error(`Fehler beim Abrufen der Übungen für ${element}:`, error);
+            //kategorieKopfzeileFüllen(`${aktKategorie}-kopfzeile-gesamt`, {"wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal});
+           
           }
-          
-          console.log("test")
+        }
+        catch (error){
+          console.error("Fehler beim Einsortieren der Performances.", error);
         }
 
-        }
-        catch (error){          
-          console.error("Fehler beim Abrufen:", error);
-          alert("Einträge des Athleten konnten nicht geladen werden.");
-        }
+        
       
       }
       
@@ -326,19 +349,19 @@
       const testKopfDaten2 = {"wert": "12s", "medaille":"🥉"};      
       const testKopfDaten3 = {"wert": "1232412134123s", "medaille":"🥉"};
 
-      kategorieKopfzeileFüllen("ausdauer-kopfzeile-gesamt", testKopfDaten);
-      kategorieKopfzeileFüllen("schnelligkeit-kopfzeile-gesamt", testKopfDaten2);      
-      kategorieKopfzeileFüllen("kraft-kopfzeile-gesamt", testKopfDaten3);
-      kategorieKopfzeileFüllen("koordination-kopfzeile-gesamt", testKopfDaten);
+      kategorieKopfzeileFüllen("Ausdauer-kopfzeile-gesamt", testKopfDaten);
+      kategorieKopfzeileFüllen("Schnelligkeit-kopfzeile-gesamt", testKopfDaten2);      
+      kategorieKopfzeileFüllen("Kraft-kopfzeile-gesamt", testKopfDaten3);
+      kategorieKopfzeileFüllen("Koordination-kopfzeile-gesamt", testKopfDaten);
       
       //Tabellen befüllen testen 
       const testDaten = [ {"disziplin": "300m Sprint", "datum": "30.01.2025", "wert": "30,89s", "medaille": "gold"},
                           {"disziplin": "100m Sprint", "datum": "19.01.2025", "wert": "45,89s", "medaille": "bronze"}];
       
-      tabelleFüllen("ausdauer-tabelle", testDaten);
-      tabelleFüllen("schnelligkeit-tabelle", testDaten);   
-      tabelleFüllen("kraft-tabelle", testDaten);
-      tabelleFüllen("koordination-tabelle", testDaten);  
+      tabelleFüllen("Ausdauer-tabelle", testDaten);
+      tabelleFüllen("Schnelligkeit-tabelle", testDaten);   
+      tabelleFüllen("Kraft-tabelle", testDaten);
+      tabelleFüllen("Koordination-tabelle", testDaten);  
 
       */
       
@@ -387,7 +410,7 @@
       function tabelleFüllen(id, daten){
         const table = document.getElementById(id);
 
-        for (let i =0; i<daten.length; i++){ //alle Daten durchgehen 
+        for (let i =0; i<daten.length; i++){ //alle Daten durchgehen           
           //in Zellen packen, die in eine Zeile und die dann am Ende in Tabelle
           let row = table.insertRow(-1);
           let cell1 = row.insertCell(0);
