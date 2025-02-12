@@ -56,8 +56,10 @@
             </div>
 
             <!-- Angemeldet bleiben (Checkbox) -->
-            <label for="loggedin">Angemeldet bleiben?</label>
-            <input type="checkbox" name="loggedin" id="loggedin" value="True">
+             <div class="form-group">
+              <label for="remember_me">Angemeldet bleiben?</label>
+              <input type="checkbox" name="remember_me" id="remember_me" value="True">
+             </div>
             <div class="form-group">
               <div class="row justify-content-md-center">
                 <button type="submit" class="btn btn-light" style="width: 150px; height: 40px">Anmelden</button>
@@ -65,7 +67,7 @@
             </div>
           </form> <!-- /.login-form -->
           
-          <!-- Kein Account abfrage -->
+          <!-- 'Kein Account?'-Abfrage -->
           <hr class="my-4">
 
           <div class="row justify-content-center align-items-center text-center">
@@ -97,19 +99,13 @@
         // Eingabewerte abrufen
         const email = document.getElementById('email').value;
         const password = document.getElementById('pwd').value;
-  /*
-        const loggedin = document.getElementById('loggedin').value;
-        if (loggedin === "") {
-          loggedin = false
-        } else {
-          loggedin = true
-        }
-*/
+        const remember_me = document.getElementById('remember_me').checked;
         try {
           // POST-Anfrage mit axios ans Backend senden
           const response = await axios.post('http://localhost:8080/v1/user/login', {
             email: email,
             password: password,
+            remember_me: remember_me,
           },
           {
             withCredentials: true,
@@ -126,10 +122,10 @@
               alert("Invalid request body");
             } else if (error.response.status === 401) {
               console.log("Wrong credentials");
-              alert("Wrong credentials");
+              alert("Email oder Passwort falsch!");
             } else if (error.response.status === 404) {
               console.log("User not found");
-              alert("User not found");
+              alert("Trainer wurde nicht gefunden");
             } else if (error.response.status === 500) {
               console.log("Internal Server Error");
               alert("Internal Server Error");
