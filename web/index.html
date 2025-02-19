@@ -26,6 +26,8 @@
 
           <!-- Alles was rechts in die navabr soll-->
           <div class="flex-d">
+		  
+            <button class="btn btn-secondary" id="getcoffecup">Coffebutton</button>
             <button class="btn btn-secondary">Abmelden</button>
           </div>
       </div>
@@ -126,4 +128,11 @@
       console.error("Fehler beim Abrufen der Athleten:", error);
     }
   });
+document.getElementById("getcoffecup").addEventListener("click", async () => {
+   try {
+    //Anfrage an Logout-Endpoint
+    await axios.get('http://localhost:8080/v1/coffee', {});
+   }catch(error) {
+	   console.error(error);	
+   }});
 </script>
