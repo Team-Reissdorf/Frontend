@@ -1,58 +1,62 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8">
-    <title>ComPeteHub</title>
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../node_modules/axios/dist/axios.js"></script>
-  </head>
-  <body>
 
-    <!-- DOCUMENTATION NAVBAR-->
-    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#" style="color: white">ComPeteHub</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+<head>
+  <meta charset="utf-8">
+  <title>ComPeteHub</title>
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../node_modules/axios/dist/axios.js"></script>
+</head>
 
-        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          
-          <!-- Alles was links in die navabr soll-->
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          </ul>
+<body>
 
-          <!-- Alles was rechts in die navabr soll-->
-          <div class="flex-d">
-            <button class="btn btn-secondary" id ="logout-button">Abmelden</button>
-          </div>
+  <!-- DOCUMENTATION NAVBAR-->
+  <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#" style="color: white">ComPeteHub</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <!-- Alles was links in die navabr soll-->
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        </ul>
+
+        <!-- Alles was rechts in die navabr soll-->
+        <div class="flex-d">
+          <button class="btn btn-secondary" id="logout-button">Abmelden</button>
+        </div>
       </div>
-    </nav>
-    
-    <!-- Sortieren Dropdown und Sportler erstellen Button -->
-    <div class="d-flex justify-content-between align-items-center m-4">
-      <!-- Dropdown für Sortieren -->
-      <div class="d-flex align-items-center">
-        <label for="sorter" class="me-2">Sortieren:</label>
-        <select id="sorter" class="form-select sorter" style="width: 200px;" required>
-          <option value="fname">Vorname</option>
-          <option value="lname">Nachname</option>
-          <option value="birthdate">Geburtstag</option>
-        </select>
-      </div>
+  </nav>
 
-      <!-- Sportler erstellen Button -->
-      <a href="html/SportlerErstellen.html">
-        <button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button>
-      </a>
+  <!-- Sortieren Dropdown und Sportler erstellen Button -->
+  <div class="d-flex justify-content-between align-items-center m-4">
+    <!-- Dropdown für Sortieren -->
+    <div class="d-flex align-items-center">
+      <label for="sorter" class="me-2">Sortieren:</label>
+      <select id="sorter" class="form-select sorter" style="width: 200px;" required>
+        <option value="fname">Vorname</option>
+        <option value="lname">Nachname</option>
+        <option value="birthdate">Geburtstag</option>
+      </select>
     </div>
 
-    <!-- Hier werden die Athleten angezeigt (Cards) -->
-    <div class="container my-4 athlete-cards">
-    </div>
-  </body>
+    <!-- Sportler erstellen Button -->
+    <a href="html/SportlerErstellen.html">
+      <button class="btn btn-light border border-2" style="font-weight: bold;">Sportler erstellen</button>
+    </a>
+  </div>
+
+  <!-- Hier werden die Athleten angezeigt (Cards) -->
+  <div class="container my-4 athlete-cards">
+  </div>
+</body>
+
 </html>
 
 <script>
@@ -62,11 +66,11 @@
     let athletes = [];
 
     // Überprüfung, ob User angemeldet ist
-    try{
-      const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
-      {withCredentials: true});
+    try {
+      const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+        { withCredentials: true });
       // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
-    } catch(error) {
+    } catch (error) {
       if (error.response) {
         // Bei Fehler mit Response gehe zu html/Anmeldung.html
         window.location.href = "html/Anmeldung.html";
@@ -81,11 +85,11 @@
       const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
         withCredentials: true,
       });
-    
+
       athletes = response.data.athletes;
       sortCards(athletes, "fname");
       renderCards(athletes);
-    
+
     } catch (error) {
       console.error("Fehler beim Abrufen der Athleten:", error);
     }
@@ -109,52 +113,53 @@
       } catch (error) {
         console.error("Logout fehlgeschlagen.");
         alert("Irgendwas ist schiefgelaufen.");
-      }});
+      }
+    });
   });
 
-// Sortierfunktion
-function sortCards(athletes, criterion) {
-  athletes.sort((a, b) => {
-    if (criterion === 'birthdate') {
-      return new Date(a.birth_date) - new Date(b.birth_date);
-    } else if (criterion === 'fname') {
-      return a.first_name.localeCompare(b.first_name);
-    } else if (criterion === 'lname') {
-      return a.last_name.localeCompare(b.last_name);
-    }
-  });
-}
+  // Sortierfunktion
+  function sortCards(athletes, criterion) {
+    athletes.sort((a, b) => {
+      if (criterion === 'birthdate') {
+        return new Date(a.birth_date) - new Date(b.birth_date);
+      } else if (criterion === 'fname') {
+        return a.first_name.localeCompare(b.first_name);
+      } else if (criterion === 'lname') {
+        return a.last_name.localeCompare(b.last_name);
+      }
+    });
+  }
 
-// Funktion zum Rendern der Karten
-function renderCards(athletes) {
-  // Zielcontainer, in dem die Athleten angezeigt werden
-  const container = document.querySelector('.athlete-cards');
-  container.innerHTML = "";  // Vorherige Karten löschen
-  
-  // Für jeden Athleten eine Karte erstellen
-  athletes.forEach(athlete => {
-    var sex = "";
-    if (athlete.sex === "m") {
-      sex = 'Männlich';
-    } else if (athlete.sex === "f") {
-      sex = 'Weiblich';
-    } else if (athlete.sex === "d") {
-      sex = 'Divers';
-    }
-    const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+  // Funktion zum Rendern der Karten
+  function renderCards(athletes) {
+    // Zielcontainer, in dem die Athleten angezeigt werden
+    const container = document.querySelector('.athlete-cards');
+    container.innerHTML = "";  // Vorherige Karten löschen
+
+    // Für jeden Athleten eine Karte erstellen
+    athletes.forEach(athlete => {
+      var sex = "";
+      if (athlete.sex === "m") {
+        sex = 'Männlich';
+      } else if (athlete.sex === "f") {
+        sex = 'Weiblich';
+      } else if (athlete.sex === "d") {
+        sex = 'Divers';
+      }
+      const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
 
 
-    // Äußeres div (.row)
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'row';
-    rowDiv.style.paddingBottom = '24px';
+      // Äußeres div (.row)
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'row';
+      rowDiv.style.paddingBottom = '24px';
 
-    // Inneres div (Karte mit Inhalt)
-    const cardDiv = document.createElement('div');
-    cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
+      // Inneres div (Karte mit Inhalt)
+      const cardDiv = document.createElement('div');
+      cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
 
-    // Inhalt der Karte
-    cardDiv.innerHTML = `
+      // Inhalt der Karte
+      cardDiv.innerHTML = `
       <div class="d-flex justify-content-between align-items-center">
         <div>
           <h4 class="mb-0" style="margin-left: 24px;">${athlete.first_name} ${athlete.last_name}</h4>
@@ -168,37 +173,37 @@ function renderCards(athletes) {
       </div>
     `;
 
-    // Karte in das äußere div einfügen
-    rowDiv.appendChild(cardDiv);
-    container.appendChild(rowDiv);
-  });
-
-  // Event-Listener für die Löschen-Buttons erneut hinzufügen
-  document.querySelectorAll('.delete-btn').forEach(button => {
-    button.addEventListener('click', async (event) => {
-      const athleteId = button.getAttribute('data-id');
-
-      if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
-        try {
-          // DELETE-Anfrage an das Backend senden
-          await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, {
-            withCredentials: true,
-          });
-
-          // Aus der Liste entfernen
-          const athleteIndex = athletes.findIndex(athlete => athlete.athlete_id === parseInt(athleteId));
-          if (athleteIndex !== -1) {
-            athletes.splice(athleteIndex, 1);  // Entfernt den Eintrag direkt aus der Liste
-          }
-
-          // Die Karten neu rendern
-          renderCards(athletes);
-        } catch (error) {
-          console.error('Fehler beim Löschen des Sportlers:', error);
-          alert('Löschen des Sportlers fehlgeschlagen.');
-        }
-      }
+      // Karte in das äußere div einfügen
+      rowDiv.appendChild(cardDiv);
+      container.appendChild(rowDiv);
     });
-  });
-}
+
+    // Event-Listener für die Löschen-Buttons erneut hinzufügen
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', async (event) => {
+        const athleteId = button.getAttribute('data-id');
+
+        if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
+          try {
+            // DELETE-Anfrage an das Backend senden
+            await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, {
+              withCredentials: true,
+            });
+
+            // Aus der Liste entfernen
+            const athleteIndex = athletes.findIndex(athlete => athlete.athlete_id === parseInt(athleteId));
+            if (athleteIndex !== -1) {
+              athletes.splice(athleteIndex, 1);  // Entfernt den Eintrag direkt aus der Liste
+            }
+
+            // Die Karten neu rendern
+            renderCards(athletes);
+          } catch (error) {
+            console.error('Fehler beim Löschen des Sportlers:', error);
+            alert('Löschen des Sportlers fehlgeschlagen.');
+          }
+        }
+      });
+    });
+  }
 </script>
