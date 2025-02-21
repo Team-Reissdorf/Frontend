@@ -1,9 +1,10 @@
 services:
   web:
     container_name: web
-    build: 
-      context: .
-      dockerfile: Dockerfile
+    image: nginx:latest
+    volumes:
+      - './web:/usr/share/nginx/html'
+      - './node_modules:/usr/share/nginx/html/node_modules'
     restart: always
     ports:
      - '8081:80'
