@@ -38,7 +38,6 @@ async function setupNavbarLogic() {
         try {
             //Anfrage an Logout-Endpoint
             //TODO 
-            console.log("Abmeldung gestartet...")
             await axios.post('http://localhost:8080/v1/user/logout', {}, { withCredentials: true });
             alert("Abgemeldet.");
 
@@ -57,11 +56,9 @@ async function setupNavbarLogic() {
     // Überprüfung, ob Benutzer angemeldet ist - ggf. Navbar anpassen (logOut-Button ausblenden)
         try{
             const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, {withCredentials: true});                   
-            console.log("Navbar: Benutzer ist angemeldet.")
         } 
         catch(error) {
             //Fehler = angemeldet -> Button nicht anzeigen & Link von Logo entfernen
-            console.log("Navbar: Benutzer ist nicht angemeldet.")
             logInOutButton.classList.toggle("d-none");
             document.getElementById("navbar-brand-link").href = "#";
         }
