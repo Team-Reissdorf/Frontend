@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <title>ComPeteHub</title>
@@ -8,30 +7,9 @@
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../node_modules/axios/dist/axios.js"></script>
 </head>
-
-<body>
-  <!-- DOCUMENTATION NAVBAR-->
-  <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
-        <!-- Alles was links in die navabr soll-->
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        </ul>
-
-        <!-- Alles was rechts in die navabr soll-->
-        <div class="flex-d">
-        </div>
-      </div>
-  </nav>
-
+<body> 
+  <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
+  
   <div class="container my-5">
     <div class="p-5 text-center bg-body-tertiary rounded-3">
       <h1 class="text-body-emphasis">Anmelden</h1>
@@ -82,7 +60,7 @@
       </div>
     </div>
   </div> <!-- /.container -->
-
+    
   <script>
     // Überprüfung, ob User angemeldet ist
     document.addEventListener("DOMContentLoaded", async () => {
