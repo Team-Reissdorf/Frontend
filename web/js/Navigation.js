@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         </nav>
     `;
     const navbarContainer = document.createElement("div");
+    navbarContainer.classList.add("sticky-top");
     navbarContainer.innerHTML = navbarHtml;
     document.body.prepend(navbarContainer); // Navbar am Anfang einfügen
 
