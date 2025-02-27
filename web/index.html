@@ -9,27 +9,7 @@
   </head>
   <body>
 
-    <!-- DOCUMENTATION NAVBAR-->
-    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#" style="color: white">ComPeteHub</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          
-          <!-- Alles was links in die navabr soll-->
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          </ul>
-
-          <!-- Alles was rechts in die navabr soll-->
-          <div class="flex-d">
-            <button class="btn btn-secondary" id ="logout-button">Abmelden</button>
-          </div>
-      </div>
-    </nav>
+    <script src="html/Navigation.js"></script> <!-- Navbar laden & einfügen -->
     
     <!-- Sortieren Dropdown und Sportler erstellen Button -->
     <div class="d-flex justify-content-between align-items-center m-4">
@@ -97,19 +77,7 @@
       renderCards(athletes);
     });
 
-    // Abmelden-Funktionalität
-    document.getElementById("logout-button").addEventListener("click", async () => {
-      try {
-        //Anfrage an Logout-Endpoint
-        await axios.post('http://localhost:8080/v1/user/logout', {}, { withCredentials: true });
-        alert("Abgemeldet.");
-
-        //Weiterleitung zur Anmeldeseite
-        window.location.href = "html/Anmeldung.html";
-      } catch (error) {
-        console.error("Logout fehlgeschlagen.");
-        alert("Irgendwas ist schiefgelaufen.");
-      }});
+    
   });
 
 // Sortierfunktion
