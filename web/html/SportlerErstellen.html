@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>ComPeteHub</title>
@@ -7,6 +8,7 @@
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../node_modules/axios/dist/axios.js"></script>
 </head>
+
 <body>
   <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
@@ -22,20 +24,20 @@
         <!-- Vorname -->
         <div class="form-group col-md-6 col-sm-12 col-lg-6">
           <label for="fname">Vorname</label>
-          <input type="text" class="form-control" id="fname" placeholder="Vorname">
+          <input type="text" class="form-control" id="fname" placeholder="Vorname" required>
         </div>
 
         <!-- Nachname -->
         <div class="form-group col-md-6 col-sm-12 col-lg-6">
           <label for="lname">Nachname</label>
-          <input type="text" class="form-control" id="lname" placeholder="Nachname">
+          <input type="text" class="form-control" id="lname" placeholder="Nachname" required>
         </div>
       </div>
       <div class="row">
         <!-- Email -->
         <div class="form-group col-md-12 col-sm-12 col-lg-12">
           <label for="email">Email</label>
-          <input type="email" class="form-control" id="email" placeholder="Email">
+          <input type="email" class="form-control" id="email" placeholder="Email" required>
         </div>
       </div>
 
@@ -44,7 +46,7 @@
         <!-- Geburtstag -->
         <div class="form-group col-md-6 col-lg-6 col-sm-12">
           <label for="birthDate">Geburtstag</label>
-          <input type="date" class="form-control" id="birthDate">
+          <input type="date" class="form-control" id="birthDate" required>
         </div>
 
         <!-- Gender (Radio) -->
@@ -52,27 +54,18 @@
           <label class="form-label">Geschlecht:</label>
           <div class="d-flex">
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="gender" id="male" value="m">
+              <input class="form-check-input" type="radio" name="gender" id="male" value="m" required>
               <label class="form-check-label" for="male">Männlich</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="gender" id="female" value="f">
+              <input class="form-check-input" type="radio" name="gender" id="female" value="f" required>
               <label class="form-check-label" for="female">Weiblich</label>
             </div>
             <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="gender" id="divers" value="d">
+              <input class="form-check-input" type="radio" name="gender" id="divers" value="d" required>
               <label class="form-check-label" for="divers">Divers</label>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="row mt-4">
-
-        <!-- CSV-Datei (File) -->
-        <div class="form-group col-lg-12 col-md-12 col-sm-12">
-          <label for="csv">.csv-Datei</label>
-          <input type="file" class="form-control-file" id="csv" accept=".csv">
         </div>
       </div>
 
@@ -113,100 +106,52 @@
     document.getElementById('submit-form').addEventListener('submit', async function (event) {
       event.preventDefault();
 
-      // Wenn eine file da ist, nur file senden
-      if (document.getElementById("csv").files.length > 0) {
-        const formData = new FormData();
-        formData.append('file', files[0]);
+      // Eingabewerte für einzelnen Athleten abrufen
+      const firstName = document.getElementById("fname").value;
+      const lastName = document.getElementById("lname").value;
+      const email = document.getElementById("email").value;
+      const birthDate = document.getElementById("birthDate").value;
+      const sex = document.querySelector('input[name="gender"]:checked')?.value;
 
-        try {
-          const response = await axios.post(
-            'https://localhost:8080/v1/athlete/bulk-create',
-            formData,
-            {
-              withCredentials: true,
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            }
-          );
+      try {
+        // POST-Anfrage an Backend senden
+        const response = await axios.post('http://localhost:8080/v1/athlete/create',
+          {
+            birth_date: birthDate,
+            email: email,
+            first_name: firstName,
+            last_name: lastName,
+            sex: sex
+          },
+          {
+            withCredentials: true,
+          },
+        );
 
-          // ToDo: Response auswerten
-          if (response.status === 201) {
-            console.log("Users created successfully");
-            alert("Sportler erstellt");
-            window.location.href = "../index.html";
-          }
-        } catch (error) {
-          if (error.response) {
-            if (error.response.status === 400) {
-              console.log("Invalid request body");
-              alert("Invalid request body");
-            } else if (error.response.status === 401) {
-              console.log("The token is invalid");
-              alert("The token is invalid");
-            } else if (error.response.status === 409) {
-              console.log("One or more athlete(s) already exist");
-              alert("Einer order mehrere Sportler existieren bereits!");
-            } else if (error.response.status === 500) {
-              console.log("Internal Server Error");
-              alert("Internal Server Error");
-            }
-          } else {
-            // Andere Fehler
-            console.error("Netzwerkfehler:", error.message);
-          }
+        // ToDo: Response auswerten
+        if (response.status === 201) {
+          console.log("Users created successfully");
+          alert("Sportler erstellt!");
+          window.location.href = "../index.html";
         }
-
-      } else { // Wenn kein File da ist, dann athlete senden
-
-        // Eingabewerte für einzelnen Athleten abrufen
-        const firstName = document.getElementById("fname").value;
-        const lastName = document.getElementById("lname").value;
-        const email = document.getElementById("email").value;
-        const birthDate = document.getElementById("birthDate").value;
-        const sex = document.querySelector('input[name="gender"]:checked')?.value;
-        const files = document.getElementById("csv").files;
-
-        try {
-          // POST-Anfrage an Backend senden
-          const response = await axios.post('http://localhost:8080/v1/athlete/create',
-            {
-              birth_date: birthDate,
-              email: email,
-              first_name: firstName,
-              last_name: lastName,
-              sex: sex
-            },
-            {
-              withCredentials: true,
-            },
-          );
-
-          // ToDo: Response auswerten
-          if (response.status === 201) {
-            console.log("Users created successfully");
-            alert("Sportler erstellt!");
-            window.location.href = "../index.html";
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 400) {
+            console.log("Invalid request body");
+            alert("Invalid request body");
+          } else if (error.response.status === 401) {
+            console.log("The token is invalid");
+            alert("The token is invalid");
+          } else if (error.response.status === 409) {
+            console.log("Athlete already exists");
+            alert("Sportler existiert bereits!");
+          } else if (error.response.status === 500) {
+            console.log("Internal Server Error");
+            alert("Internal Server Error");
           }
-        } catch (error) {
-          if (error.response) {
-            if (error.response.status === 400) {
-              console.log("Invalid request body");
-              alert("Invalid request body");
-            } else if (error.response.status === 401) {
-              console.log("The token is invalid");
-              alert("The token is invalid");
-            } else if (error.response.status === 409) {
-              console.log("Athlete already exists");
-              alert("Sportler existiert bereits!");
-            } else if (error.response.status === 500) {
-              console.log("Internal Server Error");
-              alert("Internal Server Error");
-            }
-          } else {
-            // Andere Fehler
-            console.error("Netzwerkfehler:", error.message);
-          }
+        } else {
+          // Andere Fehler
+          console.error("Netzwerkfehler:", error.message);
         }
       }
     });
