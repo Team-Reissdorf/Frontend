@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>ComPeteHub</title>
@@ -7,6 +8,7 @@
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../node_modules/axios/dist/axios.js"></script>
 </head>
+
 <body>
   <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
@@ -35,11 +37,19 @@
               autocomplete="new-password">
           </div>
 
+          <!-- Passwort bestätigung -->
           <div class="form-group">
-            <!-- Angemeldet bleiben (Checkbox) -->
+            <label for="pwd">Passwort Bestätigen</label>
+            <input type="password" class="form-control" id="pwd_2" placeholder="Passwort" required
+              autocomplete="new-password">
+          </div>
+
+          <!-- Angemeldet bleiben (Checkbox) -->
+          <div class="form-group">
             <label for="remember_me">Angemeldet bleiben?</label>
             <input type="checkbox" name="remember_me" id="remember_me" value="True">
           </div>
+
           <div class="form-group">
             <div class="row justify-content-md-center">
               <button type="submit" class="btn btn-light" style="width: 150px; height: 40px">Registrieren</button>
@@ -80,39 +90,44 @@
       // Eingabewerte abrufen
       const email = document.getElementById('email').value;
       const password = document.getElementById('pwd').value;
+      const password_2 = document.getElementById('pwd_2').value;
       const remember_me = document.getElementById('remember_me').checked;
+      if (password === password_2) {
+        try {
+          // POST-Anfrage mit axios ans Backend senden
+          const response = await axios.post('http://localhost:8080/v1/user/register', {
+            email: email,
+            password: password,
+            remember_me: remember_me,
+          },
+            {
+              withCredentials: true,
+            },);
 
-      try {
-        // POST-Anfrage mit axios ans Backend senden
-        const response = await axios.post('http://localhost:8080/v1/user/register', {
-          email: email,
-          password: password,
-          remember_me: remember_me,
-        },
-          {
-            withCredentials: true,
-          },);
-
-        // ToDo: Hier die Antwort verarbeiten
-        if (response.status === 201) {
-          window.location.href = "../index.html";
-        }
-      } catch (error) {
-        if (error.response) {
-          if (error.response.status === 400) {
-            console.log("Invalid request body");
-            alert("Invalid request body");
-          } else if (error.response.status === 409) {
-            console.log("User already exists");
-            alert("Trainer existiert bereit");
-          } else if (error.response.status === 500) {
-            console.log("Internal Server Error");
-            alert("Internal Server Error");
+          // ToDo: Hier die Antwort verarbeiten
+          if (response.status === 201) {
+            window.location.href = "../index.html";
           }
-        } else {
-          // Andere Fehler
-          console.error("Netzwerkfehler:", error.message);
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.log("Invalid request body");
+              alert("Invalid request body");
+            } else if (error.response.status === 409) {
+              console.log("User already exists");
+              alert("Trainer existiert bereit");
+            } else if (error.response.status === 500) {
+              console.log("Internal Server Error");
+              alert("Internal Server Error");
+            }
+          } else {
+            // Andere Fehler
+            console.error("Netzwerkfehler:", error.message);
+          }
         }
+      } else {
+        alert("Passwort nicht gleich!")
+        console.log("Password not equal")
       }
     });
   </script>
