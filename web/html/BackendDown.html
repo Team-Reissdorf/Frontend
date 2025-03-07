@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Server nicht Erreichbar</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+</head>
+<body>
+<!-- DOCUMENTATION NAVBAR-->
+<nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <!-- Alles was links in die navabr soll-->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+
+            <!-- Alles was rechts in die navabr soll-->
+            <div class="flex-d">
+            </div>
+        </div>
+</nav>
+
+<div class="container my-5 alert-warning">
+    <div id="alertBox" class="p-5 text-center rounded-3 alert alert-warning alert-dismissible fade show" role="alert">
+        <h1 class="text-body-emphasis">Server leider nicht erreichbar!</h1>
+        <p class="lead">Bitte versuchen Sie es später erneut!</p>
+    </div> <!-- /.jumbotron -->
+</div> <!-- /.container -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Überprüfung, ob User angemeldet ist
+        try {
+            const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+                {withCredentials: true});
+
+            // Wenn die Anfrage erfolgreich ist (200 OK), geh zur Overview-Seite
+            window.location.href = "../index.html";
+        } catch (error) {
+            if (error.code === "ERR_BAD_REQUEST") {
+                window.location.href = "Anmeldung.html"
+            }
+        }
+    });
+</script>
+</body>
+</html>

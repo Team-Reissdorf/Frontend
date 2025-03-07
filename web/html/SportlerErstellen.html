@@ -93,7 +93,8 @@
           window.location.href = "html/Anmeldung.html";
         } else {
           // Andere Fehler
-          console.error("Netzwerkfehler:", error.message);
+          console.log("Backend nicht erreichbar:" + error)
+          window.location.href = "BackendDown.html";// Andere Fehler
         }
       }
 

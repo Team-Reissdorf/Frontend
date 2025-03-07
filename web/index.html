@@ -68,7 +68,9 @@
       renderCards(athletes);
 
     } catch (error) {
-      console.error("Fehler beim Abrufen der Athleten:", error);
+      //Andere Fehler
+      console.log("Backend nicht erreichbar:" + error)
+      window.location.href = "/html/BackendDown.html";
     }
 
     // Event Listener für Übungsänderung
