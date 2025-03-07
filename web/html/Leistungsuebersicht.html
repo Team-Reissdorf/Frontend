@@ -183,9 +183,14 @@
               // Bei Fehler mit Response gehe zu Anmeldung.html
               window.location.href = "Anmeldung.html";
             } else {
-              // Andere Fehler
-              alert(error.message);
-              window.location.href = "Anmeldung.html";
+              //Falls Server nicht erreichbar ist
+              if(error.code == "ERR_NETWORK"){
+                console.log("Backend nicht erreichbar:" + error)
+                window.location.href = "BackendDown.html";
+              } else {
+                // Andere Fehler
+                console.log("Fehler: " + error)
+              }
             }
           }
 
