@@ -137,7 +137,8 @@
             let athleteListHTML = "<p>Folgende Sportler waren bereits vorhanden und wurden nicht erneut erstellt: </p>";
             athleteListHTML += "<ul class='list-group'>";
 
-            response.already_existing_athletes.forEach(athlete => {
+            if (response.already_existing_athletes !== null) {
+                response.already_existing_athletes.forEach(athlete => {
                 const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
                 athleteListHTML += `
                 <li class='list-group-item'>
@@ -148,7 +149,7 @@
                 </li>
             `;
             });
-
+            }
             athleteListHTML += "</ul>";
 
             // Setze den Inhalt im Modal
