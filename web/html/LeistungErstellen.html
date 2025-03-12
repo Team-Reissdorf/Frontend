@@ -85,7 +85,7 @@
             <div class="modal-body"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light border border-2 ms-3"
-                onclick="window.location.href='Leistungsuebersicht.html?id=' + athleteId">Verstanden</button>
+                onclick="window.location.href='Leistungsuebersicht.html?id=' + athleteId;">Verstanden</button>
             </div>
         </div>
     </div>
@@ -93,13 +93,13 @@
   <script>
 
     const athleteId = new URLSearchParams(window.location.search).get("id");
+    let athlete;
     let exercisesList = [];  // Liste der Übungen
     let points = null;       // Punktewert zur Übergabe ans Backend
 
     // Lade alles notwendige vor
     document.addEventListener("DOMContentLoaded", async () => {
       let datum = document.getElementById("date");
-      console.log(getDateYearsAgo());
       datum.value = getDateYearsAgo();
       // Überprüfung, ob User angemeldet ist
       try {
@@ -128,7 +128,7 @@
         const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
           withCredentials: true,
         });
-        const athlete = response.data.athlete;
+        athlete = response.data.athlete;
         var sex = "";
         if (athlete.sex === "m") {
           sex = 'Männlich';
@@ -228,8 +228,7 @@
 
         // ToDo: Übersetzen  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
         if (response.status === 201) {
-          alert("Leistung erfolgreich erstellt!");
-          window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
+          erfolgsMedailleModalFüllen(athlete.first_name, athlete.last_name, response.data.medal_status);
         }
       } catch (error) {
         if (error.response) {
@@ -338,7 +337,6 @@
       } else {
         pointsValue = parseInt(document.getElementById("points").value);
       }
-      console.log("Points: " + pointsValue);
       return pointsValue;
     }
 
@@ -358,19 +356,49 @@
       // Datum im Format yyyy-mm-dd zurückgeben
       return `${year}-${month}-${day}`;
     }
-
+    
     function fehler409ModalFüllen() {
-            const modalBody = document.getElementsByClassName("modal-body")[0];
-            const modalTitle = document.getElementById("exampleModalLabel");
+      const modalBody = document.getElementsByClassName("modal-body")[0];
+      const modalTitle = document.getElementById("exampleModalLabel");
 
-            // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Limit für Einträge erreicht<strong>";
-            modalTitle.style.color = "red";
-            modalBody.innerHTML = `<p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>`;
-            // Zeige das Modal an
-            const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
-            modal.show();
-        }
+      // Setze den Inhalt im Modal
+      modalTitle.innerHTML = "<strong>Limit für Einträge erreicht<strong>";
+      modalTitle.style.color = "red";
+      modalBody.innerHTML = `<p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>`;
+      // Zeige das Modal an
+      const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+      modal.show();
+    }
+    
+    function erfolgsMedailleModalFüllen(vorname, nachname, medaille){
+      const modalBody = document.getElementsByClassName("modal-body")[0];
+      const modalTitle = document.getElementById("exampleModalLabel");
+
+      let aktMed_icon;
+      switch (medaille) {
+        case "gold":
+          aktMed_icon = "🥇";
+          break;
+        case "silver":
+          aktMed_icon = "🥈";
+          break;
+        case "bronze":
+          aktMed_icon = "🥉";
+          break
+        default:
+          aktMed_icon = "❌";
+      }
+
+      // Setze den Inhalt im Modal
+      modalTitle.innerHTML = "<strong>Leistungseintrag erfolreich erstellt<strong>";
+      modalTitle.style.color = "green";
+      modalBody.innerHTML = `<p><strong>${vorname} ${nachname}</strong> hat folgende Medaille erreicht: </p>
+      <p style="font-size: 50px; text-align:center">${aktMed_icon}</p>`;    
+      // Zeige das Modal an
+      const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+      modal.show();
+    }
+
 
   </script>
 </body>
