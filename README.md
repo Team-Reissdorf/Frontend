@@ -1,8 +1,20 @@
 # Frontend
 
+## For production:
+#### Docker start:
+```terminal
+cd compose
+docker-compose up -d
+```
 
 
-## For Tests only:
+#### Docker stop:
+```terminal
+cd compose
+docker-compose down
+```
+
+## For tests only:
 #### Dependencies
 ```terminal
 npm install
