@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="utf-8">
   <title>ComPeteHub</title>
@@ -7,6 +8,7 @@
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../node_modules/axios/dist/axios.js"></script>
 </head>
+
 <body>
 
   <script src="js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
@@ -33,7 +35,7 @@
       <a href="html/SportlerErstellenBulk.html">
         <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;">Sportler Massenerstellung</button>
       </a>
-    </div>  
+    </div>
   </div>
 
   <!-- Hier werden die Athleten angezeigt (Cards) -->
@@ -59,8 +61,14 @@
         // Bei Fehler mit Response gehe zu html/Anmeldung.html
         window.location.href = "html/Anmeldung.html";
       } else {
-        // Andere Fehler
-        console.error("Netzwerkfehler:", error.message);
+        //Falls Server nicht erreichbar ist
+        if (error.code == "ERR_NETWORK") {
+          console.log("Backend nicht erreichbar:" + error)
+          window.location.href = "html/BackendDown.html";
+        } else {
+          // Andere Fehler
+          console.log("Fehler: " + error)
+        }
       }
     }
 
@@ -75,14 +83,7 @@
       renderCards(athletes);
 
     } catch (error) {
-      //Falls Server nicht erreichbar ist
-      if(error.code == "ERR_NETWORK"){
-          console.log("Backend nicht erreichbar:" + error)
-          window.location.href = "html/BackendDown.html";
-        } else {
-          // Andere Fehler
-          console.log("Fehler: " + error)
-        }
+      
     }
 
     // Event Listener für Übungsänderung
