@@ -75,7 +75,7 @@
           </div>
           <table class="table d-none" id="Ausdauer-tabelle">
             <tr>
-              <th>Disziplin</th>
+              <th>Übung</th>
               <th>Datum</th>
               <th>Wert</th>
               <th>Medaille</th>
@@ -102,7 +102,7 @@
           </div>
           <table class="table d-none" id="Schnelligkeit-tabelle">
             <tr>
-              <th>Disziplin</th>
+              <th>Übung</th>
               <th>Datum</th>
               <th>Wert</th>
               <th>Medaille</th>
@@ -129,7 +129,7 @@
           </div>
           <table class="table d-none" id="Kraft-tabelle">
             <tr>
-              <th>Disziplin</th>
+              <th>Übung</th>
               <th>Datum</th>
               <th>Wert</th>
               <th>Medaille</th>
@@ -156,7 +156,7 @@
           </div>
           <table class="table d-none" id="Koordination-tabelle">
             <tr>
-              <th>Disziplin</th>
+              <th>Übung</th>
               <th>Datum</th>
               <th>Wert</th>
               <th>Medaille</th>
@@ -311,7 +311,7 @@
               //Tabelleninhalte leeren, um danach neu hinzuzufügen (sonst doppelte Einträge)         
               let tab = document.getElementById(`${aktKategorie}-tabelle`)
               tab.innerHTML = `<tr>
-                <th>Disziplin</th>
+                <th>Übung</th>
                 <th>Datum</th>
                 <th>Wert</th>
                 <th>Medaille</th>   
@@ -333,7 +333,7 @@
 
                       const datum_formattiert = performance.date.split("T")[0].split('-')[2] + '.' + performance.date.split("T")[0].split('-')[1] + '.' + performance.date.split("T")[0].split('-')[0];
                       let neueTabZeile = {
-                        "disziplin": exercise.name, "datum": datum_formattiert,
+                        "uebung": exercise.name, "datum": datum_formattiert,
                         "wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal
                       }
                       tabelleFüllen(`${aktKategorie}-tabelle`, [neueTabZeile]); //!!! schauen, ob Kategorien von backend mit Id von HTML-Elementen übereinstimmen
@@ -427,7 +427,7 @@
             let cell3 = row.insertCell(2);
             let cell4 = row.insertCell(3);
 
-            cell1.innerHTML = daten[i]["disziplin"];
+            cell1.innerHTML = daten[i]["uebung"];
             cell2.innerHTML = daten[i]["datum"];
             cell3.innerHTML = daten[i]["wert"];
 
