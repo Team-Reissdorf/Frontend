@@ -83,7 +83,9 @@
       renderCards(athletes);
 
     } catch (error) {
-      
+      alert("Athleten konnten nicht geladen werden!");
+      console.log("Athleten konnten nicht geladen werden!");
+      window.location.reload();
     }
 
     // Event Listener für Übungsänderung
