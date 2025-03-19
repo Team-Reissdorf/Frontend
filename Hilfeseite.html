@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ComPeteHub - Hilfe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .navbar {
+            background-color: #292c33;
+        }
+
+        .navbar-brand {
+            color: white;
+            font-weight: bold;
+        }
+
+        .navbar-brand:hover {
+            color: #ddd;
+        }
+
+        .help-section {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            scroll-margin-top: 80px;
+        }
+
+        .section-overview {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .scroll-link {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .scroll-link:hover {
+            text-decoration: underline;
+        }
+
+        .help-section p {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- DOCUMENTATION NAVBAR-->
+    <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../index.html" style="color: white">ComPeteHub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Alles was collapsed werden soll, wenn der Bildschirm kleiner wird-->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Alles was links in die navabr soll-->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                </ul>
+
+                <!-- Alles was rechts in die navabr soll-->
+                <div class="flex-d">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="section-overview">
+            <div class="p-5 text-center">
+                <h1 class="text-body-emphasis">Hilfeseite</h1>
+                <p class="lead">Hier finden Sie eine Übersicht und Erklärungen zu den verschiedenen Funktionen der
+                    Anwendung.</p>
+            </div>
+
+            <br>
+
+
+            <p>Folgende Seiten stehen zur Verfügung:</p>
+            <ul>
+                <li><a class="scroll-link" href="#index">Index.html</a> – Übersicht über alle Sportler des Trainers.
+                </li>
+                <li><a class="scroll-link" href="#leistungsuebersicht">Leistungsuebersicht.html</a> – Zeigt die
+                    Leistungen eines Sportlers.</li>
+                <li><a class="scroll-link" href="#sportlerbearbeiten">SportlerBearbeiten.html</a> – Bearbeitung der
+                    Sportlerdaten.</li>
+                <li><a class="scroll-link" href="#sportlererstellen">SportlerErstellen.html</a> – Erstellung neuer
+                    Sportler.</li>
+                <li><a class="scroll-link" href="#sportlermassenerstellung">SportlerErstellenBulk.html</a> – Erstellung
+                    neuer Sportler per CSV-Datei.</li>
+                <li><a class="scroll-link" href="#leistungserstellen">LeistungErstellen.html</a> – Erfassung neuer
+                    Leistungen.</li>
+                <li><a class="scroll-link" href="#leistungbearbeiten">LeistungBearbeiten.html</a> – Anpassung der besten
+                    Leistung des Tages.</li>
+                <li><a class="scroll-link" href="#anmelden">Anmeldung.html</a> – Anmeldungsseite.</li>
+                <li><a class="scroll-link" href="#registrieren">Registrierung.html</a> – Registrierungsseite.</li>
+            </ul>
+        </div>
+
+        <div id="index" class="help-section">
+            <h2 class="text-dark">Startseite <em>(Index.html)</em></h2>
+            <p>Diese Seite dient als Startpunkt und zeigt eine Übersicht aller dem Trainer zugewiesenen Sportler.</p>
+            <p>Die Sportler können nach Vorname, Nachname oder Geburtstag sortiert werden. Neue Sportler lassen sich
+                über den Button <strong>„Sportler erstellen“</strong> hinzufügen.</p>
+            <p>Jeder Sportler wird mit Vor- und Nachname, Geburtsdatum sowie Geschlecht aufgelistet. Zusätzlich stehen
+                folgende Optionen zur Verfügung:</p>
+            <ul>
+                <li><strong>Bearbeiten</strong>: Weiterleitung zur Bearbeitungsseite des Sportlers.</li>
+                <li><strong>Leistungsübersicht</strong>: Anzeige aller erfassten Leistungen des Sportlers.</li>
+                <li><strong>Löschen</strong>: Entfernen des Sportlers nach Bestätigung.</li>
+            </ul>
+        </div>
+
+        <div id="sportlererstellen" class="help-section">
+            <h2 class="text-dark">Sportler erstellen <em>(SportlerErstellen.html)</em></h2>
+            <p>Hier können neue Sportler manuell hinzugefügt werden.</p>
+            <p>Dabei müssen Vorname, Nachname, E-Mail, Geburtstag und Geschlecht angegeben werden.</p>
+            <p>Sportler jeder Altersgruppe können hinzugefügt werden, jedoch können Leistungen nur für Sportler zwischen
+                <strong>6 und 18 Jahren</strong> erfasst werden.
+            </p>
+        </div>
+
+        <div id="sportlermassenerstellung" class="help-section">
+            <h2 class="text-dark">Sportlermassenerstellung <em>(SportlerErstellenBulk.html)</em></h2>
+            <p>Hier können neue Sportler über den Upload einer CSV-Datei hinzugefügt werden.</p>
+            <p>Dabei müssen in der CSV-Datei Vorname, Nachname, E-Mail, Geburtstag und Geschlecht angegeben werden.</p>
+            <p>Beim CSV-Upload werden vorhandene Sportler nicht erneut erstellt. Falls ein Sportler bereits existiert,
+                erscheint eine Benachrichtigung.</p>
+            <p>Sportler jeder Altersgruppe können hinzugefügt werden, jedoch können Leistungen nur für Sportler zwischen
+                <strong>6 und 18 Jahren</strong> erfasst werden.
+            </p>
+        </div>
+
+        <div id="leistungsuebersicht" class="help-section">
+            <h2 class="text-dark">Leistungsübersicht <em>(Leistungsuebersicht.html)</em></h2>
+            <p>Hier sind die Leistungen eines Sportlers in den Kategorien <strong>Ausdauer, Schnelligkeit,
+                    Kraft</strong> und <strong>Koordination</strong> einsehbar.</p>
+            <p>Die neueste Leistung jeder Kategorie wird direkt angezeigt. Durch Auswahl einer Kategorie lassen sich
+                sämtliche erfassten Leistungen mit Details zur Übung und Medaillenwertung einsehen.</p>
+            <p>Zudem werden nur Übungen ab einem bestimmten Datum angezeigt. Dieses ist standardmäßig auf den ersten Tag
+                des Jahres gesetzt, kann aber individuell angepasst werden.</p>
+        </div>
+
+        <div id="leistungserstellen" class="help-section">
+            <h2 class="text-dark">Leistung erfassen <em>(LeistungErstellen.html)</em></h2>
+            <p>Auf dieser Seite können neue Leistungen für einen Sportler erfasst werden – maximal drei pro Tag.</p>
+            <p>Hierzu muss eine Kategorie gewählt, das Datum festgelegt und eine Übung mit den erreichten Punkten
+                eingetragen werden.</p>
+            <p>Die Einheit der Punkte wird je nach Übung automatisch ergänzt.</p>
+        </div>
+
+        <div id="anmelden" class="help-section">
+            <h2 class="text-dark">Anmeldung <em>(Anmeldung.html)</em></h2>
+            <p>Auf dieser Seite kann man sich mit Email und Passwort anmelden.</p>
+            <p>Darüber hinaus kann man eine Checkbox aktivieren um automatisch angemeldet zu bleiben.</p>
+            <p>Wenn man noch kein Konto hat kann man zur Registrierungsseite wechseln.</p>
+        </div>
+
+        <div id="registrieren" class="help-section">
+            <h2 class="text-dark">Registrierung <em>(Registrierung.html)</em></h2>
+            <p>Auf dieser Seite kann man sich mit Email und Passwort registrieren.</p>
+            <p>Darüber hinaus kann man eine Checkbox aktivieren um automatisch angemeldet zu bleiben.</p>
+            <p>Wenn man schon ein Konto hat kann man zur Anmeldungsseite wechseln.</p>
+        </div>
+    </div>
+
+    <iframe src="http://localhost:8080/docs" title="Technische Dokumentation"
+        style="width:100%; height:600px; border:none;"></iframe>
+</body>
+
+</html>
