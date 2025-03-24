@@ -17,14 +17,14 @@
   <div class="d-flex justify-content-between align-items-center m-2">
     <!-- Dropdown für Sortieren -->
     <div class="d-flex align-items-center">
-      <label for="sorter" class="me-2">Sortieren:</label>
+      <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
+        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
       <select id="sorter" class="form-select sorter" style="width: 200px;" required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
     </div>
-
     <div class="d-flex flex-row justify-content-between">
       <!-- Exportieren Button -->
       <button type="button" class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="modal"
@@ -41,7 +41,6 @@
       </a>
     </div>
   </div>
-
   <!-- Hier werden die Athleten angezeigt (Cards) -->
   <div class="container my-2 athlete-cards">
   </div>
@@ -184,6 +183,9 @@
         selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
       });
     });
+    // Activate tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
   });
 
   // Sortierfunktion
@@ -235,13 +237,13 @@
           <h5 class="mb-0" style="margin-left: 24px; text-align: left;">${birthdate} ${sex}</h5>
         </div>
         <div>
-          <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 10px; padding-left:10px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
-          <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 10px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsübersicht</button></a>
-          <button class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 10px">Löschen</button>
-        </div>
+        <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">Bearbeiten</button></a>
+        <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Hier kann man eine Übersicht der Leistungen dieses Sportlers sehen.">Leistungsnachweis</button></a>
+        <button type="button" class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man den Sportler aus dem System entfernen.">Löschen</button>
       </div>
-      `;
-
+    </div>
+  `;
+      console.log("HAHAHAHHA");
       // Karte in das äußere div einfügen
       rowDiv.appendChild(cardDiv);
       container.appendChild(rowDiv);
