@@ -73,11 +73,11 @@
         window.location.href = "../index.html";
       } catch(error) {
         if(error.code == "ERR_NETWORK"){
-          console.log("Backend nicht erreichbar:" + error)
+          console.error("Backend nicht erreichbar:" + error)
           window.location.href = "BackendDown.html";
         } else {
           // Andere Fehler
-          console.log("Fehler: " + error)
+          console.error("Fehler: " + error)
         }
       }
     });
@@ -108,16 +108,16 @@
       } catch (error) {
         if (error.response) {
           if (error.response.status === 400) {
-            console.log("Invalid request body");
+            console.error("Invalid request body");
             alert("Invalid request body");
           } else if (error.response.status === 401) {
-            console.log("Wrong credentials");
+            console.error("Wrong credentials");
             alert("Email oder Passwort falsch!");
           } else if (error.response.status === 404) {
-            console.log("User not found");
+            console.error("User not found");
             alert("Trainer wurde nicht gefunden");
           } else if (error.response.status === 500) {
-            console.log("Internal Server Error");
+            console.error("Internal Server Error");
             alert("Internal Server Error");
           }
         } else {

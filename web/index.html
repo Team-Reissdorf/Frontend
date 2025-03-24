@@ -84,11 +84,11 @@
       if (error.response) {
         window.location.href = "html/Anmeldung.html";
       } else if (error.code == "ERR_NETWORK") {
-        console.log("Backend nicht erreichbar:" + error)
+        console.error("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
       } else {
         // Andere Fehler
-        console.log("Fehler: " + error)
+        console.error("Fehler: " + error)
       }
     }
 
@@ -103,7 +103,7 @@
       renderCards(athletes);
       modalFüllen(athletes);
     } catch (error) {
-      console.log("Athletes could not load");
+      console.error("Athletes could not load");
       alert("Sportler konnten nicht geladen werden");
       window.location.reload();
     }
@@ -124,7 +124,7 @@
         });
 
         if (athletes.length == 0) {
-          console.log("Es wurden keine Sportler ausgewählt!");
+          console.error("Es wurden keine Sportler ausgewählt!");
           alert("Es wurden keine Sportler ausgewählt!");
           return
         } else {
@@ -153,18 +153,18 @@
         if (error.response) {
           // ToDo: Response auswerten i1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseume
           if (error.response.status === 400) {
-            console.log("Invalid request body");
+            console.error("Invalid request body");
             alert("Invalid request body");
           } else if (error.response.status === 401) {
             window.location.href = "Anmeldung.html";
           } else if (error.response.status === 404) {
-            console.log("Athlete or exercise does not exist");
+            console.error("Athlete or exercise does not exist");
             alert("Athlete or exercise does not exist");
           } else if (error.response.status === 409) {
-            console.log("Performance limit reached");
+            console.error("Performance limit reached");
             fehler409ModalFüllen();
           } else if (error.response.status === 500) {
-            console.log("Internal Server Error");
+            console.error("Internal Server Error");
             alert("Internal Server Error");
           }
         } else {
@@ -206,12 +206,12 @@
     const container = document.querySelector('.athlete-cards');
     container.innerHTML = "";
 
-    const disciplines = await getDisciplineNames();
-    if (!disciplines || disciplines.length === 0) {
-      console.error("Couldnt get disciplines");
-      alert("Disziplinen konnten nicht geladen werden!");
+    const discipline_names = await getDisciplineNames();
+    if (!discipline_names || discipline_names.length === 0) {
+      console.error("Disziplinen konnten nicht geladen werden");
       return;
     }
+    const exercises = await getOrderedExercises(discipline_names);
 
     for (const athlete of athletes) {
       const sexMap = { m: "Männlich", f: "Weiblich", d: "Divers" };
@@ -220,12 +220,53 @@
 
       const performanceEntries = await getPerformanceEntries(athlete.athlete_id);
 
-      // Disziplin-Medaillen-Zuordnung
-      const medalRow = disciplines.map((_, index) => {
-        const perf = performanceEntries.find(p => p.exercise_id === index + 1);
-        const medal = perf?.medal || "none";
-        return `<td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${getMedalIcon(medal)}</td>`;
-      }).join("");
+      // Punkte berechnen (bronze = 1, silber = 2, gold = 3)
+      let totalPoints = 0;
+      const medalCells = exercises.map(exerciseGroup => {
+        // Sammle alle Medaillen in dieser Disziplin
+        const medals = exerciseGroup.map(exercise => {
+          const perf = performanceEntries.find(p => p.exercise_id === exercise.exercise_id);
+          return perf?.medal || "none";
+        });
+
+        // Beste Medaille wählen: gold > silver > bronze > none
+        let bestMedal = "none";
+        if (medals.includes("gold")) bestMedal = "gold";
+        else if (medals.includes("silver")) bestMedal = "silver";
+        else if (medals.includes("bronze")) bestMedal = "bronze";
+
+        // Punkte dazu zählen
+        if (bestMedal === "gold") totalPoints += 3;
+        else if (bestMedal === "silver") totalPoints += 2;
+        else if (bestMedal === "bronze") totalPoints += 1;
+
+        return `<td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">
+          ${getMedalIcon(bestMedal)}
+        </td>`;
+      });
+
+      schwimmnachweis = false; // Muss noch bearbeitet werden!! naksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasda
+
+      // Zähle wie viele gültige Medaillen vorhanden sind
+      const validMedalCount = medalCells.filter(cell =>
+        cell.includes("🥇") || cell.includes("🥈") || cell.includes("🥉")
+      ).length;
+
+      const enoughMedals = validMedalCount === 4;
+
+      // DSA-Medaille je nach Gesamtpunktzahl
+      let dsaMedal = "none";
+      if (enoughMedals && schwimmnachweis) {
+        if (totalPoints >= 11) dsaMedal = "gold";
+        else if (totalPoints >= 8) dsaMedal = "silver";
+        else if (totalPoints >= 4) dsaMedal = "bronze";
+      }
+
+      // Gesamte Zeile: DSA zuerst
+      const medalRow = `
+        <td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${getMedalIcon(dsaMedal)}</td>
+        ${medalCells.join("")}
+      `;
 
       const cardHTML = `
       <div class="row" style="padding-bottom: 24px;">
@@ -240,12 +281,11 @@
                 <thead>
                   <tr>
                     <th style="padding: 8px 16px; min-width: 60px;">DSA</th>
-                    ${disciplines.map(d => `<th style="padding: 8px 16px; min-width: 60px;">${d}</th>`).join("")}
+                    ${discipline_names.map(d => `<th style="padding: 8px 16px; min-width: 60px;">${d}</th>`).join("")}
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td style="padding: 8px 16px; min-width: 60px;"><img src="media/brandIcon.jpeg" width="25px" alt="brand logo"></td>
                     ${medalRow}
                   </tr>
                 </tbody>
@@ -259,8 +299,7 @@
           </div>
         </div>
       </div>
-    `;
-
+      `;
       container.insertAdjacentHTML('beforeend', cardHTML);
     }
 
@@ -366,6 +405,16 @@
     }
   }
 
+  async function getExercises(discipline_name) {
+    try {
+      const response = await axios.get(`http://localhost:8080/v1/exercise/get/${discipline_name}`, { withCredentials: true });
+      return response.data.exercises;
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Übungen:", error);
+      return [];
+    }
+  }
+
   function getMedalIcon(medal) {
     const medalMap = {
       gold: '🥇',
@@ -374,5 +423,20 @@
       none: '❌'
     };
     return medalMap[medal] || medalMap.none;
+  }
+
+  async function getOrderedExercises(disciplineNames) {
+    const exercises = [];
+
+    for (const name of disciplineNames) {
+      const list = await getExercises(name);
+      if (list.length > 0) {
+        exercises.push(list);
+      } else {
+        console.warn(`Keine Übung für Disziplin "${name}" gefunden`);
+      }
+    }
+
+    return exercises;
   }
 </script>

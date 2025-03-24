@@ -185,11 +185,11 @@
             } else {
               //Falls Server nicht erreichbar ist
               if(error.code == "ERR_NETWORK"){
-                console.log("Backend nicht erreichbar:" + error)
+                console.error("Backend nicht erreichbar:" + error)
                 window.location.href = "BackendDown.html";
               } else {
                 // Andere Fehler
-                console.log("Fehler: " + error)
+                console.error("Fehler: " + error)
               }
             }
           }
