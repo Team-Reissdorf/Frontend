@@ -206,13 +206,10 @@
     const container = document.querySelector('.athlete-cards');
     container.innerHTML = "";
 
-    let disciplines = [];
-    try {
-      const response = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
-      disciplines = response.data.discipline_names;
-    } catch (error) {
-      alert("Etwas ist schief gelaufen!");
-      console.log("Get disciplines went wrong");
+    const disciplines = await getDisciplineNames();
+    if (!disciplines || disciplines.length === 0) {
+      console.error("Couldnt get disciplines");
+      alert("Disziplinen konnten nicht geladen werden!");
       return;
     }
 
@@ -364,8 +361,8 @@
       return response.data.discipline_names;
     } catch (error) {
       alert("Etwas ist schief gelaufen!");
-      console.log("Get disciplines went wrong");
-      return;
+      console.error("Get disciplines went wrong");
+      return [];
     }
   }
 
