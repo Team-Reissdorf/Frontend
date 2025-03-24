@@ -65,13 +65,20 @@
     // Überprüfung, ob User angemeldet ist
     document.addEventListener("DOMContentLoaded", async () => {
       // Überprüfung, ob User angemeldet ist
-      try {
+      try{
         const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
-          { withCredentials: true });
+        {withCredentials: true});
 
         // Wenn die Anfrage erfolgreich ist (200 OK), geh zur Overview-Seite
         window.location.href = "../index.html";
-      } catch (error) {
+      } catch(error) {
+        if(error.code == "ERR_NETWORK"){
+          console.log("Backend nicht erreichbar:" + error)
+          window.location.href = "BackendDown.html";
+        } else {
+          // Andere Fehler
+          console.log("Fehler: " + error)
+        }
       }
     });
 

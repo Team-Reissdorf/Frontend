@@ -12,7 +12,7 @@
 
   <div class="container my-5">
     <div class="p-5 text-center bg-body-tertiary rounded-3 jumbomumbo">
-      <h1 class="text-body-emphasis">Leistungserfassung</h1>
+      <h1 class="text-body-emphasis">Leistungserstellung</h1>
       <br>
     </div> <!-- /.jumbotron -->
 
@@ -65,26 +65,44 @@
       <div class="row justify-content-center align-items-center text-center mt-4">
         <div class="d-flex justify-content-between gap-3" style="width: 400px;">
           <button type="submit" class="btn btn-light"
-            style="width: 150px; height: 40px; padding: 0px 20px;">Speichern</button>
-          <a href="../index.html"><button type="button" class="btn btn-light"
+            style="width: 150px; height: 40px; padding: 0px 20px;">Erstellen</button>
+          <a href="#" onclick="this.href='Leistungsuebersicht.html?id=' + athleteId"><button type="button" class="btn btn-light"
               style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</button></a>
         </div>
       </div>
     </form>
 
   </div><!-- /.container -->
+
+    <!-- Modal für Fehler bei mehr als 3 am Tag-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header d-flex-row justify-content-center text-center">
+                <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"></h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light border border-2 ms-3"
+                onclick="window.location.href='Leistungsuebersicht.html?id=' + athleteId;">Verstanden</button>
+            </div>
+        </div>
+    </div>
+  </div>
   <script>
     // Activate tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
+    const athleteId = new URLSearchParams(window.location.search).get("id");
+    let athlete;
     let exercisesList = [];  // Liste der Übungen
     let points = null;       // Punktewert zur Übergabe ans Backend
 
     // Lade alles notwendige vor
     document.addEventListener("DOMContentLoaded", async () => {
       let datum = document.getElementById("date");
-      console.log(getDateYearsAgo());
       datum.value = getDateYearsAgo();
       // Überprüfung, ob User angemeldet ist
       try {
@@ -96,9 +114,14 @@
           // Bei Fehler mit Response gehe zu Anmeldung.html
           window.location.href = "Anmeldung.html";
         } else {
+          //Falls Server nicht erreichbar ist
+        if(error.code == "ERR_NETWORK"){
+          console.log("Backend nicht erreichbar:" + error)
+          window.location.href = "BackendDown.html";
+        } else {
           // Andere Fehler
-          alert(error.message);
-          window.location.href = "Anmeldung.html";
+          console.log("Fehler: " + error)
+        }
         }
       }
 
@@ -108,7 +131,7 @@
         const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
           withCredentials: true,
         });
-        const athlete = response.data.athlete;
+        athlete = response.data.athlete;
         var sex = "";
         if (athlete.sex === "m") {
           sex = 'Männlich';
@@ -208,7 +231,7 @@
 
         // ToDo: Übersetzen  sdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsfsdfsfsdfsfsfsfsfdsfsdfsf
         if (response.status === 201) {
-          alert("Leistung erfolgreich erstellt!");
+          erfolgsMedailleModalFüllen(athlete.first_name, athlete.last_name, response.data.medal_status);
         }
       } catch (error) {
         if (error.response) {
@@ -222,7 +245,7 @@
             alert("Athlete or exercise does not exist");
           } else if (error.response.status === 409) {
             console.log("Performance limit reached");
-            alert("Performance limit reached");
+            fehler409ModalFüllen();
           } else if (error.response.status === 500) {
             console.log("Internal Server Error");
             alert("Internal Server Error");
@@ -317,7 +340,6 @@
       } else {
         pointsValue = parseInt(document.getElementById("points").value);
       }
-      console.log("Points: " + pointsValue);
       return pointsValue;
     }
 
@@ -337,6 +359,50 @@
       // Datum im Format yyyy-mm-dd zurückgeben
       return `${year}-${month}-${day}`;
     }
+    
+    function fehler409ModalFüllen() {
+      const modalBody = document.getElementsByClassName("modal-body")[0];
+      const modalTitle = document.getElementById("exampleModalLabel");
+
+      // Setze den Inhalt im Modal
+      modalTitle.innerHTML = "<strong>Limit für Einträge erreicht<strong>";
+      modalTitle.style.color = "red";
+      modalBody.innerHTML = `<p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>`;
+      // Zeige das Modal an
+      const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+      modal.show();
+    }
+    
+    function erfolgsMedailleModalFüllen(vorname, nachname, medaille){
+      const modalBody = document.getElementsByClassName("modal-body")[0];
+      const modalTitle = document.getElementById("exampleModalLabel");
+
+      let aktMed_icon;
+      switch (medaille) {
+        case "gold":
+          aktMed_icon = "🥇";
+          break;
+        case "silver":
+          aktMed_icon = "🥈";
+          break;
+        case "bronze":
+          aktMed_icon = "🥉";
+          break
+        default:
+          aktMed_icon = "❌";
+      }
+
+      // Setze den Inhalt im Modal
+      modalTitle.innerHTML = "<strong>Leistungseintrag erfolreich erstellt<strong>";
+      modalTitle.style.color = "green";
+      modalBody.innerHTML = `<p><strong>${vorname} ${nachname}</strong> hat folgende Medaille erreicht: </p>
+      <p style="font-size: 50px; text-align:center">${aktMed_icon}</p>`;    
+      // Zeige das Modal an
+      const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
+      modal.show();
+    }
+
+
   </script>
 </body>
 
