@@ -25,21 +25,21 @@
       <div class="row">
         <!-- Kategorie -->
         <div class="form-group col-md-6 col-sm-12 col-lg-6">
-          <label for="category">Kategorie</label>
+          <label for="category" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man eine der verfügbaren Kategorien aus dem Dropdown auswählen.">Kategorie</label>
           <select id="category" class="form-select kategorien" required>
           </select>
         </div>
 
         <!-- Datum -->
         <div class="form-group col-md-6 col-lg-6 col-sm-12">
-          <label for="date">Datum</label>
+          <label for="date" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man das Datum der erbrachten Leistung angeben.">Datum</label>
           <input type="date" class="form-control datum" id="date" min="2020-01-01" required>
         </div>
       </div>
       <div class="row">
         <!-- Übung -->
         <div class="form-group col-md-6 col-sm-12 col-lg-6">
-          <label for="exercise">Übung</label>
+          <label for="exercise" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man eine der verfügbaren Übungen aus dem Dropdown auswählen.">Übung</label>
           <select id="exercise" class="form-select uebungen" required>
           </select>
         </div>
@@ -54,7 +54,7 @@
 
         <!-- Punkte -->
         <div class="form-group col-md-6 col-lg-6 col-sm-12">
-          <label for="points">Punkte</label>
+          <label for="points" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man die erreichte Punktzahl eingeben.">Punkte</label>
           <div class="input-group mb-3 responsive-input">
           </div>
         </div>
@@ -91,6 +91,9 @@
     </div>
   </div>
   <script>
+    // Activate tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
     const athleteId = new URLSearchParams(window.location.search).get("id");
     let athlete;
