@@ -81,7 +81,9 @@
       // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
     } catch (error) {
       //Falls Server nicht erreichbar ist
-      if (error.code == "ERR_NETWORK") {
+      if (error.response) {
+        window.location.href = "html/Anmeldung.html";
+      } else if (error.code == "ERR_NETWORK") {
         console.log("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
       } else {
@@ -103,7 +105,7 @@
     } catch (error) {
       console.log("Athletes could not load");
       alert("Sportler konnten nicht geladen werden");
-      windowl.location.reload();
+      window.location.reload();
     }
 
     // Event Listener für Übungsänderung
@@ -200,72 +202,85 @@
   }
 
   // Funktion zum Rendern der Karten
-  function renderCards(athletes) {
-    // Zielcontainer, in dem die Athleten angezeigt werden
+  async function renderCards(athletes) {
     const container = document.querySelector('.athlete-cards');
-    container.innerHTML = "";  // Vorherige Karten löschen
+    container.innerHTML = "";
 
-    // Für jeden Athleten eine Karte erstellen
-    athletes.forEach(athlete => {
-      var sex = "";
-      if (athlete.sex === "m") {
-        sex = 'Männlich';
-      } else if (athlete.sex === "f") {
-        sex = 'Weiblich';
-      } else if (athlete.sex === "d") {
-        sex = 'Divers';
-      }
-      const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+    let disciplines = [];
+    try {
+      const response = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+      disciplines = response.data.discipline_names;
+    } catch (error) {
+      alert("Etwas ist schief gelaufen!");
+      console.log("Get disciplines went wrong");
+      return;
+    }
 
+    for (const athlete of athletes) {
+      const sexMap = { m: "Männlich", f: "Weiblich", d: "Divers" };
+      const sex = sexMap[athlete.sex] || "";
+      const birthdate = new Date(athlete.birth_date).toLocaleDateString("de-DE");
 
-      // Äußeres div (.row)
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'row';
-      rowDiv.style.paddingBottom = '24px';
+      const performanceEntries = await getPerformanceEntries(athlete.athlete_id);
 
-      // Inneres div (Karte mit Inhalt)
-      const cardDiv = document.createElement('div');
-      cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
+      // Disziplin-Medaillen-Zuordnung
+      const medalRow = disciplines.map((_, index) => {
+        const perf = performanceEntries.find(p => p.exercise_id === index + 1);
+        const medal = perf?.medal || "none";
+        return `<td style="font-size: 20px;">${getMedalIcon(medal)}</td>`;
+      }).join("");
 
-      // Inhalt der Karte
-      cardDiv.innerHTML = `
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h2 class="mb-0" style="margin-left: 24px; text-align: left;">${athlete.first_name} ${athlete.last_name}</h2>
-          <h5 class="mb-0" style="margin-left: 24px; text-align: left;">${birthdate} ${sex}</h5>
-        </div>
-        <div>
-          <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 10px; padding-left:10px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
-          <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 10px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsübersicht</button></a>
-          <button class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 10px">Löschen</button>
+      const cardHTML = `
+      <div class="row" style="padding-bottom: 24px;">
+        <div class="p-4 text-center bg-body-tertiary rounded-4 border border-2 w-100">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h4 class="mb-0" style="margin-left: 24px; text-align: left;">${athlete.first_name} ${athlete.last_name}</h4>
+              <h6 class="mb-0" style="margin-left: 24px; text-align: left;">${birthdate} ${sex}</h6>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+              <table>
+                <thead>
+                  <tr>
+                    <th>DSA</th>
+                    ${disciplines.map(d => `<th>${d}</th>`).join("")}
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><img src="media/brandIcon.jpeg" width="25px" alt="brand logo"></td>
+                    ${medalRow}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}"><button class="btn btn-light rounded-3 border border-2 fw-bold mx-2 my-2">Bearbeiten</button></a>
+              <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}"><button class="btn btn-light rounded-3 border border-2 fw-bold mx-2 my-2">Leistungsübersicht</button></a>
+              <button class="btn btn-light rounded-3 border border-2 delete-btn fw-bold mx-2 my-2" data-id="${athlete.athlete_id}">Löschen</button>
+            </div>
+          </div>
         </div>
       </div>
-      `;
+    `;
 
-      // Karte in das äußere div einfügen
-      rowDiv.appendChild(cardDiv);
-      container.appendChild(rowDiv);
-    });
+      container.insertAdjacentHTML('beforeend', cardHTML);
+    }
 
-    // Event-Listener für die Löschen-Buttons erneut hinzufügen
+    // Event Listener fürs Löschen
     document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', async (event) => {
+      button.addEventListener('click', async () => {
         const athleteId = button.getAttribute('data-id');
 
         if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
           try {
-            // DELETE-Anfrage an das Backend senden
-            await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, {
-              withCredentials: true,
-            });
+            await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, { withCredentials: true });
 
-            // Aus der Liste entfernen
-            const athleteIndex = athletes.findIndex(athlete => athlete.athlete_id === parseInt(athleteId));
-            if (athleteIndex !== -1) {
-              athletes.splice(athleteIndex, 1);  // Entfernt den Eintrag direkt aus der Liste
+            const index = athletes.findIndex(a => a.athlete_id === parseInt(athleteId));
+            if (index !== -1) {
+              athletes.splice(index, 1);
             }
 
-            // Die Karten neu rendern
             renderCards(athletes);
           } catch (error) {
             console.error('Fehler beim Löschen des Sportlers:', error);
@@ -329,5 +344,38 @@
     // Setze den Inhalt im Modal
     modalTitle.innerHTML = "<strong>Leistungsexport<strong>";
     modalBody.innerHTML = athleteListHTML;
+  }
+
+  async function getPerformanceEntries(athleteId) {
+    try {
+      const response = await axios.get(`http://localhost:8080/v1/performance/get-all/${athleteId}`, {
+        withCredentials: true
+      });
+      return response.data.performance_entries;
+    } catch (error) {
+      console.error(`Fehler beim Abrufen der Leistungen für Athlet ${athleteId}:`, error);
+      return [];
+    }
+  }
+
+  async function getDisciplineNames() {
+    try {
+      const response = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+      return response.data.discipline_names;
+    } catch (error) {
+      alert("Etwas ist schief gelaufen!");
+      console.log("Get disciplines went wrong");
+      return;
+    }
+  }
+
+  function getMedalIcon(medal) {
+    const medalMap = {
+      gold: '🥇',
+      silver: '🥈',
+      bronze: '🥉',
+      none: '❌'
+    };
+    return medalMap[medal] || medalMap.none;
   }
 </script>
