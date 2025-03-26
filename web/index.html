@@ -71,8 +71,6 @@
   // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
 
   document.addEventListener("DOMContentLoaded", async () => {
-    let athletes = [];
-
     // Überprüfung, ob User angemeldet ist
     try {
       const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
@@ -83,12 +81,15 @@
       if (error.code == "ERR_NETWORK") {
         console.log("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
+      } else if (error.response) {
+        window.location.href = "html/Anmeldung.html";
       } else {
         // Andere Fehler
         console.log("Fehler: " + error)
       }
     }
 
+    let athletes = [];
     try {
       // Athleten vom Server abrufen
       const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
