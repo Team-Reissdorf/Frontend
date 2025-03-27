@@ -303,6 +303,7 @@
         <tbody>
     `;
     if (response !== null) {
+      id=0
       response.forEach(athlete => {
         const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
         var sex = "";
@@ -315,13 +316,14 @@
         }
         athleteListHTML += `
           <tr>
-            <td><input type="checkbox" class="athlete-checkbox" value="1" data-athleteid=${athlete.athlete_id}></td>
+            <td><input type="checkbox" class="athlete-checkbox" value="1" data-athleteid=${athlete.athlete_id} id="helloWorld_${id}"></td>
             <td><strong>${athlete.first_name} ${athlete.last_name}</strong></td>
             <td>${birthdate}</td>
             <td>${athlete.email}</td>
             <td>${sex}</td>
           </tr>
         `;
+        id++;
       });
     }
     athleteListHTML += `
