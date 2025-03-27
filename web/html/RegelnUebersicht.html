@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ComPeteHub</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+</head>
+
+<body>
+    <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
+
+    <div class="container my-5">
+        <div class="p-5 text-center bg-body-tertiary rounded-3">
+            <h1 class="display-4">Regeln</h1>
+            <p class="lead">Übersicht für die Regeln</p>
+        </div><!-- /.jumbotron -->
+
+        <div class="d-flex justify-content-between align-items-center m-2">
+            <a href="RegelnAktualisierung.html"><button class="btn" id="regelButton">Regeln aktualisieren</button></a>
+        </div>
+
+        <table>
+            <thead>
+                <th>Disziplin</th>
+                <th>Übung</th>
+                <th>6-7</th>
+                <th>8-9</th>
+                <th>10-11</th>
+                <th>12-13</th>
+                <th>14-15</th>
+                <th>16-17</th>
+            </thead>
+        </table>
+    </div><!-- /.container -->
+
+    <!-- Modal für Erfolg & bereits erstellte Sportler-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header d-flex-row justify-content-center text-center">
+                    <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Sportler erfolgreich
+                            erstellt!</strong></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light border border-2 ms-3"
+                        onclick="window.location.href = '../index.html';">Verstanden</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        const today = new Date();
+        const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 1, 7 * 4);
+        if (redOrNot) {
+            document.getElementById("regelButton").className = "btn btn-danger border border-2 ms-3";
+        } else {
+            document.getElementById("regelButton").className = "btn btn-light border border-2 ms-3";
+        }
+    });
+</script>

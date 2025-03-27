@@ -12,11 +12,10 @@
 <body>
 
   <script src="js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
-
-  <!-- Sortieren Dropdown und Sportler erstellen Button -->
   <div class="d-flex justify-content-between align-items-center m-2">
-    <!-- Dropdown für Sortieren -->
+    <!-- Alles was links steht -->
     <div class="d-flex align-items-center">
+      <!-- Dropdown für Sortieren -->
       <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
         data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
       <select id="sorter" class="form-select sorter" style="width: 200px;" required>
@@ -24,7 +23,10 @@
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
+      <a href="html/RegelnUebersicht.html"><button class="btn" id="regelButton">Regeln</button></a>
     </div>
+
+    <!-- Alles was rechts steht -->
     <div class="d-flex flex-row justify-content-between">
       <!-- Exportieren Button -->
       <button type="button" class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="modal"
@@ -187,6 +189,14 @@
     // Activate tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+  
+    const today = new Date();
+    const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 1, 7*4);
+    if(redOrNot) {
+      document.getElementById("regelButton").className = "btn btn-danger border border-2 ms-3";
+    } else {
+      document.getElementById("regelButton").className = "btn btn-light border border-2 ms-3";
+    }
   });
 
   // Sortierfunktion
