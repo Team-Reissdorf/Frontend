@@ -85,7 +85,7 @@
                     formData.append('Swimcertificate', document.getElementById("pdf").files[0]);
                     const athleteId = new URLSearchParams(window.location.search).get("id");
                     try {
-                        const response = await axios.post(`http://localhost:8080/v1/swimcertificate/create/${athleteId}`, formData,
+                        const response = await axios.post(`http://localhost:8080/v1/swimCertificate/create/${athleteId}`, formData,
                             { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } });
 
                         if (response.status === 201) {
