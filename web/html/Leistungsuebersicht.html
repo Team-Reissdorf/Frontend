@@ -71,7 +71,8 @@
         <div id="Ausdauer-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
           onclick="toggleDetails('Ausdauer-tabelle')">
           <h2 class="display-4 text-start">Ausdauer</h2>
-          <div id="Ausdauer-kopfzeile-lW" class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+          <div id="Ausdauer-kopfzeile-lW"
+            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
             <h6 class="lead">letzter Wert</h4>
               <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
@@ -98,7 +99,8 @@
         <div id="Schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
           onclick="toggleDetails('Schnelligkeit-tabelle')">
           <h2 class="display-4 text-start">Schnelligkeit</h2>
-          <div id="Schnelligkeit-kopfzeile-lW" class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+          <div id="Schnelligkeit-kopfzeile-lW"
+            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
             <h6 class="lead">letzter Wert</h4>
               <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
@@ -125,7 +127,8 @@
         <div id="Kraft-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
           onclick="toggleDetails('Kraft-tabelle')">
           <h2 class="display-4 text-start">Kraft</h2>
-          <div id="Kraft-kopfzeile-lW" class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+          <div id="Kraft-kopfzeile-lW" class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x"
+            style="width: 20vmin;">
             <h6 class="lead">letzter Wert</h4>
               <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
@@ -152,7 +155,8 @@
         <div id="Koordination-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
           onclick="toggleDetails('Koordination-tabelle')">
           <h2 class="display-4 text-start">Koordination</h2>
-          <div id="Koordination-kopfzeile-lW" class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+          <div id="Koordination-kopfzeile-lW"
+            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
             <h6 class="lead">letzter Wert</h4>
               <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
@@ -335,16 +339,18 @@
               try {
 
                 const datum_formattiert = performance.date.split("T")[0].split('-')[2] + '.' + performance.date.split("T")[0].split('-')[1] + '.' + performance.date.split("T")[0].split('-')[0];
+                const unit = changeUnit(exercise.unit)
+                const points = changePoints(performance.points, exercise.unit)
                 let neueTabZeile = {
                   "uebung": exercise.name, "datum": datum_formattiert,
-                  "wert": `${performance.points} ${exercise.unit}`, "medaille": performance.medal
+                  "wert": `${points} ${unit}`, "medaille": performance.medal
                 }
                 tabelleFüllen(`${aktKategorie}-tabelle`, [neueTabZeile]); //!!! schauen, ob Kategorien von backend mit Id von HTML-Elementen übereinstimmen
 
                 // Nur beim ersten Exercise die Kopfzeile füllen
                 if (!kopfzeileGefüllt) {
                   kategorieKopfzeileFüllen(`${aktKategorie}-kopfzeile-gesamt`, {
-                    "wert": `${performance.points} ${exercise.unit}`,
+                    "wert": `${points} ${unit}`,
                     "medaille": performance.medal
                   });
                   kopfzeileGefüllt = true; // Markiere, dass die Kopfzeile gefüllt wurde
@@ -451,6 +457,45 @@
       }
       cell4.innerHTML = aktMed;
 
+    }
+  }
+
+  function changeUnit(unit) {
+    switch (unit) {
+      case "minute":
+        return "Min"
+      case "second":
+        return "Sek"
+      case "meter":
+        return "m"
+      case "centimeter":
+        return "cm"
+      case "point":
+        return "Punkte"
+      default:
+        return "Bestanden"
+    }
+  }
+
+  function changePoints(points, unit) {
+    switch (unit) {
+      case "minute":
+        // Umrechnung von Millisekunden in Sekunden
+        const totalSeconds = points / 1000;
+        // Ganze Minuten
+        const minutes = Math.floor(totalSeconds / 60);
+        // Restliche Sekunden
+        const seconds = Math.floor(totalSeconds % 60);
+        // Formatierung, sodass z.B. 3:05 statt 3:5 ausgegeben wird
+        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+      case "second":
+        return points / 1000;
+      case "meter":
+        return points / 100;
+      case "centimeter":
+        return points;
+      default:
+        return points;
     }
   }
 
