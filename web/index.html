@@ -79,13 +79,13 @@
     } catch (error) {
       //Falls Server nicht erreichbar ist
       if (error.code == "ERR_NETWORK") {
-        console.log("Backend nicht erreichbar:" + error)
+        console.error("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
       } else if (error.response) {
         window.location.href = "html/Anmeldung.html";
       } else {
         // Andere Fehler
-        console.log("Fehler: " + error)
+        console.error("Fehler: " + error)
       }
     }
 
@@ -101,7 +101,7 @@
       renderCards(athletes);
       modalFüllen(athletes);
     } catch (error) {
-      console.log("Athletes could not load");
+      console.error("Athletes could not load");
       alert("Sportler konnten nicht geladen werden");
       windowl.location.reload();
     }
@@ -122,7 +122,7 @@
         });
 
         if (athletes.length == 0) {
-          console.log("Es wurden keine Sportler ausgewählt!");
+          console.error("Es wurden keine Sportler ausgewählt!");
           alert("Es wurden keine Sportler ausgewählt!");
           return
         } else {
@@ -151,18 +151,18 @@
         if (error.response) {
           // ToDo: Response auswerten i1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseume
           if (error.response.status === 400) {
-            console.log("Invalid request body");
+            console.error("Invalid request body");
             alert("Invalid request body");
           } else if (error.response.status === 401) {
             window.location.href = "Anmeldung.html";
           } else if (error.response.status === 404) {
-            console.log("Athlete or exercise does not exist");
+            console.error("Athlete or exercise does not exist");
             alert("Athlete or exercise does not exist");
           } else if (error.response.status === 409) {
-            console.log("Performance limit reached");
+            console.error("Performance limit reached");
             fehler409ModalFüllen();
           } else if (error.response.status === 500) {
-            console.log("Internal Server Error");
+            console.error("Internal Server Error");
             alert("Internal Server Error");
           }
         } else {
@@ -244,7 +244,6 @@
       </div>
     </div>
   `;
-      console.log("HAHAHAHHA");
       // Karte in das äußere div einfügen
       rowDiv.appendChild(cardDiv);
       container.appendChild(rowDiv);
