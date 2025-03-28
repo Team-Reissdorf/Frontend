@@ -183,20 +183,15 @@
             { withCredentials: true });
           // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
         } catch (error) {
-          if (error.response) {
-            // Bei Fehler mit Response gehe zu Anmeldung.html
-            window.location.href = "Anmeldung.html";
+          //Falls Server nicht erreichbar ist
+          if (error.code == "ERR_NETWORK") {
+            console.log("Backend nicht erreichbar:" + error)
+            window.location.href = "BackendDown.html";
+          } else if (error.response) {
+            windows.location.href = "Anmeldung.html"
           } else {
-            //Falls Server nicht erreichbar ist
-            if (error.code == "ERR_NETWORK") {
-              console.log("Backend nicht erreichbar:" + error)
-              window.location.href = "BackendDown.html";
-            } else if(error.response) {
-              windows.location.href = "Anmeldung.html"
-            } else {
-              // Andere Fehler
-              console.log("Fehler: " + error)
-            }
+            // Andere Fehler
+            console.log("Fehler: " + error)
           }
         }
 
