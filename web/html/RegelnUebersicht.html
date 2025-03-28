@@ -218,16 +218,24 @@
             alert("Kategorien konnten nicht geladen werden.");
         }
 
+        const value = document.getElementById("date").value;
+
         // Event Listener für Kategorieänderung
         document.querySelector(".kategorien").addEventListener("change", async (event) => {
             //const category = document.getElementById("category").value;
             await loadExercises(event.target.value);
+            await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
         });
 
         // Event Listener für Datumsänderung
         document.querySelector(".datum").addEventListener("change", async (event) => {
-            const value = document.getElementById("date").value;
             document.getElementById("date").value = value[0]+value[1]+value[2]+value[3] + "-01-01";
+            await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
+        });
+
+        // Event Listener für Übungsänderung
+        document.querySelector(".uebungen").addEventListener("change", async (event) => {
+            await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
         });
     });
 
@@ -235,7 +243,7 @@
       try {
         const athleteId = new URLSearchParams(window.location.search).get("id");
         const datum = document.getElementById("date").value;
-        const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}?athlete-id=${athleteId}&performance-date=${datum}`, { withCredentials: true });
+        const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}?performance-date=${datum}`, { withCredentials: true });
         exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
         // Übungen Dropdown befüllen
         const uebungen = document.querySelector('.uebungen');
@@ -243,18 +251,18 @@
         exercisesList.forEach(element => {
           uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
         });
-        // Überprüfen, ob eine Übung direkt ausgewählt werden kann
-        if (exercisesList.length > 0) {
-          updateFieldByUnit(exercisesList[0].exercise_id);
-        }
+        const value = document.getElementById("date").value;
+        await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
       } catch (error) {
         console.error("Fehler beim Laden der Übungen:", error);
         alert("Übungen konnten nicht geladen werden.");
       }
     }
 
-    // Dynamisch das Eingabefeld nach der Einheit rendern
-    function updateFieldByUnit(exerciseId) {
-      
+    async function loadTable(year, exercise_id) {
+        try {
+            const response = await axios.get(`http://localhost:8080/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`, { withCredentials: true });
+        } catch (error) {
+        }
     }
 </script>
