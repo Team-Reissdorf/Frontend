@@ -330,7 +330,7 @@
 
       if (selectedExercise.unit === "minute") {
         const timeValue = document.getElementById("points").value.split(":");
-        pointsValue = parseInt((timeValue[0]) * 60 + parseInt(timeValue[1]) * 1000);
+        pointsValue = parseInt(parseInt(timeValue[0]*60) + parseInt(timeValue[1]))*1000;
       } else if (selectedExercise.unit === "bool") {
         pointsValue = document.getElementById("points_bool").checked ? 1 : 0;
       } else if (selectedExercise.unit === "meter") {
