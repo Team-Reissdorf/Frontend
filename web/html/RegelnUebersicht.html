@@ -224,45 +224,95 @@
         document.querySelector(".kategorien").addEventListener("change", async (event) => {
             //const category = document.getElementById("category").value;
             await loadExercises(event.target.value);
-            await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
+            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
         });
 
         // Event Listener für Datumsänderung
         document.querySelector(".datum").addEventListener("change", async (event) => {
-            document.getElementById("date").value = value[0]+value[1]+value[2]+value[3] + "-01-01";
-            await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
+            document.getElementById("date").value = value[0] + value[1] + value[2] + value[3] + "-01-01";
+            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
         });
 
         // Event Listener für Übungsänderung
         document.querySelector(".uebungen").addEventListener("change", async (event) => {
-            await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
+            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
         });
     });
 
     async function loadExercises(category) {
-      try {
-        const athleteId = new URLSearchParams(window.location.search).get("id");
-        const datum = document.getElementById("date").value;
-        const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}?performance-date=${datum}`, { withCredentials: true });
-        exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
-        // Übungen Dropdown befüllen
-        const uebungen = document.querySelector('.uebungen');
-        uebungen.innerHTML = "";  // Vorherige Optionen löschen
-        exercisesList.forEach(element => {
-          uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
-        });
-        const value = document.getElementById("date").value;
-        await loadTable(parseInt(value[0]+value[1]+value[2]+value[3]), document.getElementById("exercise").value);
-      } catch (error) {
-        console.error("Fehler beim Laden der Übungen:", error);
-        alert("Übungen konnten nicht geladen werden.");
-      }
+        try {
+            const athleteId = new URLSearchParams(window.location.search).get("id");
+            const datum = document.getElementById("date").value;
+            const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}?performance-date=${datum}`, { withCredentials: true });
+            exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
+            // Übungen Dropdown befüllen
+            const uebungen = document.querySelector('.uebungen');
+            uebungen.innerHTML = "";  // Vorherige Optionen löschen
+            exercisesList.forEach(element => {
+                uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
+            });
+            const value = document.getElementById("date").value;
+            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+        } catch (error) {
+            console.error("Fehler beim Laden der Übungen:", error);
+            alert("Übungen konnten nicht geladen werden.");
+        }
     }
 
     async function loadTable(year, exercise_id) {
         try {
-            const response = await axios.get(`http://localhost:8080/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`, { withCredentials: true });
+            const response = await axios.get(`http://localhost:8080/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
+                { withCredentials: true });
+            fillRulesTables(response.data);
         } catch (error) {
+            if (error.response) {
+                if (error.response.status === 401) { } // Error Response abchecken im Backend und dann bearbeiten adsakjdlalkdjklajdlajkdjlkasjdlkaldkjaskldjklasjdklasjdklajskjld
+            } else {
+                alert("Fehler beim Laden des Regelsets");
+                console.error("Fehler beim Laden des Regelsets:", error);
+            }
         }
+    }
+
+    function fillRulesTables(rulesData) {
+        const femaleData = rulesData.find(item => item.sex === 'f');
+        const maleData = rulesData.find(item => item.sex === 'm');
+        const diverseData = rulesData.find(item => item.sex === 'd');
+        const maleDivData = maleData || diverseData;
+
+        const ageRanges = ["6-7", "8-9", "10-11", "12-13", "14-15", "16-17"];
+        const medalTypes = ["bronze", "silver", "gold"];
+
+        const tables = document.querySelectorAll("table.table-striped.table-hover");
+        if (tables.length < 2) return;
+        const maleDivTable = tables[0];
+        const femaleTable = tables[1];
+
+        function getRuleForRange(data, range) {
+            const [from, to] = range.split("-").map(Number);
+            if (!data) return null;
+            const rules = data.rules ? data.rules : data;
+            return rules.find(rule => rule.from_age === from && rule.to_age === to);
+        }
+
+        const maleRows = maleDivTable.querySelectorAll("tbody tr");
+        maleRows.forEach((row, rowIndex) => {
+            const cells = row.querySelectorAll("td");
+            ageRanges.forEach((range, colIndex) => {
+                const rule = getRuleForRange(maleDivData, range);
+                const value = rule ? rule[medalTypes[rowIndex]] : "-";
+                cells[colIndex + 1].textContent = value;
+            });
+        });
+
+        const femaleRows = femaleTable.querySelectorAll("tbody tr");
+        femaleRows.forEach((row, rowIndex) => {
+            const cells = row.querySelectorAll("td");
+            ageRanges.forEach((range, colIndex) => {
+                const rule = getRuleForRange(femaleData, range);
+                const value = rule ? rule[medalTypes[rowIndex]] : "-";
+                cells[colIndex + 1].textContent = value;
+            });
+        });
     }
 </script>
