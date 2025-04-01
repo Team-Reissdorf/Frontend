@@ -164,36 +164,35 @@
         <!-- wird mit passenden Einträgen befüllt-->
       </table>
     </div>
-  </div>
 
-  <!--Kategorie 4 Koordination-->
-  <div class="container my-3">
-    <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Koordination-tabelle')">
-      <div id="Koordination-kopfzeile-gesamt"
-        class="d-flex mx-5 justify-content-between align-items-center position-relative">
-        <h2 class="display-4 responsive-category-name text-start">Koordination</h2>
-        <div id="Koordination-kopfzeile-lW"
-          class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
-          <h6 class="lead">letzter Wert</h6>
-          <p class="wert" style="font-size: 3vmin;">-</p>
+    <!--Kategorie 4 Koordination-->
+    <div class="container my-3">
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Koordination-tabelle')">
+        <div id="Koordination-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Koordination</h2>
+          <div id="Koordination-kopfzeile-lW"
+            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <div id="Koordination-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <span class="toggle-icon" id="icon-Koordination">&#x25BC;</span>
         </div>
-        <div id="Koordination-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
-          <h6 class="lead">letzte Medaille</h6>
-          <p class="wert" style="font-size: 3vmin;">-</p>
-        </div>
-        <span class="toggle-icon" id="icon-Koordination">&#x25BC;</span>
+        <table class="table d-none" id="Koordination-tabelle">
+          <tr>
+            <th>Übung</th>
+            <th>Datum</th>
+            <th>Wert</th>
+            <th>Medaille</th>
+          </tr>
+          <!-- wird mit passenden Einträgen befüllt-->
+        </table>
       </div>
-      <table class="table d-none" id="Koordination-tabelle">
-        <tr>
-          <th>Übung</th>
-          <th>Datum</th>
-          <th>Wert</th>
-          <th>Medaille</th>
-        </tr>
-        <!-- wird mit passenden Einträgen befüllt-->
-      </table>
     </div>
-  </div>
 </body>
 
 </html>
