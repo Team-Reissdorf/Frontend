@@ -82,7 +82,7 @@
                 // Wenn eine file da ist, nur file senden
                 if (document.getElementById("pdf").files.length > 0) {
                     const formData = new FormData();
-                    formData.append('Swimcertificate', document.getElementById("pdf").files[0]);
+                    formData.append('file', document.getElementById("pdf").files[0]);
                     const athleteId = new URLSearchParams(window.location.search).get("id");
                     try {
                         const response = await axios.post(`http://localhost:8080/v1/swimCertificate/create/${athleteId}`, formData,
