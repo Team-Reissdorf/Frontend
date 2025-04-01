@@ -330,13 +330,15 @@
 
       if (selectedExercise.unit === "minute") {
         const timeValue = document.getElementById("points").value.split(":");
-        pointsValue = parseInt(timeValue[0]) * 60 + parseInt(timeValue[1]);
+        pointsValue = parseInt(parseInt(timeValue[0] * 60) + parseInt(timeValue[1])) * 1000;
       } else if (selectedExercise.unit === "bool") {
         pointsValue = document.getElementById("points_bool").checked ? 1 : 0;
       } else if (selectedExercise.unit === "meter") {
         pointsValue = Number(document.getElementById("points").value) * 100;
-      } else {
+      } else if (selectedExercise.unit === "centimeter") {
         pointsValue = parseInt(document.getElementById("points").value);
+      } else {
+        pointsValue = parseInt(document.getElementById("points").value * 1000);
       }
       return pointsValue;
     }
@@ -365,7 +367,11 @@
       // Setze den Inhalt im Modal
       modalTitle.innerHTML = "<strong>Limit für Einträge erreicht<strong>";
       modalTitle.style.color = "red";
-      modalBody.innerHTML = `<p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>`;
+      modalBody.innerHTML = `
+      <p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>
+      <p>Soll der Eintrag überschrieben werden?</p>
+      <button class="btn btn-light" onClick="Ueberschreiben(${document.getElementById("exercise").value})">Überschreiben</button>
+      `;
       // Zeige das Modal an
       const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
       modal.show();
@@ -400,7 +406,55 @@
       modal.show();
     }
 
+    async function Ueberschreiben(exercise_id) {
+      performanceId = "";
+      try {
+        const performanceResponse = axios.get(`http://localhost:8080/v1/performance/get-all/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
+        performanceId = performanceResponse.data.performance_entries[0].performance_id;
 
+        try {
+          const response = await axios.put("http://localhost:8080/v1/performance/edit",
+            {
+              date: document.getElementById("date").value,
+              exercise_id: parseInt(document.getElementById("exercise").value),
+              performance_id: performanceId,
+              points: document.getElementById("points").value,
+            },
+            { withCredentials: true });
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.error("Invalid request body. Error: " + error);
+              alert("Invalid request body!");
+            } else if (error.response.status === 404) {
+              console.error("Performance entry or goals not found. Error: " + error);
+              alert("Performance entry or goals not found!");
+            } else {
+              console.error("Internal server error. Error: " + error);
+              alert("Internal server error");
+            }
+          } else {
+            console.error("Error:" + error);
+            alert("Unexpected error");
+            //window.location.href("Leistungsuebersicht.html?id=" + athleteId);
+          }
+        }
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 404) {
+            console.error("Athlete does not exists. Error: " + error);
+            alert("Athlet existiert nicht!");
+          } else {
+            console.error("Internal server error. Error: " + error);
+            alert("Unerwarteter Fehler!");
+          }
+        } else {
+          console.error("Fehler bei Leistungsabruf! Error:" + error);
+          alert("Fehler bei Leistungsabruf");
+          //window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
+        }
+      }
+    }
   </script>
 </body>
 
