@@ -7,6 +7,24 @@
   <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../node_modules/axios/dist/axios.js"></script>
+  <style>
+    .responsive-category-name {
+      font-size: clamp(1.5rem, 5vmin, 3rem);
+    }
+
+    .toggle-icon {
+      position: absolute;
+      right: 0rem;
+      top: 0rem;
+      font-size: 1.5rem;
+      transition: transform 0.4s ease;
+      pointer-events: none;
+    }
+
+    .toggle-icon.open {
+      transform: rotate(180deg);
+    }
+  </style>
 </head>
 
 <body>
@@ -62,19 +80,20 @@
   <div class="my-5">
     <!--Kategorie 1 Ausdauer-->
     <div class="container my-3">
-      <div class="p-2 text-center bg-body-tertiary rounded-3">
-        <div id="Ausdauer-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
-          onclick="toggleDetails('Ausdauer-tabelle')">
-          <h2 class="display-4 text-start">Ausdauer</h2>
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Ausdauer-tabelle')">
+        <div id="Ausdauer-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Ausdauer</h2>
           <div id="Ausdauer-kopfzeile-lW"
             class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
-            <h6 class="lead">letzter Wert</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
           <div id="Ausdauer-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
-            <h6 class="lead">letzte Medaille</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
+          <span class="toggle-icon" id="icon-Ausdauer">&#x25BC;</span>
         </div>
         <table class="table d-none" id="Ausdauer-tabelle">
           <tr>
@@ -90,19 +109,20 @@
 
     <!--Kategorie 2 Schnelligkeit-->
     <div class="container my-3">
-      <div class="p-2 text-center bg-body-tertiary rounded-3">
-        <div id="Schnelligkeit-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
-          onclick="toggleDetails('Schnelligkeit-tabelle')">
-          <h2 class="display-4 text-start">Schnelligkeit</h2>
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Schnelligkeit-tabelle')">
+        <div id="Schnelligkeit-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Schnelligkeit</h2>
           <div id="Schnelligkeit-kopfzeile-lW"
             class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
-            <h6 class="lead">letzter Wert</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
           <div id="Schnelligkeit-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
-            <h6 class="lead">letzte Medaille</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
+          <span class="toggle-icon" id="icon-Schnelligkeit">&#x25BC;</span>
         </div>
         <table class="table d-none" id="Schnelligkeit-tabelle">
           <tr>
@@ -118,59 +138,62 @@
 
     <!--Kategorie 3 Kraft-->
     <div class="container my-3">
-      <div class="p-2 text-center bg-body-tertiary rounded-3">
-        <div id="Kraft-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
-          onclick="toggleDetails('Kraft-tabelle')">
-          <h2 class="display-4 text-start">Kraft</h2>
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Kraft-tabelle')">
+        <div id="Kraft-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Kraft</h2>
           <div id="Kraft-kopfzeile-lW" class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x"
             style="width: 20vmin;">
-            <h6 class="lead">letzter Wert</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
           <div id="Kraft-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
-            <h6 class="lead">letzte Medaille</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
           </div>
+          <span class="toggle-icon" id="icon-Kraft">&#x25BC;</span>
         </div>
-        <table class="table d-none" id="Kraft-tabelle">
-          <tr>
-            <th>Übung</th>
-            <th>Datum</th>
-            <th>Wert</th>
-            <th>Medaille</th>
-          </tr>
-          <!-- wird mit passenden Einträgen befüllt-->
-        </table>
       </div>
+      <table class="table d-none" id="Kraft-tabelle">
+        <tr>
+          <th>Übung</th>
+          <th>Datum</th>
+          <th>Wert</th>
+          <th>Medaille</th>
+        </tr>
+        <!-- wird mit passenden Einträgen befüllt-->
+      </table>
     </div>
+  </div>
 
-    <!--Kategorie 4 Koordination-->
-    <div class="container my-3">
-      <div class="p-2 text-center bg-body-tertiary rounded-3">
-        <div id="Koordination-kopfzeile-gesamt" class="d-flex mx-5 justify-content-between align-items-center "
-          onclick="toggleDetails('Koordination-tabelle')">
-          <h2 class="display-4 text-start">Koordination</h2>
-          <div id="Koordination-kopfzeile-lW"
-            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
-            <h6 class="lead">letzter Wert</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
-          </div>
-          <div id="Koordination-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
-            <h6 class="lead">letzte Medaille</h4>
-              <p class="wert" style="font-size: 3vmin;">-</p>
-          </div>
+  <!--Kategorie 4 Koordination-->
+  <div class="container my-3">
+    <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Koordination-tabelle')">
+      <div id="Koordination-kopfzeile-gesamt"
+        class="d-flex mx-5 justify-content-between align-items-center position-relative">
+        <h2 class="display-4 responsive-category-name text-start">Koordination</h2>
+        <div id="Koordination-kopfzeile-lW"
+          class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+          <h6 class="lead">letzter Wert</h6>
+          <p class="wert" style="font-size: 3vmin;">-</p>
         </div>
-        <table class="table d-none" id="Koordination-tabelle">
-          <tr>
-            <th>Übung</th>
-            <th>Datum</th>
-            <th>Wert</th>
-            <th>Medaille</th>
-          </tr>
-          <!-- wird mit passenden Einträgen befüllt-->
-        </table>
+        <div id="Koordination-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
+          <h6 class="lead">letzte Medaille</h6>
+          <p class="wert" style="font-size: 3vmin;">-</p>
+        </div>
+        <span class="toggle-icon" id="icon-Koordination">&#x25BC;</span>
       </div>
+      <table class="table d-none" id="Koordination-tabelle">
+        <tr>
+          <th>Übung</th>
+          <th>Datum</th>
+          <th>Wert</th>
+          <th>Medaille</th>
+        </tr>
+        <!-- wird mit passenden Einträgen befüllt-->
+      </table>
     </div>
+  </div>
 </body>
 
 </html>
@@ -494,4 +517,14 @@
     }
   }
 
+  function toggleDetails(id) {
+    let details = document.getElementById(id);
+    details.classList.toggle("d-none");
+
+    const kategorieName = id.split("-")[0];
+    const icon = document.getElementById("icon-" + kategorieName);
+    if (icon) {
+      icon.classList.toggle("open");
+    }
+  }
 </script>
