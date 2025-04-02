@@ -271,7 +271,7 @@
     try {
       const abrufenAb = document.getElementById("datenAbfragenAb").value;
 
-      const responsePerformance = await axios.get(`http://localhost:8080/v1/performance/get-all/${athleteId}?since=${abrufenAb}`, {
+      const responsePerformance = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${abrufenAb}`, {
         withCredentials: true
       });
       performanceEinträge = responsePerformance.data.performance_entries
