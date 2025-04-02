@@ -25,19 +25,26 @@
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
     </div>
+    
     <div class="d-flex flex-row justify-content-between">
       <!-- Exportieren Button -->
       <button type="button" class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="modal"
-        data-bs-target="#exampleModal">Leistungsexport</button>
+        data-bs-target="#exampleModal" title="Hier kann man Leistungen von Sportlern als CSV-Datei exportieren.">
+        Leistungsexport
+      </button>
 
       <!-- einzelnen Sportler erstellen Button -->
       <a href="html/SportlerErstellen.html">
-        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;">Sportler erstellen</button>
+        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="tooltip"
+          data-bs-placement="top" data-bs-title="Hier kann man einen neuen Sportler anlegen.">Sportler
+          erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;">Sportler Massenerstellung</button>
+        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="tooltip"
+          data-bs-placement="top" data-bs-title="Hier kann man mehrere neue Sportler anlegen.">Sportler
+          Massenerstellung</button>
       </a>
     </div>
   </div>
@@ -187,6 +194,10 @@
     // Activate tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    const tooltipTriggerListe = [].slice.call(document.querySelectorAll('[title]'))
+    tooltipTriggerListe.forEach(function (tooltipTriggerEl) {
+      new bootstrap.Tooltip(tooltipTriggerEl)
+    })
   });
 
   // Sortierfunktion
