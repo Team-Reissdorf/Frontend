@@ -369,7 +369,7 @@
       modalTitle.style.color = "red";
       modalBody.innerHTML = `
       <p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>
-      <p>Soll der Eintrag überschrieben werden?</p>
+      <p>Soll der beste Eintrag überschrieben werden?</p>
       <button class="btn btn-light" onClick="Ueberschreiben(${document.getElementById("exercise").value})">Überschreiben</button>
       `;
       // Zeige das Modal an
@@ -409,7 +409,7 @@
     async function Ueberschreiben(exercise_id) {
       performanceId = "";
       try {
-        const performanceResponse = axios.get(`http://localhost:8080/v1/performance/get-all/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
+        const performanceResponse = axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
         performanceId = performanceResponse.data.performance_entries[0].performance_id;
 
         try {
@@ -436,7 +436,7 @@
           } else {
             console.error("Error:" + error);
             alert("Unexpected error");
-            //window.location.href("Leistungsuebersicht.html?id=" + athleteId);
+            window.location.href("Leistungsuebersicht.html?id=" + athleteId);
           }
         }
       } catch (error) {
