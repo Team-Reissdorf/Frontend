@@ -409,16 +409,16 @@
     async function Ueberschreiben(exercise_id) {
       performanceId = "";
       try {
-        const performanceResponse = axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
+        const performanceResponse = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
         performanceId = performanceResponse.data.performance_entries[0].performance_id;
-
+        points = preparePointsForBackend();
         try {
           const response = await axios.put("http://localhost:8080/v1/performance/edit",
             {
               date: document.getElementById("date").value,
               exercise_id: parseInt(document.getElementById("exercise").value),
               performance_id: performanceId,
-              points: document.getElementById("points").value,
+              points: points,
             },
             { withCredentials: true });
         } catch (error) {
