@@ -51,7 +51,7 @@ async function setupNavbarLogic() {
 
     //Hilfeseite-Button - immer anzeigen
     document.getElementById("hilfeseite-button").addEventListener("click", async () => {
-        window.location.href = "http://localhost:8081/html/Hilfe.html";});
+        window.location.href = "http://localhost:8081/html/Hilfeseite.html";});
 
     // Überprüfung, ob Benutzer angemeldet ist - ggf. Navbar anpassen (logOut-Button ausblenden)
         try{
@@ -60,7 +60,6 @@ async function setupNavbarLogic() {
         catch(error) {
             //Fehler = angemeldet -> Button nicht anzeigen & Link von Logo entfernen
             logInOutButton.classList.toggle("d-none");
-            document.getElementById("navbar-brand-link").href = "#";
         }
     
 }
