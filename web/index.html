@@ -14,18 +14,22 @@
   <script src="js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
   <!-- Sortieren Dropdown und Sportler erstellen Button -->
-  <div class="d-flex justify-content-between align-items-center m-4">
+  <div class="d-flex justify-content-between align-items-center m-2">
     <!-- Dropdown für Sortieren -->
     <div class="d-flex align-items-center">
-      <label for="sorter" class="me-2">Sortieren:</label>
+      <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
+        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
       <select id="sorter" class="form-select sorter" style="width: 200px;" required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
     </div>
-
     <div class="d-flex flex-row justify-content-between">
+      <!-- Exportieren Button -->
+      <button type="button" class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="modal"
+        data-bs-target="#exampleModal">Leistungsexport</button>
+
       <!-- einzelnen Sportler erstellen Button -->
       <a href="html/SportlerErstellen.html">
         <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;">Sportler erstellen</button>
@@ -37,9 +41,27 @@
       </a>
     </div>
   </div>
-
   <!-- Hier werden die Athleten angezeigt (Cards) -->
-  <div class="container my-4 athlete-cards">
+  <div class="container my-2 athlete-cards">
+  </div>
+
+  <!-- Modal für Erfolg & bereits erstellte Sportler-->
+  <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header d-flex-row justify-content-center text-center">
+          <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Leistungsexport</strong></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;" id="export">Leistungen
+            exportieren</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+        </div>
+      </div>
+    </div>
   </div>
 </body>
 
@@ -49,29 +71,25 @@
   // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
 
   document.addEventListener("DOMContentLoaded", async () => {
-    let athletes = [];
-
     // Überprüfung, ob User angemeldet ist
     try {
       const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
         { withCredentials: true });
       // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
     } catch (error) {
-      if (error.response) {
-        // Bei Fehler mit Response gehe zu html/Anmeldung.html
+      //Falls Server nicht erreichbar ist
+      if (error.code == "ERR_NETWORK") {
+        console.error("Backend nicht erreichbar:" + error)
+        window.location.href = "html/BackendDown.html";
+      } else if (error.response) {
         window.location.href = "html/Anmeldung.html";
       } else {
-        //Falls Server nicht erreichbar ist
-        if (error.code == "ERR_NETWORK") {
-          console.log("Backend nicht erreichbar:" + error)
-          window.location.href = "html/BackendDown.html";
-        } else {
-          // Andere Fehler
-          console.log("Fehler: " + error)
-        }
+        // Andere Fehler
+        console.error("Fehler: " + error)
       }
     }
 
+    let athletes = [];
     try {
       // Athleten vom Server abrufen
       const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
@@ -81,11 +99,11 @@
       athletes = response.data.athletes;
       sortCards(athletes, "fname");
       renderCards(athletes);
-
+      modalFüllen(athletes);
     } catch (error) {
-      alert("Athleten konnten nicht geladen werden!");
-      console.log("Athleten konnten nicht geladen werden!");
-      window.location.reload();
+      console.error("Athletes could not load");
+      alert("Sportler konnten nicht geladen werden");
+      windowl.location.reload();
     }
 
     // Event Listener für Übungsänderung
@@ -94,6 +112,81 @@
       sortCards(athletes, sortBy);
       renderCards(athletes);
     });
+
+    // Event Listener für Export Button
+    document.getElementById("export").addEventListener("click", async function (event) {
+      const athletes = [];
+      try {
+        document.querySelectorAll(".athlete-checkbox:checked").forEach(checkbox => {
+          athletes.push(parseInt(checkbox.dataset.athleteid));
+        });
+
+        if (athletes.length == 0) {
+          console.error("Es wurden keine Sportler ausgewählt!");
+          alert("Es wurden keine Sportler ausgewählt!");
+          return
+        } else {
+          // POST-Anfrage an Backend senden
+          const response = await axios.post('http://localhost:8080/v1/performance/export',
+            {
+              athlete_ids: athletes,
+            },
+            {
+              withCredentials: true,
+              responseType: "blob",
+            });
+
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "performances.csv";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
+        modal.hide();
+      } catch (error) {
+        if (error.response) {
+          // ToDo: Response auswerten i1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseume
+          if (error.response.status === 400) {
+            console.error("Invalid request body");
+            alert("Invalid request body");
+          } else if (error.response.status === 401) {
+            window.location.href = "Anmeldung.html";
+          } else if (error.response.status === 404) {
+            console.error("Athlete or exercise does not exist");
+            alert("Athlete or exercise does not exist");
+          } else if (error.response.status === 409) {
+            console.error("Performance limit reached");
+            fehler409ModalFüllen();
+          } else if (error.response.status === 500) {
+            console.error("Internal Server Error");
+            alert("Internal Server Error");
+          }
+        } else {
+          // Andere Fehler
+          console.error("Error:", error.message);
+        }
+      }
+    });
+
+    const selectAllCheckbox = document.getElementById("selectAll");
+    const checkboxes = document.querySelectorAll(".athlete-checkbox");
+
+    selectAllCheckbox.addEventListener("change", function () {
+      checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+    });
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", function () {
+        selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
+      });
+    });
+    // Activate tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
   });
 
   // Sortierfunktion
@@ -141,17 +234,16 @@
       cardDiv.innerHTML = `
       <div class="d-flex justify-content-between align-items-center">
         <div>
-          <h2 class="mb-0" style="margin-left: 24px;">${athlete.first_name} ${athlete.last_name}</h2>
-          <h5 class="mb-0" style="margin-left: 24px;">${birthdate} ${sex}</h5>
+          <h2 class="mb-0" style="margin-left: 24px; text-align: left;">${athlete.first_name} ${athlete.last_name}</h2>
+          <h5 class="mb-0" style="margin-left: 24px; text-align: left;">${birthdate} ${sex}</h5>
         </div>
         <div>
-          <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 10px; padding-left:10px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
-          <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 10px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsübersicht</button></a>
-          <button class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 10px">Löschen</button>
-        </div>
+        <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
+        <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis</button></a>
+        <button type="button" class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px">Löschen</button>
       </div>
-      `;
-
+    </div>
+  `;
       // Karte in das äußere div einfügen
       rowDiv.appendChild(cardDiv);
       container.appendChild(rowDiv);
@@ -184,5 +276,62 @@
         }
       });
     });
+  }
+
+  function modalFüllen(response) {
+    const modalBody = document.getElementsByClassName("modal-body")[0];
+    const modalTitle = document.getElementById("exampleModalLabel");
+
+    //bereits vorhandene Sportler anzeigen
+    let athleteListHTML = `
+      <p>Wählen Sie bitte die Sportler aus, von denen Sie die Leistungen exportieren möchten!</p>
+      <p>Es wird eine CSV-Datei erstellt, die mit diesem Format:</p>
+      <p>Nachname, Vorname, Geschlecht, Geburtstag, Übung, Kategorie, Datum, Ergebnis, Punkte</p>
+    `;
+    athleteListHTML += `
+      <table class="table">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="selectAll"></th>
+            <th>Name</th>
+            <th>Geburtsdatum</th>
+            <th>E-Mail</th>
+            <th>Geschlecht</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+    if (response !== null) {
+      id=0
+      response.forEach(athlete => {
+        const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+        var sex = "";
+        if (athlete.sex === "m") {
+          sex = 'Männlich';
+        } else if (athlete.sex === "f") {
+          sex = 'Weiblich';
+        } else if (athlete.sex === "d") {
+          sex = 'Divers';
+        }
+        athleteListHTML += `
+          <tr>
+            <td><input type="checkbox" class="athlete-checkbox" value="1" data-athleteid=${athlete.athlete_id} id="helloWorld_${id}"></td>
+            <td><strong>${athlete.first_name} ${athlete.last_name}</strong></td>
+            <td>${birthdate}</td>
+            <td>${athlete.email}</td>
+            <td>${sex}</td>
+          </tr>
+        `;
+        id++;
+      });
+    }
+    athleteListHTML += `
+        </tbody>
+      </table>
+    `;
+
+    // Setze den Inhalt im Modal
+    modalTitle.innerHTML = "<strong>Leistungsexport<strong>";
+    modalBody.innerHTML = athleteListHTML;
   }
 </script>
