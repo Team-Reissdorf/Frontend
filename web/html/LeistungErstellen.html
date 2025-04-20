@@ -436,7 +436,7 @@
           } else {
             console.error("Error:" + error);
             alert("Unexpected error");
-            window.location.href("Leistungsuebersicht.html?id=" + athleteId);
+            window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
           }
         }
       } catch (error) {
