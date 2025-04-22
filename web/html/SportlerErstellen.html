@@ -23,20 +23,20 @@
       <div class="row">
         <!-- Vorname -->
         <div class="form-group col-md-6 col-sm-12 col-lg-6">
-        <label for="fname">Vorname</label>
+        <label for="fname" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man den Vornamen des Sportlers eingeben.">Vorname</label>
         <input type="text" class="form-control" id="fname" placeholder="Vorname">
         </div>
 
         <!-- Nachname -->
         <div class="form-group col-md-6 col-sm-12 col-lg-6">
-        <label for="lname">Nachname</label>
+        <label for="lname" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man den Nachnamen des Sportlers eingeben.">Nachname</label>
         <input type="text" class="form-control" id="lname" placeholder="Nachname">
         </div>
       </div>
       <div class="row">
         <!-- Email -->
         <div class="form-group col-md-12 col-sm-12 col-lg-12">
-        <label for="email">Email</label>
+        <label for="email" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Hier kann man die E-Mail des Sportlers eingeben.">Email</label>
         <input type="email" class="form-control" id="email" placeholder="Email">
         </div>
       </div>
@@ -45,13 +45,13 @@
 
         <!-- Geburtstag -->
         <div class="form-group col-md-6 col-lg-6 col-sm-12">
-        <label for="birthDate">Geburtstag</label>
+        <label for="birthDate" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Hier kann man das Geburtsdatum des Sportlers eingeben.">Geburtstag</label>
         <input type="date" class="form-control" id="birthDate">
         </div>
 
         <!-- Gender (Radio) -->
         <div class="col-md-6 col-lg-6 col-sm-12">
-          <label class="form-label">Geschlecht:</label>
+          <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Hier kann man das Geschlecht des Sportlers eingeben.">Geschlecht:</label>
           <div class="d-flex">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="radio" name="gender" id="male" value="m" required>
@@ -81,6 +81,10 @@
 
   </div><!-- /.container -->
   <script>
+    // Activate tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
     document.addEventListener("DOMContentLoaded", async () => {
       // Überprüfung, ob User angemeldet ist
       try {

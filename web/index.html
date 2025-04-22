@@ -251,9 +251,9 @@
           <h5 class="mb-0" style="margin-left: 24px; text-align: left;">${birthdate} ${sex}</h5>
         </div>
         <div>
-        <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Bearbeiten</button></a>
-        <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;">Leistungsnachweis</button></a>
-        <button type="button" class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px">Löschen</button>
+        <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">Bearbeiten</button></a>
+        <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Hier kann man eine Übersicht der Leistungen dieses Sportlers sehen.">Leistungsnachweis</button></a>
+        <button type="button" class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man den Sportler aus dem System entfernen.">Löschen</button>
       </div>
     </div>
   `;

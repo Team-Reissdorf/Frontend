@@ -57,19 +57,19 @@
     <div class="d-flex justify-content-center gap-3 align-items-end  ">
       <!-- Button: Leistungen eintragen -->
       <a href="#" onclick="this.href='LeistungErstellen.html?id=' + athleteId" class="text-decoration-none">
-        <button class="btn btn-light border border-2 fw-bold py-2 px-3">Leistungen eintragen</button>
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man eine neue Leistung des Sportlers anlegen.">Leistungen eintragen</button>
       </a>
 
       <!-- Datum für Datenabfrage  -->
       <div class="text-center">
         <label for="datenAbfragenAb" class="form-label d-block">Leistungen anzeigen ab</label>
         <input type="date" class="form-control btn btn-light border border-2 fw-bold py-2 px-3" id="datenAbfragenAb"
-          value="2025-01-01" max="9999-12-31" style="max-width: 180px; font-weight: bold;">
+          value="2025-01-01" max="9999-12-31" style="max-width: 180px; font-weight: bold;" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man festlegen, ab wann die Leistungen eingesehen werden können.">
       </div>
 
       <!-- Button: Schwimmnachweis eintragen -->
       <a href="#" onclick="this.href='SchwimmnachweisErstellen.html?id=' + athleteId" class="text-decoration-none">
-        <button class="btn btn-light border border-2 fw-bold py-2 px-3">Schwimmnachweis eintragen</button>
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man einen neuen Schwimmnachweis des Sportlers anlegen.">Schwimmnachweis eintragen</button>
       </a>
 
     </div>
@@ -199,6 +199,11 @@
 
 <script>
   const athleteId = new URLSearchParams(window.location.search).get("id");
+
+  // Activate tooltips
+  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
   // Lade alles notwendige vor
   document.addEventListener("DOMContentLoaded", async () => {
     // Überprüfung, ob User angemeldet ist
