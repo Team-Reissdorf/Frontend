@@ -421,6 +421,9 @@
               points: points,
             },
             { withCredentials: true });
+            
+            // Wenn überschrieben wurde dann wechsel zur Leistungsuebersicht
+            window.location.href = `Leistungsuebersicht.html?id=${athleteId}`
         } catch (error) {
           if (error.response) {
             if (error.response.status === 400) {
