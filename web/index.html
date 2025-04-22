@@ -17,14 +17,14 @@
   <div class="d-flex justify-content-between align-items-center m-2">
     <!-- Dropdown für Sortieren -->
     <div class="d-flex align-items-center">
-      <label for="sorter" class="me-2">Sortieren:</label>
+      <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
+        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
       <select id="sorter" class="form-select sorter" style="width: 200px;" required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
     </div>
-
     <div class="d-flex flex-row justify-content-between">
       <!-- Exportieren Button -->
       <button type="button" class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="modal"
@@ -41,7 +41,6 @@
       </a>
     </div>
   </div>
-
   <!-- Hier werden die Athleten angezeigt (Cards) -->
   <div class="container my-2 athlete-cards">
   </div>
@@ -72,8 +71,6 @@
   // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
 
   document.addEventListener("DOMContentLoaded", async () => {
-    let athletes = [];
-
     // Überprüfung, ob User angemeldet ist
     try {
       const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
@@ -86,12 +83,15 @@
       } else if (error.code == "ERR_NETWORK") {
         console.error("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
+      } else if (error.response) {
+        window.location.href = "html/Anmeldung.html";
       } else {
         // Andere Fehler
         console.error("Fehler: " + error)
       }
     }
 
+    let athletes = [];
     try {
       // Athleten vom Server abrufen
       const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
@@ -186,6 +186,9 @@
         selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
       });
     });
+    // Activate tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
   });
 
   // Sortierfunktion
@@ -351,6 +354,7 @@
         <tbody>
     `;
     if (response !== null) {
+      id=0
       response.forEach(athlete => {
         const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
         var sex = "";
@@ -363,13 +367,14 @@
         }
         athleteListHTML += `
           <tr>
-            <td><input type="checkbox" class="athlete-checkbox" value="1" data-athleteid=${athlete.athlete_id}></td>
+            <td><input type="checkbox" class="athlete-checkbox" value="1" data-athleteid=${athlete.athlete_id} id="helloWorld_${id}"></td>
             <td><strong>${athlete.first_name} ${athlete.last_name}</strong></td>
             <td>${birthdate}</td>
             <td>${athlete.email}</td>
             <td>${sex}</td>
           </tr>
         `;
+        id++;
       });
     }
     athleteListHTML += `

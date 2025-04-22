@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <title>ComPeteHub</title>
@@ -7,6 +8,7 @@
   <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../node_modules/axios/dist/axios.js"></script>
 </head>
+
 <body>
   <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
@@ -54,7 +56,7 @@
 
         <!-- Punkte -->
         <div class="form-group col-md-6 col-lg-6 col-sm-12">
-          <label for="points">Punkte</label>
+          <p style="margin-bottom: 0px">Gemmessener Wert</p>
           <div class="input-group mb-3 responsive-input">
           </div>
         </div>
@@ -66,32 +68,31 @@
         <div class="d-flex justify-content-between gap-3" style="width: 400px;">
           <button type="submit" class="btn btn-light"
             style="width: 150px; height: 40px; padding: 0px 20px;">Erstellen</button>
-          <a href="#" onclick="this.href='Leistungsuebersicht.html?id=' + athleteId"><button type="button" class="btn btn-light"
-              style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</button></a>
+          <a href="#" onclick="this.href='Leistungsuebersicht.html?id=' + athleteId"><button type="button"
+              class="btn btn-light" style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</button></a>
         </div>
       </div>
     </form>
 
   </div><!-- /.container -->
 
-    <!-- Modal für Fehler bei mehr als 3 am Tag-->
+  <!-- Modal für Fehler bei mehr als 3 am Tag-->
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header d-flex-row justify-content-center text-center">
-                <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"></h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light border border-2 ms-3"
-                onclick="window.location.href='Leistungsuebersicht.html?id=' + athleteId;">Verstanden</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header d-flex-row justify-content-center text-center">
+          <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-light border border-2 ms-3"
+            onclick="window.location.href='Leistungsuebersicht.html?id=' + athleteId;">Verstanden</button>
+        </div>
+      </div>
     </div>
   </div>
   <script>
-
     const athleteId = new URLSearchParams(window.location.search).get("id");
     let athlete;
     let exercisesList = [];  // Liste der Übungen
@@ -329,13 +330,15 @@
 
       if (selectedExercise.unit === "minute") {
         const timeValue = document.getElementById("points").value.split(":");
-        pointsValue = parseInt(timeValue[0]) * 60 + parseInt(timeValue[1]);
+        pointsValue = parseInt(parseInt(timeValue[0] * 60) + parseInt(timeValue[1])) * 1000;
       } else if (selectedExercise.unit === "bool") {
         pointsValue = document.getElementById("points_bool").checked ? 1 : 0;
       } else if (selectedExercise.unit === "meter") {
         pointsValue = Number(document.getElementById("points").value) * 100;
-      } else {
+      } else if (selectedExercise.unit === "centimeter") {
         pointsValue = parseInt(document.getElementById("points").value);
+      } else {
+        pointsValue = parseInt(document.getElementById("points").value * 1000);
       }
       return pointsValue;
     }
@@ -356,7 +359,7 @@
       // Datum im Format yyyy-mm-dd zurückgeben
       return `${year}-${month}-${day}`;
     }
-    
+
     function fehler409ModalFüllen() {
       const modalBody = document.getElementsByClassName("modal-body")[0];
       const modalTitle = document.getElementById("exampleModalLabel");
@@ -364,13 +367,17 @@
       // Setze den Inhalt im Modal
       modalTitle.innerHTML = "<strong>Limit für Einträge erreicht<strong>";
       modalTitle.style.color = "red";
-      modalBody.innerHTML = `<p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>`;
+      modalBody.innerHTML = `
+      <p>Es wurden bereits 3 Leistungen für diesen Tag eingetragen.</p>
+      <p>Soll der beste Eintrag überschrieben werden?</p>
+      <button class="btn btn-light" onClick="Ueberschreiben(${document.getElementById("exercise").value})">Überschreiben</button>
+      `;
       // Zeige das Modal an
       const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
       modal.show();
     }
-    
-    function erfolgsMedailleModalFüllen(vorname, nachname, medaille){
+
+    function erfolgsMedailleModalFüllen(vorname, nachname, medaille) {
       const modalBody = document.getElementsByClassName("modal-body")[0];
       const modalTitle = document.getElementById("exampleModalLabel");
 
@@ -393,13 +400,64 @@
       modalTitle.innerHTML = "<strong>Leistungseintrag erfolreich erstellt<strong>";
       modalTitle.style.color = "green";
       modalBody.innerHTML = `<p><strong>${vorname} ${nachname}</strong> hat folgende Medaille erreicht: </p>
-      <p style="font-size: 50px; text-align:center">${aktMed_icon}</p>`;    
+      <p style="font-size: 50px; text-align:center">${aktMed_icon}</p>`;
       // Zeige das Modal an
       const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
       modal.show();
     }
 
-
+    async function Ueberschreiben(exercise_id) {
+      performanceId = "";
+      try {
+        const performanceResponse = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
+        performanceId = performanceResponse.data.performance_entries[0].performance_id;
+        points = preparePointsForBackend();
+        try {
+          const response = await axios.put("http://localhost:8080/v1/performance/edit",
+            {
+              date: document.getElementById("date").value,
+              exercise_id: parseInt(document.getElementById("exercise").value),
+              performance_id: performanceId,
+              points: points,
+            },
+            { withCredentials: true });
+            
+            // Wenn überschrieben wurde dann wechsel zur Leistungsuebersicht
+            window.location.href = `Leistungsuebersicht.html?id=${athleteId}`
+        } catch (error) {
+          if (error.response) {
+            if (error.response.status === 400) {
+              console.error("Invalid request body. Error: " + error);
+              alert("Invalid request body!");
+            } else if (error.response.status === 404) {
+              console.error("Performance entry or goals not found. Error: " + error);
+              alert("Performance entry or goals not found!");
+            } else {
+              console.error("Internal server error. Error: " + error);
+              alert("Internal server error");
+            }
+          } else {
+            console.error("Error:" + error);
+            alert("Unexpected error");
+            window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
+          }
+        }
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 404) {
+            console.error("Athlete does not exists. Error: " + error);
+            alert("Athlet existiert nicht!");
+          } else {
+            console.error("Internal server error. Error: " + error);
+            alert("Unerwarteter Fehler!");
+          }
+        } else {
+          console.error("Fehler bei Leistungsabruf! Error:" + error);
+          alert("Fehler bei Leistungsabruf");
+          //window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
+        }
+      }
+    }
   </script>
 </body>
 
