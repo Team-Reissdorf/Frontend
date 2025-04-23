@@ -5,6 +5,81 @@
   <meta charset="utf-8">
   <title>ComPeteHub</title>
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+
+  <style>
+    /*--------------------------------------------------------------
+      1. Shrink table cells on very small screens (≤575.98px)
+        - Reduces padding and font-size in athlete-cards tables
+    --------------------------------------------------------------*/
+    @media (max-width: 575.98px) {
+
+      .athlete-cards table th,
+      .athlete-cards table td {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      2. Shrink table cells on small-medium screens (768px–991.98px)
+        - Same adjustments as above for tablets and small laptops
+    --------------------------------------------------------------*/
+    @media (min-width: 768px) and (max-width: 991.98px) {
+
+      .athlete-cards table th,
+      .athlete-cards table td {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      3. Enable horizontal scrolling on overflow tables
+        - Any <div class="table-responsive"> will scroll instead of breaking layout
+    --------------------------------------------------------------*/
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      /* smooth scrolling on iOS */
+    }
+
+    /*--------------------------------------------------------------
+      4. Make buttons & selects “finger-friendly” on phones (≤575.98px)
+        - btn-responsive and form-select-responsive get default Bootstrap sizes to improve tap targets
+    --------------------------------------------------------------*/
+    @media (max-width: 575.98px) {
+      .btn-responsive {
+        /* default Bootstrap button padding & font-size */
+        padding: .375rem .75rem;
+        font-size: 1rem;
+      }
+
+      .form-select-responsive {
+        /* default Bootstrap select padding & font-size */
+        padding: .375rem .75rem;
+        font-size: 1rem;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      5. Shrink buttons & selects to “.btn-sm” / “.form-select-sm” on larger screens (≥576px)
+        - Keeps controls compact once there’s enough room
+    --------------------------------------------------------------*/
+    @media (min-width: 576px) {
+      .btn-responsive {
+        /* Bootstrap’s btn-sm padding & font-size */
+        padding: .25rem .5rem;
+        font-size: .875rem;
+      }
+
+      .form-select-responsive {
+        /* Bootstrap’s form-select-sm padding & font-size */
+        padding: .25rem .5rem;
+        font-size: .875rem;
+      }
+    }
+  </style>
+
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../node_modules/axios/dist/axios.js"></script>
 </head>
@@ -14,32 +89,33 @@
   <script src="js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
   <!-- Sortieren Dropdown und Sportler erstellen Button -->
-  <div class="d-flex justify-content-between align-items-center m-2">
+  <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
     <!-- Dropdown für Sortieren -->
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center mb-2 mb-sm-0">
       <label for="sorter" class="me-2">Sortieren:</label>
-      <select id="sorter" class="form-select sorter" style="width: 200px;" required>
+      <select id="sorter" class="form-select sorter form-select-responsive" style="width: 200px;" required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
     </div>
-    <div class="d-flex flex-row justify-content-between">
-      <!-- Exportieren Button -->
-      <button type="button" class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="modal"
-        data-bs-target="#exampleModal">Leistungsexport</button>
 
-      <!-- einzelnen Sportler erstellen Button -->
-      <a href="html/SportlerErstellen.html">
-        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;">Sportler erstellen</button>
+    <!-- Exportieren Button -->
+    <div class="d-flex flex-column flex-sm-row align-items-center">
+      <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;">Leistungsexport</button>
+
+      <!-- einzelnen Sportler erstellen-->
+      <a href="html/SportlerErstellen.html" class="mb-2 mb-sm-0 me-sm-2">
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;">Sportler Massenerstellung</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler Massenerstellung</button>
       </a>
     </div>
   </div>
+
   <!-- Hier werden die Athleten angezeigt (Cards) -->
   <div class="container my-2 athlete-cards">
   </div>
@@ -224,7 +300,6 @@
       const medalCells = exercises.map(exerciseGroup => {
         // Sammle alle Medaillen in dieser Disziplin
         const medals = exerciseGroup.map(exercise => {
-          console.log(performanceEntries);
           const perf = performanceEntries.find(p => p.exercise_id === exercise.exercise_id);
           return perf?.medal || "none";
         });
@@ -271,37 +346,57 @@
       `;
 
       const cardHTML = `
-      <div class="row" style="padding-bottom: 24px;">
-        <div class="p-4 text-center bg-body-tertiary rounded-4 border border-2 w-100">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <h4 class="mb-0" style="margin-left: 24px; text-align: left;">${athlete.first_name} ${athlete.last_name}</h4>
-              <h6 class="mb-0" style="margin-left: 24px; text-align: left;">${birthdate} ${sex}</h6>
-            </div>
-            <div class="d-flex justify-content-between align-items-center">
-              <table>
-                <thead>
-                  <tr>
-                    <th style="padding: 8px 16px; min-width: 60px;">DSA</th>
-                    ${discipline_names.map(d => `<th style="padding: 8px 16px; min-width: 60px;">${d}</th>`).join("")}
-                    <th style="padding: 8px 16px; min-width: 60px;">Schwimmnachweis</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    ${medalRow}
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div>
-              <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}"><button class="btn btn-light rounded-3 border border-2 fw-bold mx-2 my-2">Bearbeiten</button></a>
-              <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}"><button class="btn btn-light rounded-3 border border-2 fw-bold mx-2 my-2">Leistungsübersicht</button></a>
-              <button class="btn btn-light rounded-3 border border-2 delete-btn fw-bold mx-2 my-2" data-id="${athlete.athlete_id}">Löschen</button>
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="p-4 bg-body-tertiary rounded-4 border border-2">
+              <!-- Flex-Container: columns on xs, row ab md -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                
+                <!-- Name & Details -->
+                <div class="text-start mb-3 mb-md-0 flex-fill">
+                  <h4 class="mb-1">${athlete.first_name} ${athlete.last_name}</h4>
+                  <h6 class="mb-0">${birthdate}  ${sex}</h6>
+                </div>
+                
+                <!-- Medaillen-Tabelle -->
+                <div class="mb-3 mb-md-0 flex-fill text-center table-responsive">
+                  <table class="mx-auto">
+                    <thead>
+                      <tr>
+                        <th style="padding:8px;">DSA</th>
+                        ${discipline_names.map(d => `<th style="padding:8px;">${d}</th>`).join('')}
+                        <th style="padding:8px;">Schwimm-nachweis</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        ${medalRow}
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="d-inline-flex flex-column align-items-stretch flex-fill">
+                  <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" class="mb-2">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center">
+                      Bearbeiten
+                    </button>
+                  </a>
+                  <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" class="mb-2">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center">
+                      Leistungsübersicht
+                    </button>
+                  </a>
+                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center">
+                    Löschen
+                  </button>
+                </div>
+              
+              </div>
             </div>
           </div>
         </div>
-      </div>
       `;
       container.insertAdjacentHTML('beforeend', cardHTML);
     }
@@ -341,17 +436,19 @@
       <p>Nachname, Vorname, Geschlecht, Geburtstag, Übung, Kategorie, Datum, Ergebnis, Punkte</p>
     `;
     athleteListHTML += `
-      <table class="table">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAll"></th>
-            <th>Name</th>
-            <th>Geburtsdatum</th>
-            <th>E-Mail</th>
-            <th>Geschlecht</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll"></th>
+              <th>Name</th>
+              <th>Geburtsdatum</th>
+              <th>E-Mail</th>
+              <th>Geschlecht</th>
+            </tr>
+          </thead>
+          <tbody>
+        </div>
     `;
     if (response !== null) {
       id = 0
