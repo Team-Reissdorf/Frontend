@@ -224,6 +224,7 @@
       const medalCells = exercises.map(exerciseGroup => {
         // Sammle alle Medaillen in dieser Disziplin
         const medals = exerciseGroup.map(exercise => {
+          console.log(performanceEntries);
           const perf = performanceEntries.find(p => p.exercise_id === exercise.exercise_id);
           return perf?.medal || "none";
         });
@@ -392,7 +393,7 @@
       const response = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${year}-01-01`, {
         withCredentials: true
       });
-      return response.data.performance_entries;
+      return Array.isArray(response.data.performance_entries) ? response.data.performance_entries : [];
     } catch (error) {
       console.error(`Fehler beim Abrufen der Leistungen für Athlet ${athleteId}:`, error);
       return [];
