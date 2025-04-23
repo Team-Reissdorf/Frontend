@@ -408,9 +408,9 @@
           try {
             await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, { withCredentials: true });
 
-            const index = athletes.findIndex(a => a.athlete_id === parseInt(athleteId));
-            if (index !== -1) {
-              athletes.splice(index, 1);
+            const athleteIndex = athletes.findIndex(a => a.athlete_id === parseInt(athleteId));
+            if (athleteIndex !== -1) {
+              athletes.splice(athleteIndex, 1);
             }
 
             renderCards(athletes);
