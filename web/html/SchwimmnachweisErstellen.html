@@ -43,20 +43,19 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header d-flex-row justify-content-center text-center">
-                    <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Sportler erfolgreich
-                            erstellt!</strong></h1>
+                    <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Schwimmnachweis erfolgreich erstellt</strong></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light border border-2 ms-3"
-                        onclick="window.location.href = '../index.html';">Verstanden</button>
+                        onclick="window.location.href = `Leistungsuebersicht.html?id=${athleteId}`">Verstanden</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
+        const athleteId = new URLSearchParams(window.location.search).get("id");
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
@@ -66,10 +65,10 @@
             } catch (error) {
                 if (error.code == "ERR_NETWORK") {
                     console.log("Backend nicht erreichbar:" + error)
-                    window.location.href = "html/BackendDown.html";
+                    window.location.href = "BackendDown.html";
                 } else if (error.response) {
                     // Bei Fehler mit Response gehe zu html/Anmeldung.html
-                    window.location.href = "html/Anmeldung.html";
+                    window.location.href = "Anmeldung.html";
                 } else {
                     // Andere Fehler
                     console.error("Netzwerkfehler:", error.message);
@@ -83,12 +82,12 @@
                 if (document.getElementById("pdf").files.length > 0) {
                     const formData = new FormData();
                     formData.append('file', document.getElementById("pdf").files[0]);
-                    const athleteId = new URLSearchParams(window.location.search).get("id");
+                    
                     try {
                         const response = await axios.post(`http://localhost:8080/v1/swimCertificate/create/${athleteId}`, formData,
                             { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } });
 
-                        if (response.status === 201) {
+                        if (response.status === 200) {
                             console.log("Users created successfully");
                             try {
                                 erfolgsModalFüllen(response.data);
@@ -119,7 +118,6 @@
                             // Andere Fehler
                             console.error("Netzwerkfehler:", error.message);
                         }
-                        fehlerModalFüllen(fehlerNachricht, error.message);
                     }
                 } else {
                     alert("Bitte eine PDF-Datei auswählen.");
@@ -134,25 +132,10 @@
             // Setze den Inhalt im Modal
             modalTitle.innerHTML = "<strong>Schwimmnachweis erfolgreich hochgeladen<strong>";
             modalTitle.style.color = "green";
-            modalBody.innerHTML = athleteListHTML;
             // Zeige das Modal an
             const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
             modal.show();
         }
-
-        function fehlerModalFüllen(nachricht, error) {
-            const modalBody = document.getElementsByClassName("modal-body")[0];
-            const modalTitle = document.getElementById("exampleModalLabel");
-
-            // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Fehler bei Schwimmnachweis-Hochladung!<strong>";
-            modalTitle.style.color = "red";
-            modalBody.innerHTML = `<p>${nachricht}</p><p>${error}</p>`;
-            // Zeige das Modal an
-            const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
-            modal.show();
-        }
-
     </script>
 
 </body>
