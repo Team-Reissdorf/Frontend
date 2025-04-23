@@ -17,8 +17,7 @@
   <div class="d-flex justify-content-between align-items-center m-2">
     <!-- Dropdown für Sortieren -->
     <div class="d-flex align-items-center">
-      <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
+      <label for="sorter" class="me-2">Sortieren:</label>
       <select id="sorter" class="form-select sorter" style="width: 200px;" required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
@@ -184,9 +183,6 @@
         selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
       });
     });
-    // Activate tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
   });
 
   // Sortierfunktion
