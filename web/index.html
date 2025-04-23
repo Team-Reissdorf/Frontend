@@ -158,8 +158,6 @@
       } else if (error.code == "ERR_NETWORK") {
         console.error("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
-      } else if (error.response) {
-        window.location.href = "html/Anmeldung.html";
       } else {
         // Andere Fehler
         console.error("Fehler: " + error)
@@ -486,7 +484,7 @@
 
   async function getPerformanceEntries(athleteId) {
     try {
-      year = new Date().getFullYear();
+      const year = new Date().getFullYear();
       const response = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${year}-01-01`, {
         withCredentials: true
       });
