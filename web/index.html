@@ -253,16 +253,20 @@
 
       // DSA-Medaille je nach Gesamtpunktzahl
       let dsaMedal = "none";
-      if (enoughMedals) {
+      let swimCert = athlete.swim_cert;
+      if (enoughMedals && swimCert) {
         if (totalPoints >= 11) dsaMedal = "gold";
         else if (totalPoints >= 8) dsaMedal = "silver";
         else if (totalPoints >= 4) dsaMedal = "bronze";
       }
 
+      const swimIcon = swimCert ? '✅' : '❌';
+
       // Gesamte Zeile: DSA zuerst
       const medalRow = `
         <td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${getMedalIcon(dsaMedal)}</td>
         ${medalCells.join("")}
+        <td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${swimIcon}</td>  
       `;
 
       const cardHTML = `
@@ -279,6 +283,7 @@
                   <tr>
                     <th style="padding: 8px 16px; min-width: 60px;">DSA</th>
                     ${discipline_names.map(d => `<th style="padding: 8px 16px; min-width: 60px;">${d}</th>`).join("")}
+                    <th style="padding: 8px 16px; min-width: 60px;">Schwimmnachweis</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -348,7 +353,7 @@
         <tbody>
     `;
     if (response !== null) {
-      id=0
+      id = 0
       response.forEach(athlete => {
         const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
         var sex = "";
