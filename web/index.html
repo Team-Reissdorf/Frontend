@@ -244,8 +244,6 @@
         </td>`;
       });
 
-      schwimmnachweis = false; // Muss noch bearbeitet werden!! naksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasdanaksndasda
-
       // Zähle wie viele gültige Medaillen vorhanden sind
       const validMedalCount = medalCells.filter(cell =>
         cell.includes("🥇") || cell.includes("🥈") || cell.includes("🥉")
@@ -255,7 +253,7 @@
 
       // DSA-Medaille je nach Gesamtpunktzahl
       let dsaMedal = "none";
-      if (enoughMedals && schwimmnachweis) {
+      if (enoughMedals) {
         if (totalPoints >= 11) dsaMedal = "gold";
         else if (totalPoints >= 8) dsaMedal = "silver";
         else if (totalPoints >= 4) dsaMedal = "bronze";
