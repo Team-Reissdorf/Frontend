@@ -16,8 +16,7 @@
     <!-- Alles was links steht -->
     <div class="d-flex align-items-center">
       <!-- Dropdown für Sortieren -->
-      <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
+      <label for="sorter" class="me-2">Sortieren:</label>
       <select id="sorter" class="form-select sorter" style="width: 200px;" required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
@@ -186,9 +185,6 @@
         selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
       });
     });
-    // Activate tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
   
     const today = new Date();
     const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 1, 7*4);
