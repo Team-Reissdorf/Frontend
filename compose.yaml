@@ -7,4 +7,4 @@ services:
       - './node_modules:/usr/share/nginx/html/node_modules'
     restart: always
     ports:
-     - '8081:80'
+     - '8081:8081'
