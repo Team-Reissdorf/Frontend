@@ -99,7 +99,8 @@
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
-      <a href="html/RegelnUebersicht.html"><button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" id="regelButton">Regeln</button></a>
+      <a href="html/RegelnUebersicht.html"><button class="btn btn-light border border-2 btn-responsive"
+          style="font-weight: bold;" id="regelButton">Regeln</button></a>
     </div>
 
     <!-- Exportieren Button -->
@@ -371,20 +372,22 @@
                 
                 <!-- Medaillen-Tabelle -->
                 <div class="mb-3 mb-md-0 flex-fill text-center table-responsive">
-                  <table class="mx-auto">
-                    <thead>
-                      <tr>
-                        <th style="padding:8px;">DSA</th>
-                        ${discipline_names.map(d => `<th style="padding:8px;">${d}</th>`).join('')}
-                        <th style="padding:8px;">Schwimmnachweis</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        ${medalRow}
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="table-responsive">
+                    <table class="mx-auto">
+                      <thead>
+                        <tr>
+                          <th style="padding:8px;">DSA</th>
+                          ${discipline_names.map(d => `<th style="padding:8px;">${d}</th>`).join('')}
+                          <th style="padding:8px;">Schwimmnachweis</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          ${medalRow}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 
                 <!-- Buttons -->
