@@ -91,7 +91,7 @@
   <!-- Sortieren Dropdown und Sportler erstellen Button -->
   <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
     <!-- Sortieren Dropdown und Regel-Button -->
-    <div class="d-flex flex-column flex-sm-row align-items-center">
+    <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
       <label for="sorter" class="me-2 mb-2 mb-sm-0">Sortieren:</label>
       <select id="sorter" class="form-select sorter form-select-responsive me-sm-2 mb-2 mb-sm-0" style="width: 200px;"
         required>
@@ -99,7 +99,7 @@
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
-      <a href="html/RegelnUebersicht.html"><button class="btn" id="regelButton">Regeln</button></a>
+      <a href="html/RegelnUebersicht.html"><button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" id="regelButton">Regeln</button></a>
     </div>
 
     <!-- Exportieren Button -->
@@ -268,9 +268,9 @@
     const today = new Date();
     const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 7 * 4);
     if (redOrNot) {
-      document.getElementById("regelButton").className = "btn btn-danger border border-2 ms-3";
+      document.getElementById("regelButton").className = "btn btn-danger border border-2 btn-responsive";
     } else {
-      document.getElementById("regelButton").className = "btn btn-light border border-2 ms-3";
+      document.getElementById("regelButton").className = "btn btn-light border border-2 btn-responsive";
     }
   });
 
