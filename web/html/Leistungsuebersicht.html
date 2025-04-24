@@ -52,24 +52,25 @@
   </div>
 
   <!--Optionen-->
-  <!--TODO-->
   <div class="container">
-    <div class="d-flex justify-content-center gap-3 align-items-end  ">
+    <div class="d-flex flex-wrap justify-content-center gap-3 align-items-center m-auto">
       <!-- Button: Leistungen eintragen -->
       <a href="#" onclick="this.href='LeistungErstellen.html?id=' + athleteId" class="text-decoration-none">
         <button class="btn btn-light border border-2 fw-bold py-2 px-3">Leistungen eintragen</button>
       </a>
 
-      <!-- Datum für Datenabfrage  -->
-      <div class="text-center">
-        <label for="datenAbfragenAb" class="form-label d-block">Leistungen anzeigen ab</label>
-        <input type="date" class="form-control btn btn-light border border-2 fw-bold py-2 px-3" id="datenAbfragenAb"
-          value="2025-01-01" max="9999-12-31" style="max-width: 180px; font-weight: bold;">
-      </div>
+      <label for="datenAbfragenAb" class="btn btn-light border border-2 fw-bold py-2 px-3 d-flex align-items-center gap-2">
+        <span>Anzeigen ab</span>
+        <input type="date" id="datenAbfragenAb" class="border-0 bg-transparent fw-bold p-0" value="2025-01-01" max="9999-12-31" style="outline: none; box-shadow: none;" />
+      </label>
 
       <!-- Button: Schwimmnachweis eintragen -->
       <a href="#" onclick="this.href='SchwimmnachweisErstellen.html?id=' + athleteId" class="text-decoration-none">
         <button class="btn btn-light border border-2 fw-bold py-2 px-3">Schwimmnachweis eintragen</button>
+      </a>
+
+      <a href="#" onclick="downloadSchwimmnachweise()" class="text-decoration-none">
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3">Schwimmnachweise Herunterladen</button>
       </a>
 
     </div>
@@ -197,27 +198,31 @@
 
 </html>
 
-<script>
-  const athleteId = new URLSearchParams(window.location.search).get("id");
-  // Lade alles notwendige vor
-  document.addEventListener("DOMContentLoaded", async () => {
-    // Überprüfung, ob User angemeldet ist
-    try {
-      const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
-        { withCredentials: true });
-      // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
-    } catch (error) {
-      //Falls Server nicht erreichbar ist
-      if (error.code == "ERR_NETWORK") {
-        console.log("Backend nicht erreichbar:" + error)
-        window.location.href = "BackendDown.html";
-      } else if (error.response) {
-        windows.location.href = "Anmeldung.html"
-      } else {
-        // Andere Fehler
-        console.log("Fehler: " + error)
-      }
-    }
+      <script>
+        const athleteId = new URLSearchParams(window.location.search).get("id");
+
+        // Lade alles notwendige vor
+        document.addEventListener("DOMContentLoaded", async () => {
+          // Überprüfung, ob User angemeldet ist
+          try {
+            const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+              { withCredentials: true });
+            // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
+          } catch (error) {
+            if (error.response) {
+              // Bei Fehler mit Response gehe zu Anmeldung.html
+              window.location.href = "Anmeldung.html";
+            } else {
+              //Falls Server nicht erreichbar ist
+              if(error.code == "ERR_NETWORK"){
+                console.error("Backend nicht erreichbar:" + error)
+                window.location.href = "BackendDown.html";
+              } else {
+                // Andere Fehler
+                console.error("Fehler: " + error)
+              }
+            }
+          }
 
     try {
       // Daten vom Backend abrufen & vorbereiten
@@ -526,4 +531,44 @@
       icon.classList.toggle("open");
     }
   }
+
+  async function downloadSchwimmnachweise() {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/v1/swimCertificate/download-all/${athleteId}`,
+        {
+          responseType: 'blob',
+          withCredentials: true,
+        }
+      );
+
+      // ZIP-Datei aus dem response erzeugen
+      const blob = new Blob([response.data], { type: 'application/zip' });
+      const url = window.URL.createObjectURL(blob);
+
+      // zip für download erzeugen
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'schwimmnachweise.zip'); 
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+      if (error.response.status === 401) {
+        window.location.href = "Anmeldung.html";
+      }
+      else if (error.response.status === 404) {
+        alert('Für diesen Athleten existieren noch keine Schwimmnachweise.');
+      }
+      else {
+
+        alert('Schwimmnachweise konnten nicht heruntergeladen werden!');
+      }
+
+      console.error(error);
+    }
+  }
+
 </script>
