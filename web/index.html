@@ -149,7 +149,7 @@
     // Überprüfung, ob User angemeldet ist
     try {
       const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
-        { withCredentials: true });
+        { withCredentials: true, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': ' GET, PUT, POST, DELETE, OPTIONS' } });
       // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
     } catch (error) {
       //Falls Server nicht erreichbar ist
