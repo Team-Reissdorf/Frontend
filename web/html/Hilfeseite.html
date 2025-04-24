@@ -158,7 +158,7 @@
     <div class="container my-5">
         <div id="dokuBackend" class="p-5  bg-body-tertiary rounded-3">
             <h2 class="text-dark text-center mb-5">Technische Dokumentation des Backends</h2>
-            <iframe src="http://localhost:8080/docs" title="Technische Dokumentation" allowfullscreen
+            <iframe src="http://localhost:8081/backend/docs" title="Technische Dokumentation" allowfullscreen
                 style="height: 500px; width: 100%;"></iframe>
         </div>
     </div>
@@ -170,7 +170,7 @@
 <script>
     document.addEventListener("DOMContentLoaded", async () => {
         try {
-            const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+            const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
                 { withCredentials: true });
             // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
         } catch (error) {

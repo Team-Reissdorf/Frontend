@@ -205,7 +205,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
           // Überprüfung, ob User angemeldet ist
           try {
-            const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+            const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
               { withCredentials: true });
             // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
           } catch (error) {
@@ -226,7 +226,7 @@
 
     try {
       // Daten vom Backend abrufen & vorbereiten
-      const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
+      const response = await axios.get(`http://localhost:8081/backend/v1/athlete/get/${athleteId}`, {
         withCredentials: true,
       });
       const athlete = response.data.athlete;
@@ -276,7 +276,7 @@
     try {
       const abrufenAb = document.getElementById("datenAbfragenAb").value;
 
-      const responsePerformance = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${abrufenAb}`, {
+      const responsePerformance = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?since=${abrufenAb}`, {
         withCredentials: true
       });
       performanceEinträge = responsePerformance.data.performance_entries
@@ -296,7 +296,7 @@
     //Kategorien für spätere Zuordnung bekommen
     let alleKategorien = []
     try {
-      const responseDisziplinen = await axios.get(`http://localhost:8080/v1/discipline/get-all`, {
+      const responseDisziplinen = await axios.get(`http://localhost:8081/backend/v1/discipline/get-all`, {
         withCredentials: true
       });
       alleKategorien = responseDisziplinen.data.discipline_names
@@ -316,7 +316,7 @@
       let alleExercisesFürAktKategorie = []
       for (const aktKategorie of alleKategorien) {
         try {
-          const responseExercises = await axios.get(`http://localhost:8080/v1/exercise/get/${aktKategorie}`, {
+          const responseExercises = await axios.get(`http://localhost:8081/backend/v1/exercise/get/${aktKategorie}`, {
             withCredentials: true
           });
 
@@ -535,7 +535,7 @@
   async function downloadSchwimmnachweise() {
     try {
       const response = await axios.get(
-        `http://localhost:8080/v1/swimCertificate/download-all/${athleteId}`,
+        `http://localhost:8081/backend/v1/swimCertificate/download-all/${athleteId}`,
         {
           responseType: 'blob',
           withCredentials: true,

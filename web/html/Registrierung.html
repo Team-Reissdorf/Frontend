@@ -72,7 +72,7 @@
     // Überprüfung, ob User angemeldet ist
     document.addEventListener("DOMContentLoaded", async () => {
       try{
-        const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+        const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
                 {withCredentials: true});
 
         // Wenn die Anfrage erfolgreich ist (200 OK), geh zur Overview-Seite
@@ -101,7 +101,7 @@
       if (password === password_2) {
         try {
           // POST-Anfrage mit axios ans Backend senden
-          const response = await axios.post('http://localhost:8080/v1/user/register', {
+          const response = await axios.post('http://localhost:8081/backend/v1/user/register', {
             email: email,
             password: password,
             remember_me: remember_me,

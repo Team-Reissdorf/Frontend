@@ -148,7 +148,7 @@
   document.addEventListener("DOMContentLoaded", async () => {
     // Überprüfung, ob User angemeldet ist
     try {
-      const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+      const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
         { withCredentials: true, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': ' GET, PUT, POST, DELETE, OPTIONS' } });
       // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
     } catch (error) {
@@ -167,7 +167,7 @@
     let athletes = [];
     try {
       // Athleten vom Server abrufen
-      const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
+      const response = await axios.get('http://localhost:8081/backend/v1/athlete/get-all', {
         withCredentials: true,
       });
 
@@ -202,7 +202,7 @@
           return
         } else {
           // POST-Anfrage an Backend senden
-          const response = await axios.post('http://localhost:8080/v1/performance/export',
+          const response = await axios.post('http://localhost:8081/backend/v1/performance/export',
             {
               athlete_ids: athletes,
             },
@@ -406,7 +406,7 @@
 
         if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
           try {
-            await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, { withCredentials: true });
+            await axios.delete(`http://localhost:8081/backend/v1/athlete/delete/${athleteId}`, { withCredentials: true });
 
             const athleteIndex = athletes.findIndex(a => a.athlete_id === parseInt(athleteId));
             if (athleteIndex !== -1) {
@@ -485,7 +485,7 @@
   async function getPerformanceEntries(athleteId) {
     try {
       const year = new Date().getFullYear();
-      const response = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${year}-01-01`, {
+      const response = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?since=${year}-01-01`, {
         withCredentials: true
       });
       return Array.isArray(response.data.performance_entries) ? response.data.performance_entries : [];
@@ -497,7 +497,7 @@
 
   async function getDisciplineNames() {
     try {
-      const response = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+      const response = await axios.get('http://localhost:8081/backend/v1/discipline/get-all', { withCredentials: true });
       return response.data.discipline_names;
     } catch (error) {
       alert("Etwas ist schief gelaufen!");
@@ -508,7 +508,7 @@
 
   async function getExercises(discipline_name) {
     try {
-      const response = await axios.get(`http://localhost:8080/v1/exercise/get/${discipline_name}`, { withCredentials: true });
+      const response = await axios.get(`http://localhost:8081/backend/v1/exercise/get/${discipline_name}`, { withCredentials: true });
       return response.data.exercises;
     } catch (error) {
       console.error("Fehler beim Abrufen der Übungen:", error);
