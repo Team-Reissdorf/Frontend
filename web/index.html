@@ -92,7 +92,8 @@
   <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
     <!-- Sortieren Dropdown und Regel-Button -->
     <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
-      <label for="sorter" class="me-2 mb-2 mb-sm-0">Sortieren:</label>
+      <label for="sorter" class="me-2 mb-2 mb-sm-0" data-bs-toggle="tooltip" data-bs-placement="right"
+        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
       <select id="sorter" class="form-select sorter form-select-responsive me-sm-2 mb-2 mb-sm-0" style="width: 200px;"
         required>
         <option value="fname">Vorname (A-Z)</option>
@@ -100,24 +101,29 @@
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
       <a href="html/RegelnUebersicht.html"><button class="btn btn-light border border-2 btn-responsive"
-          style="font-weight: bold;" id="regelButton">Regeln</button></a>
+          style="font-weight: bold;" id="regelButton" data-bs-toggle="tooltip" data-bs-placement="top"
+          data-bs-title="Hier kann man die Regeln anschauen und aktualisieren.">Regeln</button></a>
     </div>
 
     <!-- Exportieren Button -->
     <div class="d-flex flex-column flex-sm-row align-items-center">
       <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
-        data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;">Leistungsexport</button>
+        data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;" data-bs-toggle="tooltip"
+        data-bs-placement="left"
+        data-bs-title="Hier kann man die Leistungen von Sportlern exportieren.">Leistungsexport</button>
 
       <!-- einzelnen Sportler erstellen-->
       <a href="html/SportlerErstellen.html" class="mb-2 mb-sm-0 me-sm-2">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
-          erstellen</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" data-bs-toggle="tooltip"
+          data-bs-placement="top" data-bs-title="Hier kann man einen neuen Sportler anlegen.">
+          Sportler erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
-          Massenerstellung</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" data-bs-toggle="tooltip"
+          data-bs-placement="top" data-bs-title="Hier kann man mehrere neuene Sportler anlegen.">
+          Sportler Massenerstellung</button>
       </a>
     </div>
   </div>
@@ -273,6 +279,7 @@
     } else {
       document.getElementById("regelButton").className = "btn btn-light border border-2 btn-responsive";
     }
+    initTooltips();
   });
 
   // Sortierfunktion
@@ -393,20 +400,17 @@
                 <!-- Buttons -->
                 <div class="d-inline-flex flex-column align-items-stretch flex-fill">
                   <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" class="mb-2">
-                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">
                       Bearbeiten
                     </button>
                   </a>
                   <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" class="mb-2">
-                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hier kann man eine Übersicht der Leistungen dieses Sportlers sehen.">
                       Leistungsübersicht
                     </button>
                   </a>
-                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center">
-                    Löschen
-                  </button>
+                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center" data-athleteid="${athlete.athlete_id}" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hiermit kann man den Sportler aus dem System entfernen.">Löschen</button>
                 </div>
-              
               </div>
             </div>
           </div>
@@ -418,7 +422,7 @@
     // Event Listener fürs Löschen
     document.querySelectorAll('.delete-btn').forEach(button => {
       button.addEventListener('click', async () => {
-        const athleteId = button.getAttribute('data-id');
+        const athleteId = button.dataset.athleteid;
 
         if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
           try {
@@ -437,6 +441,7 @@
         }
       });
     });
+    initTooltips();
   }
 
   function modalFüllen(response) {
@@ -555,5 +560,26 @@
     }
 
     return exercises;
+  }
+
+  /**
+   * Initialisiert alle Bootstrap-Tooltips (ohne Duplikate).
+   * Verwendet entweder das title-Attribut oder – falls vorhanden – data-bs-title.
+  */
+  function initTooltips() {
+    document.querySelectorAll('[data-bs-title]').forEach(el => {
+      // schon initialisiert?
+      if (bootstrap.Tooltip.getInstance(el)) return;
+
+      // Tooltip-Text aus title oder data-bs-title ziehen
+      const title = el.getAttribute('title')
+        || el.getAttribute('data-bs-title')
+        || '';
+      new bootstrap.Tooltip(el, {
+        title,
+        placement: el.getAttribute('data-bs-placement') || 'top',
+        trigger: 'hover'
+      });
+    });
   }
 </script>

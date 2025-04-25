@@ -26,7 +26,8 @@
             <div class="d-flex justify-content-center">
                 <div class="d-flex flex-column justify-content-center text-center m-4 col-md-6">
                     <!-- PDF-Datei (File) -->
-                    <label for="pdf">CSV-Datei mit aktualisierten Regeln:</label>
+                    <label for="pdf" data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-title="Hier kann man die Regeln-CSV hochladen.">CSV-Datei mit aktualisierten Regeln:</label>
                     <input type="file" class="form-control" id="pdf" accept=".csv">
                 </div>
             </div>
@@ -160,4 +161,6 @@
         modal.show();
     }
 
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>

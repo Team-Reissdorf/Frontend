@@ -19,27 +19,32 @@
         </div><!-- /.jumbotron -->
 
         <div class="d-flex justify-content-center m-2">
-            <a href="RegelnAktualisierung.html"><button class="btn" id="regelButton">Regeln aktualisieren</button></a>
+            <a href="RegelnAktualisierung.html"><button class="btn" id="regelButton" data-bs-toggle="tooltip"
+                    data-bs-placement="top" data-bs-title="Hier können die Regeln aktualisiert werden.">Regeln
+                    aktualisieren</button></a>
         </div>
 
         <div class="row">
             <!-- Kategorie -->
             <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                <label for="category">Kategorie</label>
+                <label for="category" data-bs-toggle="tooltip"
+                data-bs-placement="top" data-bs-title="Hier kann die Kategorie für die angezeigten Regeln ausgewählt werden.">Kategorie</label>
                 <select id="category" class="form-select kategorien" required>
                 </select>
             </div>
 
             <!-- Datum -->
             <div class="form-group col-md-6 col-lg-6 col-sm-12">
-                <label for="date">Datum</label>
+                <label for="date" data-bs-toggle="tooltip"
+                data-bs-placement="left" data-bs-title="Hier kann das Datum für die angezeigten Regeln verändert werden.">Datum</label>
                 <input type="date" class="form-control datum" id="date" min="2020-01-01" required>
             </div>
         </div>
         <div class="row">
             <!-- Übung -->
             <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                <label for="exercise">Übung</label>
+                <label for="exercise" data-bs-toggle="tooltip"
+                data-bs-placement="left" data-bs-title="Hier kann die Übung für die angezeigten Regeln ausgewählt werden.">Übung</label>
                 <select id="exercise" class="form-select uebungen" required>
                 </select>
             </div>
@@ -438,4 +443,6 @@
                 return points;
         }
     }
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>
