@@ -90,6 +90,15 @@
                     <td></td>
                     <td></td>
                 </tr>
+                <tr>
+                    <td scope="col">Beschreibung</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
 
@@ -132,6 +141,15 @@
                 </tr>
                 <tr>
                     <td scope="col">Gold</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="col">Beschreibung</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -186,6 +204,7 @@
             }
         }
 
+        let exerciseUnits = {};
         document.getElementById("date").value = new Date().getFullYear() + "-01-01";
 
         const today = new Date();
@@ -239,80 +258,184 @@
         });
     });
 
+    /**
+     * Lädt die Übungen für eine Kategorie und speichert die Units.
+     */
     async function loadExercises(category) {
         try {
-            const athleteId = new URLSearchParams(window.location.search).get("id");
             const datum = document.getElementById("date").value;
-            const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}?performance-date=${datum}`, { withCredentials: true });
-            exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
-            // Übungen Dropdown befüllen
+            const exerciseResponse = await axios.get(
+                `http://localhost:8080/v1/exercise/get/${category}?performance-date=${datum}`,
+                { withCredentials: true }
+            );
+
             const uebungen = document.querySelector('.uebungen');
-            uebungen.innerHTML = "";  // Vorherige Optionen löschen
-            exercisesList.forEach(element => {
-                uebungen.innerHTML += `<option value="${element.exercise_id}">${element.name}</option>`;
+            uebungen.innerHTML = "";
+            exercisesList = exerciseResponse.data.exercises;
+
+            // Einheit pro Übung merken und Dropdown füllen
+            exerciseUnits = {};
+            exercisesList.forEach(el => {
+                exerciseUnits[el.exercise_id] = el.unit;
+                uebungen.innerHTML += `<option value="${el.exercise_id}">${el.name}</option>`;
             });
-            const value = document.getElementById("date").value;
-            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+
+            // Tabelle direkt mit der ersten Übung füllen
+            const firstId = exercisesList.length ? exercisesList[0].exercise_id : null;
+            if (firstId) {
+                await loadTable(new Date().getFullYear(), firstId);
+            }
         } catch (error) {
             console.error("Fehler beim Laden der Übungen:", error);
             alert("Übungen konnten nicht geladen werden.");
         }
     }
 
+    /**
+     * Lädt das Regelset für eine Übung und übergibt es inkl. Unit an fillRulesTables.
+     */
     async function loadTable(year, exercise_id) {
         try {
-            const response = await axios.get(`http://localhost:8080/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
-                { withCredentials: true });
-            fillRulesTables(response.data);
+            const response = await axios.get(
+                `http://localhost:8080/v1/exercise/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
+                { withCredentials: true }
+            );
+            const unit = exerciseUnits[exercise_id];
+            fillRulesTables(response.data.exercise_goals, unit);
         } catch (error) {
-            if (error.response) {
-                if (error.response.status === 401) { } // Error Response abchecken im Backend und dann bearbeiten adsakjdlalkdjklajdlajkdjlkasjdlkaldkjaskldjklasjdklasjdklajskjld
-            } else {
-                alert("Fehler beim Laden des Regelsets");
-                console.error("Fehler beim Laden des Regelsets:", error);
-            }
+            console.error("Fehler beim Laden des Regelsets:", error);
+            alert("Fehler beim Laden des Regelsets");
         }
     }
 
-    function fillRulesTables(rulesData) {
-        const femaleData = rulesData.find(item => item.sex === 'f');
-        const maleData = rulesData.find(item => item.sex === 'm');
-        const diverseData = rulesData.find(item => item.sex === 'd');
-        const maleDivData = maleData || diverseData;
+    /**
+ * Füllt die beiden Tabellen (männlich/divers & weiblich) mit umgerechneten Werten
+ * und der Beschreibung. Bei Unit "bool" werden nur die Beschreibungszeilen angezeigt.
+ */
+    function fillRulesTables(rulesArray, unit) {
+        const isBool = unit === 'bool';
+        const femaleRules = rulesArray.filter(r => r.sex === 'f');
+        const maleRules = rulesArray.filter(r => r.sex === 'm' || r.sex === 'd');
 
         const ageRanges = ["6-7", "8-9", "10-11", "12-13", "14-15", "16-17"];
-        const medalTypes = ["bronze", "silver", "gold"];
-
         const tables = document.querySelectorAll("table.table-striped.table-hover");
         if (tables.length < 2) return;
-        const maleDivTable = tables[0];
-        const femaleTable = tables[1];
+        const maleTbl = tables[0];
+        const femaleTbl = tables[1];
 
-        function getRuleForRange(data, range) {
-            const [from, to] = range.split("-").map(Number);
-            if (!data) return null;
-            const rules = data.rules ? data.rules : data;
-            return rules.find(rule => rule.from_age === from && rule.to_age === to);
+        function getRule(rules, from, to) {
+            return rules.find(x => x.from_age === from && x.to_age === to);
         }
 
-        const maleRows = maleDivTable.querySelectorAll("tbody tr");
-        maleRows.forEach((row, rowIndex) => {
-            const cells = row.querySelectorAll("td");
-            ageRanges.forEach((range, colIndex) => {
-                const rule = getRuleForRange(maleDivData, range);
-                const value = rule ? rule[medalTypes[rowIndex]] : "-";
-                cells[colIndex + 1].textContent = value;
+        // Zeilen ein-/ausblenden: bei bool nur Beschreibung (Index 3)
+        [maleTbl, femaleTbl].forEach(tbl => {
+            tbl.querySelectorAll("tbody tr").forEach((row, idx) => {
+                if (isBool) {
+                    row.style.display = (idx === 3 ? "" : "none");
+                } else {
+                    row.style.display = "";
+                }
             });
         });
 
-        const femaleRows = femaleTable.querySelectorAll("tbody tr");
-        femaleRows.forEach((row, rowIndex) => {
-            const cells = row.querySelectorAll("td");
-            ageRanges.forEach((range, colIndex) => {
-                const rule = getRuleForRange(femaleData, range);
-                const value = rule ? rule[medalTypes[rowIndex]] : "-";
-                cells[colIndex + 1].textContent = value;
+        // Wenn bool, nur Beschreibungen füllen
+        if (isBool) {
+            const mDescRow = maleTbl.querySelectorAll("tbody tr")[3];
+            const fDescRow = femaleTbl.querySelectorAll("tbody tr")[3];
+            ageRanges.forEach((rng, colIdx) => {
+                const [from, to] = rng.split("-").map(Number);
+                const mRule = getRule(maleRules, from, to);
+                const fRule = getRule(femaleRules, from, to);
+
+                let mDesc = mRule && mRule.description ? mRule.description : "";
+                let fDesc = fRule && fRule.description ? fRule.description : "";
+
+                if (mDesc.replace(/["“”]/g, '').trim() === '') mDesc = "";
+                if (fDesc.replace(/["“”]/g, '').trim() === '') fDesc = "";
+
+                mDescRow.cells[colIdx + 1].textContent = mDesc;
+                fDescRow.cells[colIdx + 1].textContent = fDesc;
+            });
+            return;
+        }
+
+        // Normalfall: Bronze/Silber/Gold + Beschreibung
+        const medals = ["bronze", "silver", "gold"];
+        const displayUnit = changeUnit(unit);
+
+        // Bronze, Silber, Gold füllen
+        medals.forEach((medal, rowIdx) => {
+            const mRow = maleTbl.querySelectorAll("tbody tr")[rowIdx];
+            const fRow = femaleTbl.querySelectorAll("tbody tr")[rowIdx];
+            ageRanges.forEach((rng, colIdx) => {
+                const [from, to] = rng.split("-").map(Number);
+                const mRule = getRule(maleRules, from, to);
+                const fRule = getRule(femaleRules, from, to);
+
+                mRow.cells[colIdx + 1].textContent =
+                    mRule ? changePoints(mRule[medal], unit) + " " + displayUnit : "-";
+                fRow.cells[colIdx + 1].textContent =
+                    fRule ? changePoints(fRule[medal], unit) + " " + displayUnit : "-";
             });
         });
+
+        // Beschreibung füllen
+        const mDescRow = maleTbl.querySelectorAll("tbody tr")[3];
+        const fDescRow = femaleTbl.querySelectorAll("tbody tr")[3];
+        ageRanges.forEach((rng, colIdx) => {
+            const [from, to] = rng.split("-").map(Number);
+            const mRule = getRule(maleRules, from, to);
+            const fRule = getRule(femaleRules, from, to);
+
+            let mDesc = mRule && mRule.description ? mRule.description : "";
+            let fDesc = fRule && fRule.description ? fRule.description : "";
+
+            if (mDesc.replace(/["“”]/g, '').trim() === '') mDesc = "";
+            if (fDesc.replace(/["“”]/g, '').trim() === '') fDesc = "";
+
+            mDescRow.cells[colIdx + 1].textContent = mDesc;
+            fDescRow.cells[colIdx + 1].textContent = fDesc;
+        });
+    }
+
+    /**
+     * Wandelt Backend-Unit in Anzeige-Unit um.
+     * Für 'bool' geben wir keine zusätzliche Einheit aus.
+     */
+    function changeUnit(unit) {
+        switch (unit) {
+            case "minute": return "Min";
+            case "second": return "Sek";
+            case "meter": return "m";
+            case "centimeter": return "cm";
+            case "point": return "Punkte";
+            case "bool": return "";       // für boolean keine Einheit
+            default: return "";
+        }
+    }
+
+    /**
+     * Rechnet rohe Punkte (Millisekunden, Zentimeter, etc.) in Anzeige-Wert um.
+     * Für 'bool' wird 1 → "Bestanden", 0 → "Nicht bestanden".
+     */
+    function changePoints(points, unit) {
+        switch (unit) {
+            case "bool":
+                return points === 1 ? "Bestanden" : "Nicht bestanden";
+            case "minute": {
+                const totalSec = points / 1000;
+                const min = Math.floor(totalSec / 60);
+                const sec = Math.floor(totalSec % 60);
+                return min + ":" + (sec < 10 ? "0" : "") + sec;
+            }
+            case "second":
+                return (points / 1000).toFixed(2);
+            case "meter":
+                return (points / 100).toFixed(2);
+            case "centimeter":
+                return points;
+            default:
+                return points;
+        }
     }
 </script>
