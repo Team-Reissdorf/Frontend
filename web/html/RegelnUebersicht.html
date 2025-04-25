@@ -301,7 +301,7 @@
                 { withCredentials: true }
             );
             const unit = exerciseUnits[exercise_id];
-            fillRulesTables(response.data.exercise_goals, unit);
+            fillRulesTables(response.data.ruleset_goals, unit);
         } catch (error) {
             console.error("Fehler beim Laden des Regelsets:", error);
             alert("Fehler beim Laden des Regelsets");
