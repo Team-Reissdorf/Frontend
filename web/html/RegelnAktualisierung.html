@@ -117,7 +117,7 @@
                             fehlerNachricht = "The token is invalid";
                         } else if (error.response.status === 409) {
                             console.error("One or more athlete(s) already exist");
-                            fehlerNachricht = "Einer order mehrere Sportler existieren bereits!";
+                            fehlerNachricht = "Einer oder mehrere Sportler existieren bereits!";
                         } else if (error.response.status === 500) {
                             console.error("Internal Server Error");
                             fehlerNachricht = "Internal Server Error";
