@@ -89,22 +89,21 @@
             // Wenn eine file da ist, nur file senden
             if (document.getElementById("pdf").files.length > 0) {
                 const formData = new FormData();
-                formData.append('Swimcertificate', document.getElementById("pdf").files[0]);
+                formData.append('RulesetEntries', document.getElementById("pdf").files[0]);
                 const athleteId = new URLSearchParams(window.location.search).get("id");
                 try {
-                    const response = await axios.post(`http://localhost:8080/v1/ruleset/create/${athleteId}`, formData,
+                    const response = await axios.post(`http://localhost:8080/v1/ruleset/create`, formData,
                         { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } });
 
-                    if (response.status === 201) {
+                    if (response.status === 200) {
                         console.log("Ruleset updated successfully");
                         try {
-                            erfolgsModalFüllen(response.data);
+                            erfolgsModalFüllen();
                         }
                         catch (error) {
                             console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
                             alert("Fehler beim Füllen des Erfolgs-Modals!");
                         }
-                        window.location.href = "RegelnUebersicht.html"
                     }
                 } catch (error) {
                     console.error(error)
@@ -135,14 +134,14 @@
         })
     });
 
-    function erfolgsModalFüllen(response) {
+    function erfolgsModalFüllen() {
         const modalBody = document.getElementsByClassName("modal-body")[0];
         const modalTitle = document.getElementById("exampleModalLabel");
 
         // Setze den Inhalt im Modal
         modalTitle.innerHTML = "<strong>Regeln erfolgreich aktualisiert!<strong>";
         modalTitle.style.color = "green";
-        modalBody.innerHTML = athleteListHTML;
+        modalBody.innerHTML = "Die Regel wurden erfolgreich ins System geschrieben!";
         // Zeige das Modal an
         const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
         modal.show();
