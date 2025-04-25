@@ -5,6 +5,81 @@
   <meta charset="utf-8">
   <title>ComPeteHub</title>
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+
+  <style>
+    /*--------------------------------------------------------------
+      1. Shrink table cells on very small screens (≤575.98px)
+        - Reduces padding and font-size in athlete-cards tables
+    --------------------------------------------------------------*/
+    @media (max-width: 575.98px) {
+
+      .athlete-cards table th,
+      .athlete-cards table td {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      2. Shrink table cells on small-medium screens (768px–991.98px)
+        - Same adjustments as above for tablets and small laptops
+    --------------------------------------------------------------*/
+    @media (min-width: 768px) and (max-width: 991.98px) {
+
+      .athlete-cards table th,
+      .athlete-cards table td {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      3. Enable horizontal scrolling on overflow tables
+        - Any <div class="table-responsive"> will scroll instead of breaking layout
+    --------------------------------------------------------------*/
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      /* smooth scrolling on iOS */
+    }
+
+    /*--------------------------------------------------------------
+      4. Make buttons & selects “finger-friendly” on phones (≤575.98px)
+        - btn-responsive and form-select-responsive get default Bootstrap sizes to improve tap targets
+    --------------------------------------------------------------*/
+    @media (max-width: 575.98px) {
+      .btn-responsive {
+        /* default Bootstrap button padding & font-size */
+        padding: .375rem .75rem;
+        font-size: 1rem;
+      }
+
+      .form-select-responsive {
+        /* default Bootstrap select padding & font-size */
+        padding: .375rem .75rem;
+        font-size: 1rem;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      5. Shrink buttons & selects to “.btn-sm” / “.form-select-sm” on larger screens (≥576px)
+        - Keeps controls compact once there’s enough room
+    --------------------------------------------------------------*/
+    @media (min-width: 576px) {
+      .btn-responsive {
+        /* Bootstrap’s btn-sm padding & font-size */
+        padding: .25rem .5rem;
+        font-size: .875rem;
+      }
+
+      .form-select-responsive {
+        /* Bootstrap’s form-select-sm padding & font-size */
+        padding: .25rem .5rem;
+        font-size: .875rem;
+      }
+    }
+  </style>
+
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../node_modules/axios/dist/axios.js"></script>
 </head>
@@ -14,42 +89,39 @@
   <script src="js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
   <!-- Sortieren Dropdown und Sportler erstellen Button -->
-  <div class="d-flex justify-content-between align-items-center m-2">
-    <!-- Dropdown für Sortieren -->
-    <div class="d-flex align-items-center">
-      <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
-      <label for="sorter" class="me-2" data-bs-toggle="tooltip" data-bs-placement="top"
-        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
-      <select id="sorter" class="form-select sorter" style="width: 200px;" required>
+  <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
+    <!-- Sortieren Dropdown und Regel-Button -->
+    <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
+      <label for="sorter" class="me-2 mb-2 mb-sm-0">Sortieren:</label>
+      <select id="sorter" class="form-select sorter form-select-responsive me-sm-2 mb-2 mb-sm-0" style="width: 200px;"
+        required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
+      <a href="html/RegelnUebersicht.html"><button class="btn btn-light border border-2 btn-responsive"
+          style="font-weight: bold;" id="regelButton">Regeln</button></a>
     </div>
 
-    <div class="d-flex flex-row justify-content-between">
-      <!-- Exportieren Button -->
-      <button type="button" class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="modal"
-        data-bs-target="#exampleModal" title="Hier kann man Leistungen von Sportlern als CSV-Datei exportieren.">
-        Leistungsexport
-      </button>
+    <!-- Exportieren Button -->
+    <div class="d-flex flex-column flex-sm-row align-items-center">
+      <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
+        data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;">Leistungsexport</button>
 
-      <!-- einzelnen Sportler erstellen Button -->
-      <a href="html/SportlerErstellen.html">
-        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="tooltip"
-          data-bs-placement="top" data-bs-title="Hier kann man einen neuen Sportler anlegen.">Sportler
+      <!-- einzelnen Sportler erstellen-->
+      <a href="html/SportlerErstellen.html" class="mb-2 mb-sm-0 me-sm-2">
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
           erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;" data-bs-toggle="tooltip"
-          data-bs-placement="top" data-bs-title="Hier kann man mehrere neue Sportler anlegen.">Sportler
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
           Massenerstellung</button>
       </a>
     </div>
   </div>
+
   <!-- Hier werden die Athleten angezeigt (Cards) -->
   <div class="container my-2 athlete-cards">
   </div>
@@ -112,7 +184,7 @@
     } catch (error) {
       console.error("Athletes could not load");
       alert("Sportler konnten nicht geladen werden");
-      windowl.location.reload();
+      window.location.reload();
     }
 
     // Event Listener für Übungsänderung
@@ -193,13 +265,14 @@
         selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
       });
     });
-    // Activate tooltips
-    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-    const tooltipTriggerListe = [].slice.call(document.querySelectorAll('[title]'))
-    tooltipTriggerListe.forEach(function (tooltipTriggerEl) {
-      new bootstrap.Tooltip(tooltipTriggerEl)
-    })
+
+    const today = new Date();
+    const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 7 * 4);
+    if (redOrNot) {
+      document.getElementById("regelButton").className = "btn btn-danger border border-2 btn-responsive";
+    } else {
+      document.getElementById("regelButton").className = "btn btn-light border border-2 btn-responsive";
+    }
   });
 
   // Sortierfunktion
@@ -216,71 +289,146 @@
   }
 
   // Funktion zum Rendern der Karten
-  function renderCards(athletes) {
-    // Zielcontainer, in dem die Athleten angezeigt werden
+  async function renderCards(athletes) {
     const container = document.querySelector('.athlete-cards');
-    container.innerHTML = "";  // Vorherige Karten löschen
+    container.innerHTML = "";
 
-    // Für jeden Athleten eine Karte erstellen
-    athletes.forEach(athlete => {
-      var sex = "";
-      if (athlete.sex === "m") {
-        sex = 'Männlich';
-      } else if (athlete.sex === "f") {
-        sex = 'Weiblich';
-      } else if (athlete.sex === "d") {
-        sex = 'Divers';
+    const discipline_names = await getDisciplineNames();
+    if (!discipline_names || discipline_names.length === 0) {
+      console.error("Disziplinen konnten nicht geladen werden");
+      return;
+    }
+    const exercises = await getOrderedExercises(discipline_names);
+
+    for (const athlete of athletes) {
+      const sexMap = { m: "Männlich", f: "Weiblich", d: "Divers" };
+      const sex = sexMap[athlete.sex] || "";
+      const birthdate = new Date(athlete.birth_date).toLocaleDateString("de-DE");
+
+      const performanceEntries = await getPerformanceEntries(athlete.athlete_id);
+
+      // Punkte berechnen (bronze = 1, silber = 2, gold = 3)
+      let totalPoints = 0;
+      const medalCells = exercises.map(exerciseGroup => {
+        // Sammle alle Medaillen in dieser Disziplin
+        const medals = exerciseGroup.map(exercise => {
+          const perf = performanceEntries.find(p => p.exercise_id === exercise.exercise_id);
+          return perf?.medal || "none";
+        });
+
+        // Beste Medaille wählen: gold > silver > bronze > none
+        let bestMedal = "none";
+        if (medals.includes("gold")) bestMedal = "gold";
+        else if (medals.includes("silver")) bestMedal = "silver";
+        else if (medals.includes("bronze")) bestMedal = "bronze";
+
+        // Punkte dazu zählen
+        if (bestMedal === "gold") totalPoints += 3;
+        else if (bestMedal === "silver") totalPoints += 2;
+        else if (bestMedal === "bronze") totalPoints += 1;
+
+        return `<td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">
+          ${getMedalIcon(bestMedal)}
+        </td>`;
+      });
+
+      // Zähle wie viele gültige Medaillen vorhanden sind
+      const validMedalCount = medalCells.filter(cell =>
+        cell.includes("🥇") || cell.includes("🥈") || cell.includes("🥉")
+      ).length;
+
+      const enoughMedals = validMedalCount === 4;
+
+      // DSA-Medaille je nach Gesamtpunktzahl
+      let dsaMedal = "none";
+      let swimCert = athlete.swim_cert;
+      if (enoughMedals && swimCert) {
+        if (totalPoints >= 11) dsaMedal = "gold";
+        else if (totalPoints >= 8) dsaMedal = "silver";
+        else if (totalPoints >= 4) dsaMedal = "bronze";
       }
-      const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
 
+      const swimIcon = swimCert ? '✅' : '❌';
 
-      // Äußeres div (.row)
-      const rowDiv = document.createElement('div');
-      rowDiv.className = 'row';
-      rowDiv.style.paddingBottom = '24px';
+      // Gesamte Zeile: DSA zuerst
+      const medalRow = `
+        <td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${getMedalIcon(dsaMedal)}</td>
+        ${medalCells.join("")}
+        <td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${swimIcon}</td>  
+      `;
 
-      // Inneres div (Karte mit Inhalt)
-      const cardDiv = document.createElement('div');
-      cardDiv.className = 'p-4 text-center bg-body-tertiary rounded-4 border border-2';
-
-      // Inhalt der Karte
-      cardDiv.innerHTML = `
-      <div class="d-flex justify-content-between align-items-center">
-        <div>
-          <h2 class="mb-0" style="margin-left: 24px; text-align: left;">${athlete.first_name} ${athlete.last_name}</h2>
-          <h5 class="mb-0" style="margin-left: 24px; text-align: left;">${birthdate} ${sex}</h5>
+      const cardHTML = `
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="p-4 bg-body-tertiary rounded-4 border border-2">
+              <!-- Flex-Container: columns on xs, row ab md -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                
+                <!-- Name & Details -->
+                <div class="text-start mb-3 mb-md-0 flex-fill">
+                  <h4 class="mb-1">${athlete.first_name} ${athlete.last_name}</h4>
+                  <h6 class="mb-0">${birthdate}  ${sex}</h6>
+                </div>
+                
+                <!-- Medaillen-Tabelle -->
+                <div class="mb-3 mb-md-0 flex-fill text-center table-responsive">
+                  <div class="table-responsive">
+                    <table class="mx-auto">
+                      <thead>
+                        <tr>
+                          <th style="padding:8px;">DSA</th>
+                          ${discipline_names.map(d => `<th style="padding:8px;">${d}</th>`).join('')}
+                          <th style="padding:8px;">Schwimmnachweis</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          ${medalRow}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="d-inline-flex flex-column align-items-stretch flex-fill">
+                  <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" class="mb-2">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center">
+                      Bearbeiten
+                    </button>
+                  </a>
+                  <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" class="mb-2">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center">
+                      Leistungsübersicht
+                    </button>
+                  </a>
+                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center">
+                    Löschen
+                  </button>
+                </div>
+              
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-        <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">Bearbeiten</button></a>
-        <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" style="padding-right: 20px; padding-top: 20px; padding-bottom: 20px;"><button class="btn btn-light rounded-3 border border-2" style="font-weight: bold;" data-bs-toggle="tooltip"  data-bs-placement="top" data-bs-title="Hier kann man eine Übersicht der Leistungen dieses Sportlers sehen.">Leistungsnachweis</button></a>
-        <button type="button" class="btn btn-light rounded-3 border border-2 delete-btn" data-id="${athlete.athlete_id}" style="font-weight: bold; margin-right: 20px" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man den Sportler aus dem System entfernen.">Löschen</button>
-      </div>
-    </div>
-  `;
-      // Karte in das äußere div einfügen
-      rowDiv.appendChild(cardDiv);
-      container.appendChild(rowDiv);
-    });
+      `;
+      container.insertAdjacentHTML('beforeend', cardHTML);
+    }
 
-    // Event-Listener für die Löschen-Buttons erneut hinzufügen
+    // Event Listener fürs Löschen
     document.querySelectorAll('.delete-btn').forEach(button => {
-      button.addEventListener('click', async (event) => {
+      button.addEventListener('click', async () => {
         const athleteId = button.getAttribute('data-id');
 
         if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
           try {
-            // DELETE-Anfrage an das Backend senden
-            await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, {
-              withCredentials: true,
-            });
+            await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, { withCredentials: true });
 
-            // Aus der Liste entfernen
-            const athleteIndex = athletes.findIndex(athlete => athlete.athlete_id === parseInt(athleteId));
+            const athleteIndex = athletes.findIndex(a => a.athlete_id === parseInt(athleteId));
             if (athleteIndex !== -1) {
-              athletes.splice(athleteIndex, 1);  // Entfernt den Eintrag direkt aus der Liste
+              athletes.splice(athleteIndex, 1);
             }
 
-            // Die Karten neu rendern
             renderCards(athletes);
           } catch (error) {
             console.error('Fehler beim Löschen des Sportlers:', error);
@@ -302,20 +450,22 @@
       <p>Nachname, Vorname, Geschlecht, Geburtstag, Übung, Kategorie, Datum, Ergebnis, Punkte</p>
     `;
     athleteListHTML += `
-      <table class="table">
-        <thead>
-          <tr>
-            <th><input type="checkbox" id="selectAll"></th>
-            <th>Name</th>
-            <th>Geburtsdatum</th>
-            <th>E-Mail</th>
-            <th>Geschlecht</th>
-          </tr>
-        </thead>
-        <tbody>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll"></th>
+              <th>Name</th>
+              <th>Geburtsdatum</th>
+              <th>E-Mail</th>
+              <th>Geschlecht</th>
+            </tr>
+          </thead>
+          <tbody>
+        </div>
     `;
     if (response !== null) {
-      id=0
+      id = 0
       response.forEach(athlete => {
         const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
         var sex = "";
@@ -346,5 +496,64 @@
     // Setze den Inhalt im Modal
     modalTitle.innerHTML = "<strong>Leistungsexport<strong>";
     modalBody.innerHTML = athleteListHTML;
+  }
+
+  async function getPerformanceEntries(athleteId) {
+    try {
+      const year = new Date().getFullYear();
+      const response = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${year}-01-01`, {
+        withCredentials: true
+      });
+      return Array.isArray(response.data.performance_entries) ? response.data.performance_entries : [];
+    } catch (error) {
+      console.error(`Fehler beim Abrufen der Leistungen für Athlet ${athleteId}:`, error);
+      return [];
+    }
+  }
+
+  async function getDisciplineNames() {
+    try {
+      const response = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+      return response.data.discipline_names;
+    } catch (error) {
+      alert("Etwas ist schief gelaufen!");
+      console.error("Get disciplines went wrong");
+      return [];
+    }
+  }
+
+  async function getExercises(discipline_name) {
+    try {
+      const response = await axios.get(`http://localhost:8080/v1/exercise/get/${discipline_name}`, { withCredentials: true });
+      return response.data.exercises;
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Übungen:", error);
+      return [];
+    }
+  }
+
+  function getMedalIcon(medal) {
+    const medalMap = {
+      gold: '🥇',
+      silver: '🥈',
+      bronze: '🥉',
+      none: '❌'
+    };
+    return medalMap[medal] || medalMap.none;
+  }
+
+  async function getOrderedExercises(disciplineNames) {
+    const exercises = [];
+
+    for (const name of disciplineNames) {
+      const list = await getExercises(name);
+      if (list.length > 0) {
+        exercises.push(list);
+      } else {
+        console.warn(`Keine Übung für Disziplin "${name}" gefunden`);
+      }
+    }
+
+    return exercises;
   }
 </script>

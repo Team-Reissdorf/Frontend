@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ComPeteHub</title>
+    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../node_modules/axios/dist/axios.js"></script>
+</head>
+
+<body>
+    <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
+
+    <div class="container my-5">
+        <div class="p-5 text-center bg-body-tertiary rounded-3">
+            <h1 class="display-4">Regeln</h1>
+            <p class="lead">Übersicht für die Regeln</p>
+        </div><!-- /.jumbotron -->
+
+        <div class="d-flex justify-content-center m-2">
+            <a href="RegelnAktualisierung.html"><button class="btn" id="regelButton">Regeln aktualisieren</button></a>
+        </div>
+
+        <div class="row">
+            <!-- Kategorie -->
+            <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                <label for="category">Kategorie</label>
+                <select id="category" class="form-select kategorien" required>
+                </select>
+            </div>
+
+            <!-- Datum -->
+            <div class="form-group col-md-6 col-lg-6 col-sm-12">
+                <label for="date">Datum</label>
+                <input type="date" class="form-control datum" id="date" min="2020-01-01" required>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Übung -->
+            <div class="form-group col-md-6 col-sm-12 col-lg-6">
+                <label for="exercise">Übung</label>
+                <select id="exercise" class="form-select uebungen" required>
+                </select>
+            </div>
+        </div>
+
+        <br>
+
+        <div class="d-flex justify-content-center m-2">
+            <h5><strong>Männlich und Divers</strong></h5>
+        </div>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">6-7</th>
+                    <th scope="col">8-9</th>
+                    <th scope="col">10-11</th>
+                    <th scope="col">12-13</th>
+                    <th scope="col">14-15</th>
+                    <th scope="col">16-17</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="col">Bronze</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="col">Silber</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="col">Gold</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="col">Beschreibung</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <div class="d-flex justify-content-center m-2">
+            <h5><strong>Weiblich</strong></h5>
+        </div>
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">6-7</th>
+                    <th scope="col">8-9</th>
+                    <th scope="col">10-11</th>
+                    <th scope="col">12-13</th>
+                    <th scope="col">14-15</th>
+                    <th scope="col">16-17</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td scope="col">Bronze</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="col">Silber</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="col">Gold</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td scope="col">Beschreibung</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div><!-- /.container -->
+
+    <!-- Modal für Erfolg & bereits erstellte Sportler-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header d-flex-row justify-content-center text-center">
+                    <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Sportler erfolgreich
+                            erstellt!</strong></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light border border-2 ms-3"
+                        onclick="window.location.href = '../index.html';">Verstanden</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+                { withCredentials: true });
+            // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
+        } catch (error) {
+            if (error.response) {
+                // Bei Fehler mit Response gehe zu Anmeldung.html
+                window.location.href = "Anmeldung.html";
+            } else {
+                //Falls Server nicht erreichbar ist
+                if (error.code == "ERR_NETWORK") {
+                    console.log("Backend nicht erreichbar:" + error)
+                    window.location.href = "BackendDown.html";
+                } else {
+                    // Andere Fehler
+                    console.log("Fehler: " + error)
+                }
+            }
+        }
+
+        let exerciseUnits = {};
+        document.getElementById("date").value = new Date().getFullYear() + "-01-01";
+
+        const today = new Date();
+        const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 1, 7 * 4);
+        if (redOrNot) {
+            document.getElementById("regelButton").className = "btn btn-danger border border-2 ms-3";
+        } else {
+            document.getElementById("regelButton").className = "btn btn-light border border-2 ms-3";
+        }
+
+        // GET Kategorien und Dropdowns auffüllen
+        try {
+            // Kategorie-Daten vom Backend abrufen
+            const categoryResponse = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+            const disciplines = categoryResponse.data.discipline_names;
+
+            // Kategorien Dropdown befüllen
+            const kategorien = document.querySelector('.kategorien');
+            kategorien.innerHTML = "";
+            disciplines.forEach(element => {
+                kategorien.innerHTML += `<option value="${element}">${element}</option>`;
+            });
+
+            // Übungen für die erste Kategorie direkt laden
+            if (disciplines.length > 0) {
+                await loadExercises(disciplines[0]);
+            }
+        } catch (error) {
+            console.error("Fehler beim Laden der Kategorien:", error);
+            alert("Kategorien konnten nicht geladen werden.");
+        }
+
+        const value = document.getElementById("date").value;
+
+        // Event Listener für Kategorieänderung
+        document.querySelector(".kategorien").addEventListener("change", async (event) => {
+            //const category = document.getElementById("category").value;
+            await loadExercises(event.target.value);
+            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+        });
+
+        // Event Listener für Datumsänderung
+        document.querySelector(".datum").addEventListener("change", async (event) => {
+            document.getElementById("date").value = value[0] + value[1] + value[2] + value[3] + "-01-01";
+            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+        });
+
+        // Event Listener für Übungsänderung
+        document.querySelector(".uebungen").addEventListener("change", async (event) => {
+            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+        });
+    });
+
+    /**
+     * Lädt die Übungen für eine Kategorie und speichert die Units.
+     */
+    async function loadExercises(category) {
+        try {
+            const datum = document.getElementById("date").value;
+            const exerciseResponse = await axios.get(
+                `http://localhost:8080/v1/exercise/get/${category}?performance-date=${datum}`,
+                { withCredentials: true }
+            );
+
+            const uebungen = document.querySelector('.uebungen');
+            uebungen.innerHTML = "";
+            exercisesList = exerciseResponse.data.exercises;
+
+            // Einheit pro Übung merken und Dropdown füllen
+            exerciseUnits = {};
+            exercisesList.forEach(el => {
+                exerciseUnits[el.exercise_id] = el.unit;
+                uebungen.innerHTML += `<option value="${el.exercise_id}">${el.name}</option>`;
+            });
+
+            // Tabelle direkt mit der ersten Übung füllen
+            const firstId = exercisesList.length ? exercisesList[0].exercise_id : null;
+            if (firstId) {
+                await loadTable(new Date().getFullYear(), firstId);
+            }
+        } catch (error) {
+            console.error("Fehler beim Laden der Übungen:", error);
+            alert("Übungen konnten nicht geladen werden.");
+        }
+    }
+
+    /**
+     * Lädt das Regelset für eine Übung und übergibt es inkl. Unit an fillRulesTables.
+     */
+    async function loadTable(year, exercise_id) {
+        try {
+            const response = await axios.get(
+                `http://localhost:8080/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
+                { withCredentials: true }
+            );
+            const unit = exerciseUnits[exercise_id];
+            fillRulesTables(response.data.exercise_goals, unit);
+        } catch (error) {
+            console.error("Fehler beim Laden des Regelsets:", error);
+            alert("Fehler beim Laden des Regelsets");
+        }
+    }
+
+    /**
+ * Füllt die beiden Tabellen (männlich/divers & weiblich) mit umgerechneten Werten
+ * und der Beschreibung. Bei Unit "bool" werden nur die Beschreibungszeilen angezeigt.
+ */
+    function fillRulesTables(rulesArray, unit) {
+        const isBool = unit === 'bool';
+        const femaleRules = rulesArray.filter(r => r.sex === 'f');
+        const maleRules = rulesArray.filter(r => r.sex === 'm' || r.sex === 'd');
+
+        const ageRanges = ["6-7", "8-9", "10-11", "12-13", "14-15", "16-17"];
+        const tables = document.querySelectorAll("table.table-striped.table-hover");
+        if (tables.length < 2) return;
+        const maleTbl = tables[0];
+        const femaleTbl = tables[1];
+
+        function getRule(rules, from, to) {
+            return rules.find(x => x.from_age === from && x.to_age === to);
+        }
+
+        // Zeilen ein-/ausblenden: bei bool nur Beschreibung (Index 3)
+        [maleTbl, femaleTbl].forEach(tbl => {
+            tbl.querySelectorAll("tbody tr").forEach((row, idx) => {
+                if (isBool) {
+                    row.style.display = (idx === 3 ? "" : "none");
+                } else {
+                    row.style.display = "";
+                }
+            });
+        });
+
+        // Wenn bool, nur Beschreibungen füllen
+        if (isBool) {
+            const mDescRow = maleTbl.querySelectorAll("tbody tr")[3];
+            const fDescRow = femaleTbl.querySelectorAll("tbody tr")[3];
+            ageRanges.forEach((rng, colIdx) => {
+                const [from, to] = rng.split("-").map(Number);
+                const mRule = getRule(maleRules, from, to);
+                const fRule = getRule(femaleRules, from, to);
+
+                let mDesc = mRule && mRule.description ? mRule.description : "";
+                let fDesc = fRule && fRule.description ? fRule.description : "";
+
+                if (mDesc.replace(/["“”]/g, '').trim() === '') mDesc = "";
+                if (fDesc.replace(/["“”]/g, '').trim() === '') fDesc = "";
+
+                mDescRow.cells[colIdx + 1].textContent = mDesc;
+                fDescRow.cells[colIdx + 1].textContent = fDesc;
+            });
+            return;
+        }
+
+        // Normalfall: Bronze/Silber/Gold + Beschreibung
+        const medals = ["bronze", "silver", "gold"];
+        const displayUnit = changeUnit(unit);
+
+        // Bronze, Silber, Gold füllen
+        medals.forEach((medal, rowIdx) => {
+            const mRow = maleTbl.querySelectorAll("tbody tr")[rowIdx];
+            const fRow = femaleTbl.querySelectorAll("tbody tr")[rowIdx];
+            ageRanges.forEach((rng, colIdx) => {
+                const [from, to] = rng.split("-").map(Number);
+                const mRule = getRule(maleRules, from, to);
+                const fRule = getRule(femaleRules, from, to);
+
+                mRow.cells[colIdx + 1].textContent =
+                    mRule ? changePoints(mRule[medal], unit) + " " + displayUnit : "-";
+                fRow.cells[colIdx + 1].textContent =
+                    fRule ? changePoints(fRule[medal], unit) + " " + displayUnit : "-";
+            });
+        });
+
+        // Beschreibung füllen
+        const mDescRow = maleTbl.querySelectorAll("tbody tr")[3];
+        const fDescRow = femaleTbl.querySelectorAll("tbody tr")[3];
+        ageRanges.forEach((rng, colIdx) => {
+            const [from, to] = rng.split("-").map(Number);
+            const mRule = getRule(maleRules, from, to);
+            const fRule = getRule(femaleRules, from, to);
+
+            let mDesc = mRule && mRule.description ? mRule.description : "";
+            let fDesc = fRule && fRule.description ? fRule.description : "";
+
+            if (mDesc.replace(/["“”]/g, '').trim() === '') mDesc = "";
+            if (fDesc.replace(/["“”]/g, '').trim() === '') fDesc = "";
+
+            mDescRow.cells[colIdx + 1].textContent = mDesc;
+            fDescRow.cells[colIdx + 1].textContent = fDesc;
+        });
+    }
+
+    /**
+     * Wandelt Backend-Unit in Anzeige-Unit um.
+     * Für 'bool' geben wir keine zusätzliche Einheit aus.
+     */
+    function changeUnit(unit) {
+        switch (unit) {
+            case "minute": return "Min";
+            case "second": return "Sek";
+            case "meter": return "m";
+            case "centimeter": return "cm";
+            case "point": return "Punkte";
+            case "bool": return "";       // für boolean keine Einheit
+            default: return "";
+        }
+    }
+
+    /**
+     * Rechnet rohe Punkte (Millisekunden, Zentimeter, etc.) in Anzeige-Wert um.
+     * Für 'bool' wird 1 → "Bestanden", 0 → "Nicht bestanden".
+     */
+    function changePoints(points, unit) {
+        switch (unit) {
+            case "bool":
+                return points === 1 ? "Bestanden" : "Nicht bestanden";
+            case "minute": {
+                const totalSec = points / 1000;
+                const min = Math.floor(totalSec / 60);
+                const sec = Math.floor(totalSec % 60);
+                return min + ":" + (sec < 10 ? "0" : "") + sec;
+            }
+            case "second":
+                return (points / 1000).toFixed(2);
+            case "meter":
+                return (points / 100).toFixed(2);
+            case "centimeter":
+                return points;
+            default:
+                return points;
+        }
+    }
+</script>

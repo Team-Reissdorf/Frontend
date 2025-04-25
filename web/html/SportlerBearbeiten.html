@@ -97,11 +97,11 @@
         } else {
           //Falls Server nicht erreichbar ist
         if(error.code == "ERR_NETWORK"){
-          console.log("Backend nicht erreichbar:" + error)
+          console.error("Backend nicht erreichbar:" + error)
           window.location.href = "BackendDown.html";
         } else {
           // Andere Fehler
-          console.log("Fehler: " + error)
+          console.error("Fehler: " + error)
         }
         }
       }
@@ -170,19 +170,19 @@
       } catch (error) {
         if (error.response) {
           if (error.response.status === 400) {
-            console.log("Invalid request body");
+            console.error("Invalid request body");
             alert("Invalid request body");
           } else if (error.response.status === 401) {
-            console.log("The token is invalid");
+            console.error("The token is invalid");
             alert("The token is invalid");
           } else if (error.response.status === 404) {
-            console.log("Athlete could not be found for this trainer");
+            console.error("Athlete could not be found for this trainer");
             alert("Der Sportler gehört nicht zu diesem Trainer");
           } else if (error.response.status === 409) {
-            console.log("Athlete already exists");
+            console.error("Athlete already exists");
             alert("Athlete already exists");
           } else if (error.response.status === 500) {
-            console.log("Internal Server Error");
+            console.error("Internal Server Error");
             alert("Internal Server Error");
           }
         } else {
