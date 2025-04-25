@@ -90,28 +90,34 @@
 
   <!-- Sortieren Dropdown und Sportler erstellen Button -->
   <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
-    <!-- Dropdown für Sortieren -->
-    <div class="d-flex align-items-center mb-2 mb-sm-0">
-      <label for="sorter" class="me-2">Sortieren:</label>
-      <select id="sorter" class="form-select sorter form-select-responsive" style="width: 200px;" required>
+    <!-- Sortieren Dropdown und Regel-Button -->
+    <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
+      <label for="sorter" class="me-2 mb-2 mb-sm-0">Sortieren:</label>
+      <select id="sorter" class="form-select sorter form-select-responsive me-sm-2 mb-2 mb-sm-0" style="width: 200px;"
+        required>
         <option value="fname">Vorname (A-Z)</option>
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
+      <a href="html/RegelnUebersicht.html"><button class="btn btn-light border border-2 btn-responsive"
+          style="font-weight: bold;" id="regelButton">Regeln</button></a>
     </div>
 
     <!-- Exportieren Button -->
     <div class="d-flex flex-column flex-sm-row align-items-center">
-      <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive" data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;">Leistungsexport</button>
+      <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
+        data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;">Leistungsexport</button>
 
       <!-- einzelnen Sportler erstellen-->
       <a href="html/SportlerErstellen.html" class="mb-2 mb-sm-0 me-sm-2">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler erstellen</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
+          erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler Massenerstellung</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
+          Massenerstellung</button>
       </a>
     </div>
   </div>
@@ -259,6 +265,14 @@
         selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
       });
     });
+
+    const today = new Date();
+    const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 7 * 4);
+    if (redOrNot) {
+      document.getElementById("regelButton").className = "btn btn-danger border border-2 btn-responsive";
+    } else {
+      document.getElementById("regelButton").className = "btn btn-light border border-2 btn-responsive";
+    }
   });
 
   // Sortierfunktion
@@ -358,20 +372,22 @@
                 
                 <!-- Medaillen-Tabelle -->
                 <div class="mb-3 mb-md-0 flex-fill text-center table-responsive">
-                  <table class="mx-auto">
-                    <thead>
-                      <tr>
-                        <th style="padding:8px;">DSA</th>
-                        ${discipline_names.map(d => `<th style="padding:8px;">${d}</th>`).join('')}
-                        <th style="padding:8px;">Schwimmnachweis</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        ${medalRow}
-                      </tr>
-                    </tbody>
-                  </table>
+                  <div class="table-responsive">
+                    <table class="mx-auto">
+                      <thead>
+                        <tr>
+                          <th style="padding:8px;">DSA</th>
+                          ${discipline_names.map(d => `<th style="padding:8px;">${d}</th>`).join('')}
+                          <th style="padding:8px;">Schwimmnachweis</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          ${medalRow}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
                 
                 <!-- Buttons -->
