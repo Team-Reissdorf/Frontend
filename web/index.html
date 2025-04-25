@@ -92,7 +92,7 @@
   <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
     <!-- Sortieren Dropdown und Regel-Button -->
     <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
-      <label for="sorter" class="me-2 mb-2 mb-sm-0" data-bs-toggle="tooltip" data-bs-placement="top"
+      <label for="sorter" class="me-2 mb-2 mb-sm-0" data-bs-toggle="tooltip" data-bs-placement="right"
         data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
       <select id="sorter" class="form-select sorter form-select-responsive me-sm-2 mb-2 mb-sm-0" style="width: 200px;"
         required>
@@ -109,7 +109,7 @@
     <div class="d-flex flex-column flex-sm-row align-items-center">
       <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
         data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;" data-bs-toggle="tooltip"
-        data-bs-placement="top"
+        data-bs-placement="left"
         data-bs-title="Hier kann man die Leistungen von Sportlern exportieren.">Leistungsexport</button>
 
       <!-- einzelnen Sportler erstellen-->
@@ -400,16 +400,16 @@
                 <!-- Buttons -->
                 <div class="d-inline-flex flex-column align-items-stretch flex-fill">
                   <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" class="mb-2">
-                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">
                       Bearbeiten
                     </button>
                   </a>
                   <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" class="mb-2">
-                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man eine Übersicht der Leistungen dieses Sportlers sehen.">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hier kann man eine Übersicht der Leistungen dieses Sportlers sehen.">
                       Leistungsübersicht
                     </button>
                   </a>
-                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center"data-athleteid="${athlete.athlete_id}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man den Sportler aus dem System entfernen.">Löschen</button>
+                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center"data-athleteid="${athlete.athlete_id}" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hiermit kann man den Sportler aus dem System entfernen.">Löschen</button>
                 </div>
               </div>
             </div>
