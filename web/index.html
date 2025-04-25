@@ -92,8 +92,7 @@
   <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
     <!-- Sortieren Dropdown und Regel-Button -->
     <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
-      <label for="sorter" class="me-2 mb-2 mb-sm-0" data-bs-toggle="tooltip" data-bs-placement="top"
-        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
+      <label for="sorter" class="me-2 mb-2 mb-sm-0">Sortieren:</label>
       <select id="sorter" class="form-select sorter form-select-responsive me-sm-2 mb-2 mb-sm-0" style="width: 200px;"
         required>
         <option value="fname">Vorname (A-Z)</option>
@@ -107,22 +106,16 @@
     <!-- Exportieren Button -->
     <div class="d-flex flex-column flex-sm-row align-items-center">
       <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
-        data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;"
-        data-tooltip=="Hier kann man Leistungen von Sportlern als CSV-Datei exportieren."
-        data-bs-placement="top">Leistungsexport</button>
+        data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;">Leistungsexport</button>
 
       <!-- einzelnen Sportler erstellen-->
       <a href="html/SportlerErstellen.html" class="mb-2 mb-sm-0 me-sm-2">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" data-bs-toggle="tooltip"
-          data-bs-placement="top" data-bs-title="Hier kann man einen neuen Sportler anlegen.">Sportler
-          erstellen</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" data-bs-toggle="tooltip"
-          data-bs-placement="bottom" data-bs-title="Hier kann man mehrere neue Sportler anlegen.">Sportler
-          Massenerstellung</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler Massenerstellung</button>
       </a>
     </div>
   </div>
@@ -560,11 +553,4 @@
 
     return exercises;
   }
-  // Activate tooltips
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
-  const tooltipTriggerListe = [].slice.call(document.querySelectorAll('[title]'))
-  tooltipTriggerListe.forEach(function (tooltipTriggerEl) {
-    new bootstrap.Tooltip(tooltipTriggerEl)
-  })
 </script>
