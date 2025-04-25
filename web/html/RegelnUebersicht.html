@@ -297,7 +297,7 @@
     async function loadTable(year, exercise_id) {
         try {
             const response = await axios.get(
-                `http://localhost:8080/v1/exercise/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
+                `http://localhost:8080/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
                 { withCredentials: true }
             );
             const unit = exerciseUnits[exercise_id];
