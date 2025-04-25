@@ -110,12 +110,14 @@
 
       <!-- einzelnen Sportler erstellen-->
       <a href="html/SportlerErstellen.html" class="mb-2 mb-sm-0 me-sm-2">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler erstellen</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
+          erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler Massenerstellung</button>
+        <button class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;">Sportler
+          Massenerstellung</button>
       </a>
     </div>
   </div>
@@ -400,9 +402,7 @@
                       Leistungsübersicht
                     </button>
                   </a>
-                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center">
-                    Löschen
-                  </button>
+                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center"data-athleteid="${athlete.athlete_id}">Löschen</button>
                 </div>
               </div>
             </div>
@@ -415,7 +415,7 @@
     // Event Listener fürs Löschen
     document.querySelectorAll('.delete-btn').forEach(button => {
       button.addEventListener('click', async () => {
-        const athleteId = button.getAttribute('data-id');
+        const athleteId = button.dataset.athleteid;
 
         if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
           try {
