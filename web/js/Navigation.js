@@ -14,8 +14,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
 
                     <div class="flex-d">
-                        <button class="btn btn-secondary ms-3" id="hilfeseite-button">Hilfe</button>
-                        <button class="btn btn-secondary ms-3" id="logOut-button">Abmelden</button>
+                        <button class="btn btn-secondary ms-3" id="hilfeseite-button" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="Hier gelangt man zur Hilfeseite mit weiterführenden Erklärungen zu allen Funktionen der Seite.">Hilfe</button>
+                        <button class="btn btn-secondary ms-3" id="logOut-button" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                        data-bs-title="Hier kann man sich von ComPeteHub abmelden.">Abmelden</button>
                     </div>
                 </div>
             </div>
@@ -27,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.body.prepend(navbarContainer); // Navbar am Anfang einfügen
 
     setupNavbarLogic();
-    
+
 });
 
 async function setupNavbarLogic() {
@@ -37,7 +39,6 @@ async function setupNavbarLogic() {
         //Logout regeln:
         try {
             //Anfrage an Logout-Endpoint
-            //TODO 
             await axios.post('http://localhost:8080/v1/user/logout', {}, { withCredentials: true });
             alert("Abgemeldet.");
 
@@ -51,15 +52,16 @@ async function setupNavbarLogic() {
 
     //Hilfeseite-Button - immer anzeigen
     document.getElementById("hilfeseite-button").addEventListener("click", async () => {
-        window.location.href = "http://localhost:8081/html/Hilfeseite.html";});
+        window.location.href = "http://localhost:8081/html/Hilfeseite.html";
+    });
 
     // Überprüfung, ob Benutzer angemeldet ist - ggf. Navbar anpassen (logOut-Button ausblenden)
-        try{
-            const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, {withCredentials: true});                   
-        } 
-        catch(error) {
-            //Fehler = angemeldet -> Button nicht anzeigen & Link von Logo entfernen
-            logInOutButton.classList.toggle("d-none");
-        }
-    
+    try {
+        const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, { withCredentials: true });
+    }
+    catch (error) {
+        //Fehler = angemeldet -> Button nicht anzeigen & Link von Logo entfernen
+        logInOutButton.classList.toggle("d-none");
+    }
+
 }
