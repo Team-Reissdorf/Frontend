@@ -1,7 +1,7 @@
 services:
   web:
     container_name: web
-    build: path=./webserver/
+    build: ./webserver
     volumes:
       - './web:/usr/share/nginx/html'
       - './node_modules:/usr/share/nginx/html/node_modules'

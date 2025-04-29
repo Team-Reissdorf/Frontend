@@ -13,4 +13,4 @@ RUN npm install
 FROM nginx:1.27.4-alpine-slim
 
 COPY --from=modules /app/. /usr/share/nginx/html
-COPY ./default.conf /etc/nginx/conf.d/default.conf
+COPY ./webserver/default.conf /etc/nginx/conf.d/default.conf
