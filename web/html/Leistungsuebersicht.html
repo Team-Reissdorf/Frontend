@@ -56,23 +56,22 @@
     <div class="d-flex flex-wrap justify-content-center gap-3 align-items-center m-auto">
       <!-- Button: Leistungen eintragen -->
       <a href="#" onclick="this.href='LeistungErstellen.html?id=' + athleteId" class="text-decoration-none">
-        <button class="btn btn-light border border-2 fw-bold py-2 px-3">Leistungen eintragen</button>
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man eine neue Leistung des Sportlers anlegen.">Leistungen eintragen</button>
       </a>
 
-      <label for="datenAbfragenAb" class="btn btn-light border border-2 fw-bold py-2 px-3 d-flex align-items-center gap-2">
+      <label for="datenAbfragenAb" class="btn btn-light border border-2 fw-bold py-2 px-3 d-flex align-items-center gap-2"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man festlegen, ab wann die Leistungen eingesehen werden können.">
         <span>Anzeigen ab</span>
-        <input type="date" id="datenAbfragenAb" class="border-0 bg-transparent fw-bold p-0" value="2025-01-01" max="9999-12-31" style="outline: none; box-shadow: none;" />
+        <input type="date" id="datenAbfragenAb" class="border-0 bg-transparent fw-bold p-0" value="2025-01-01" max="9999-12-31" style="outline: none; box-shadow: none;"/>
       </label>
 
       <!-- Button: Schwimmnachweis eintragen -->
       <a href="#" onclick="this.href='SchwimmnachweisErstellen.html?id=' + athleteId" class="text-decoration-none">
-        <button class="btn btn-light border border-2 fw-bold py-2 px-3">Schwimmnachweis eintragen</button>
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man einen neuen Schwimmnachweis des Sportlers anlegen.">Schwimmnachweis eintragen</button>
       </a>
 
       <a href="#" onclick="downloadSchwimmnachweise()" class="text-decoration-none">
-        <button class="btn btn-light border border-2 fw-bold py-2 px-3">Schwimmnachweise Herunterladen</button>
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man alle Schwimmnachweise des Sportlers herunterladen.">Schwimmnachweise Herunterladen</button>
       </a>
-
     </div>
   </div>
 
@@ -200,6 +199,10 @@
 
       <script>
         const athleteId = new URLSearchParams(window.location.search).get("id");
+
+        // Activate tooltips
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
         // Lade alles notwendige vor
         document.addEventListener("DOMContentLoaded", async () => {

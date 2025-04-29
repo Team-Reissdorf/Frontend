@@ -4,26 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ComPeteHub - Hilfe</title>
+    <title>ComPeteHub</title>
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../../node_modules/axios/dist/axios.js"></script>
-
 </head>
 <style>
     .help-section {
-        scroll-margin-top: 200px; /*Damit Links korrekt auf Überschriften linken (wg. Navbar)*/
+        scroll-margin-top: 200px; /*Damit Links korrekt auf Überschriften zeigen (wg. Navbar)*/
     }
 </style>
 
 <body>
     <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
+    <!-- an Anfang zurück scrollen Button-->
+    <button onclick="scrollToTop()" id="scrollToTopBtn" class="btn btn-secondary "
+        style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
+        ↑ Anfang
+    </button>
+
     <div class="container my-5">
-        <div class="p-5  bg-body-tertiary rounded-3">
-            <div class="p-2 ">
+        <div class="p-5 bg-body-tertiary rounded-3" id="anfang">
+            <div class="p-2">
                 <h1 class="text-body-emphasis text-center">Hilfeseite</h1>
-                <p class="lead">Hier finden Sie eine Übersicht und Erklärungen zu den verschiedenen Funktionen der
+                <p class="lead">Hier befindet sich eine Übersicht und Erklärungen zu den verschiedenen Funktionen der
                     Anwendung.</p>
             </div>
             <div class="p-2">
@@ -33,128 +38,300 @@
                     </li>
                     <li><a class="scroll-link" href="#leistungsuebersicht">Leistungsuebersicht.html</a> – Zeigt die
                         Leistungen eines Sportlers.</li>
-                    <li><a class="scroll-link" href="#sportlerbearbeiten">SportlerBearbeiten.html</a> – Bearbeitung der
-                        Sportlerdaten.</li>
                     <li><a class="scroll-link" href="#sportlererstellen">SportlerErstellen.html</a> – Erstellung neuer
                         Sportler.</li>
                     <li><a class="scroll-link" href="#sportlermassenerstellung">SportlerErstellenBulk.html</a> –
-                        Erstellung
-                        neuer Sportler per CSV-Datei.</li>
+                        Erstellung neuer Sportler per CSV-Datei.</li>
+                    <li><a class="scroll-link" href="#sportlerbearbeiten">SportlerBearbeiten.html</a> – Bearbeitung der
+                        Sportlerdaten.</li>
                     <li><a class="scroll-link" href="#leistungserstellen">LeistungErstellen.html</a> – Erfassung neuer
                         Leistungen.</li>
+                    <li><a class="scroll-link" href="#leistungserstellenBulk">LeistungErstellenBulk.html</a> – Erfassung
+                        neuer
+                        Leistungen mehrerer Sportler per CSV.</li>
+                    <li><a class="scroll-link" href="#schwimmnachweis">SchwimmnachweisErstellen.html</a> – Verwaltung
+                        von Schwimmnachweisen.</li>
+                    <li><a class="scroll-link" href="#regelnuebersicht">RegelnUebersicht.html</a> – Übersicht und
+                        Aktualisierung der Regeln.</li>
                     <li><a class="scroll-link" href="#anmelden">Anmeldung.html</a> – Anmeldungsseite.</li>
                     <li><a class="scroll-link" href="#registrieren">Registrierung.html</a> – Registrierungsseite.</li>
-                    <li><a class="scroll-link" href="#dokuBackend">Dokumentation des Backends</a> - Überblick über die
-                        ComPeteHub API</li>
+                    <li><a class="scroll-link" href="#backenddown">BackendDown.html</a> – Anzeige bei Serverproblemen.
+                    </li>
+                    <li><a class="scroll-link" href="#dokuBackend">Dokumentation des Backends</a> – Überblick über die
+                        ComPeteHub API.</li>
                 </ul>
             </div>
         </div>
     </div>
 
+    <!-- Index.html -->
     <div class="container my-5">
         <div class="p-5 bg-body-tertiary rounded-3">
             <div id="index" class="help-section">
                 <h2 class="text-dark text-center mb-5">Startseite <em>(Index.html)</em></h2>
                 <p>Diese Seite dient als Startpunkt und zeigt eine Übersicht aller dem Trainer zugewiesenen Sportler.
                 </p>
-                <p>Die Sportler können nach Vorname, Nachname oder Geburtstag sortiert werden. Neue Sportler lassen sich
-                    über den Button <strong>„Sportler erstellen“</strong> hinzufügen.</p>
-                <p>Jeder Sportler wird mit Vor- und Nachname, Geburtsdatum sowie Geschlecht aufgelistet. Zusätzlich
-                    stehen
-                    folgende Optionen zur Verfügung:</p>
-                <ul class="text-start">
-                    <li><strong>Bearbeiten</strong>: Weiterleitung zur Bearbeitungsseite des Sportlers.</li>
-                    <li><strong>Leistungsübersicht</strong>: Anzeige aller erfassten Leistungen des Sportlers.</li>
-                    <li><strong>Löschen</strong>: Entfernen des Sportlers nach Bestätigung.</li>
+                <p><em>Buttons und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Sortieren:</strong> Dropdown-Menü, um die Sportler nach Vorname, Nachname oder
+                        Geburtstag zu sortieren.</li>
+                    <li><strong>Regeln:</strong> Button, um die aktuellen Regeln einzusehen und zu aktualisieren.</li>
+                    <li><strong>Leistungsexport:</strong> Button, um die Leistungen ausgewählter Sportler als CSV-Datei
+                        zu exportieren.</li>
+                    <li><strong>Sportler erstellen:</strong> Button, um einen neuen Sportler manuell hinzuzufügen.</li>
+                    <li><strong>Sportler Massenerstellung:</strong> Button, um mehrere Sportler per CSV-Datei
+                        hinzuzufügen.</li>
                 </ul>
             </div>
         </div>
     </div>
 
+    <!-- Leistungsuebersicht.html -->
     <div class="container my-5">
-        <div class="p-5  bg-body-tertiary rounded-3">
-            <div id="sportlererstellen" class="help-section">
-                <h2 class="text-dark text-center mb-5">Sportler erstellen <em>(SportlerErstellen.html)</em></h2>
-                <p>Hier können neue Sportler manuell hinzugefügt werden.</p>
-                <p>Dabei müssen Vorname, Nachname, E-Mail, Geburtstag und Geschlecht angegeben werden.</p>
-                <p>Sportler jeder Altersgruppe können hinzugefügt werden, jedoch können Leistungen nur für Sportler
-                    zwischen
-                    <strong>6 und 18 Jahren</strong> erfasst werden.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-5">
-        <div class="p-5  bg-body-tertiary rounded-3">
-            <div id="sportlermassenerstellung" class="help-section">
-                <h2 class="text-dark text-center mb-5">Sportlermassenerstellung <em>(SportlerErstellenBulk.html)</em>
-                </h2>
-                <p>Hier können neue Sportler über den Upload einer CSV-Datei hinzugefügt werden.</p>
-                <p>Dabei müssen in der CSV-Datei Vorname, Nachname, E-Mail, Geburtstag und Geschlecht angegeben werden.
-                </p>
-                <p>Beim CSV-Upload werden vorhandene Sportler nicht erneut erstellt. Falls ein Sportler bereits
-                    existiert,
-                    erscheint eine Benachrichtigung.</p>
-                <p>Sportler jeder Altersgruppe können hinzugefügt werden, jedoch können Leistungen nur für Sportler
-                    zwischen
-                    <strong>6 und 18 Jahren</strong> erfasst werden.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="container my-5">
-        <div class="p-5  bg-body-tertiary rounded-3">
+        <div class="p-5 bg-body-tertiary rounded-3">
             <div id="leistungsuebersicht" class="help-section">
                 <h2 class="text-dark text-center mb-5">Leistungsübersicht <em>(Leistungsuebersicht.html)</em></h2>
                 <p>Hier sind die Leistungen eines Sportlers in den Kategorien <strong>Ausdauer, Schnelligkeit,
                         Kraft</strong> und <strong>Koordination</strong> einsehbar.</p>
-                <p>Die neueste Leistung jeder Kategorie wird direkt angezeigt. Durch Auswahl einer Kategorie lassen sich
-                    sämtliche erfassten Leistungen mit Details zur Übung und Medaillenwertung einsehen.</p>
-                <p>Zudem werden nur Übungen ab einem bestimmten Datum angezeigt. Dieses ist standardmäßig auf den ersten
-                    Tag
-                    des Jahres gesetzt, kann aber individuell angepasst werden.</p>
+                <p><em>Buttons und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Leistungen eintragen:</strong> Button, um eine neue Leistung für den Sportler zu
+                        erfassen.</li>
+                    <li><strong>Anzeigen ab:</strong> Eingabefeld, um das Startdatum für die angezeigten Leistungen
+                        festzulegen.</li>
+                    <li><strong>Schwimmnachweis eintragen:</strong> Button, um einen neuen Schwimmnachweis hochzuladen.
+                    </li>
+                    <li><strong>Schwimmnachweise herunterladen:</strong> Button, um alle Schwimmnachweise des Sportlers
+                        als ZIP-Datei herunterzuladen.</li>
+                </ul>
             </div>
         </div>
     </div>
 
+    <!-- SportlerErstellen.html -->
     <div class="container my-5">
-        <div class="p-5  bg-body-tertiary rounded-3">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="sportlererstellen" class="help-section">
+                <h2 class="text-dark text-center mb-5">Sportler erstellen <em>(SportlerErstellen.html)</em></h2>
+                <p>Hier können neue Sportler manuell hinzugefügt werden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Vorname:</strong> Eingabefeld, um den Vornamen des neuen Sportlers einzugeben.</li>
+                    <li><strong>Nachname:</strong> Eingabefeld, um den Nachnamen des neuen Sportlers einzugeben.</li>
+                    <li><strong>Email:</strong> Eingabefeld, um die E-Mail-Adresse des neuen Sportlers einzugeben.</li>
+                    <li><strong>Geburtstag:</strong> Eingabefeld, um das Geburtsdatum des neuen Sportlers einzugeben.
+                    </li>
+                    <li><strong>Geschlecht:</strong> Radio-Buttons, um das Geschlecht des neuen Sportlers auszuwählen.
+                    </li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Speichern:</strong> Speichert den neuen Sportler.</li>
+                    <li><strong>Abbrechen:</strong> Bricht die Erstellung ab und kehrt zur Startseite zurück.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sportler Massenerstellung -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="sportlermassenerstellung" class="help-section">
+                <h2 class="text-dark text-center mb-5">Sportler Massenerstellung <em>(SportlerErstellenBulk.html)</em>
+                </h2>
+                <p>Hier können neue Sportler über den Upload einer CSV-Datei hinzugefügt werden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>CSV-Datei:</strong> Eingabefeld, um eine CSV-Datei mit den Sportlerdaten hochzuladen.
+                        Das Format der Datei muss den Vorgaben entsprechen:
+                        <code>Vorname,Nachname,Email,Geburtsdatum(y-m-d),Geschlecht(m,f,d)</code>.
+                    </li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Hochladen:</strong> Lädt die CSV-Datei hoch und erstellt die Sportler in der Datenbank.
+                    </li>
+                    <li><strong>Abbrechen:</strong> Bricht den Upload ab und kehrt zur Startseite zurück.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- SportlerBearbeiten.html -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="sportlerbearbeiten" class="help-section">
+                <h2 class="text-dark text-center mb-5">Sportler bearbeiten <em>(SportlerBearbeiten.html)</em></h2>
+                <p>Hier können die Daten eines bestehenden Sportlers bearbeitet werden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Vorname:</strong> Eingabefeld, um den Vornamen des Sportlers zu ändern.</li>
+                    <li><strong>Nachname:</strong> Eingabefeld, um den Nachnamen des Sportlers zu ändern.</li>
+                    <li><strong>Email:</strong> Eingabefeld, um die E-Mail-Adresse des Sportlers zu ändern.</li>
+                    <li><strong>Geburtstag:</strong> Eingabefeld, um das Geburtsdatum des Sportlers zu ändern.</li>
+                    <li><strong>Geschlecht:</strong> Radio-Buttons, um das Geschlecht des Sportlers zu ändern.</li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Speichern:</strong> Speichert die Änderungen.</li>
+                    <li><strong>Abbrechen:</strong> Bricht die Bearbeitung ab und kehrt zur Startseite zurück.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leistungerstellen -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
             <div id="leistungserstellen" class="help-section">
                 <h2 class="text-dark text-center mb-5">Leistung erfassen <em>(LeistungErstellen.html)</em></h2>
-                <p>Auf dieser Seite können neue Leistungen für einen Sportler erfasst und bearbeitet werden – maximal
-                    drei pro Tag.</p>
-                <p>Hierzu muss eine Kategorie gewählt, das Datum festgelegt und eine Übung mit den erreichten Punkten
-                    eingetragen werden.</p>
-                <p>Die Einheit der Punkte wird je nach Übung automatisch ergänzt.</p>
+                <p>Auf dieser Seite können neue Leistungen für einen Sportler erfasst werden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Kategorie:</strong> Dropdown-Menü, um die Kategorie der Leistung auszuwählen.</li>
+                    <li><strong>Datum:</strong> Eingabefeld, um das Datum der Leistung festzulegen.</li>
+                    <li><strong>Übung:</strong> Dropdown-Menü, um die spezifische Übung auszuwählen.</li>
+                    <li><strong>Gemessener Wert:</strong> Eingabefeld, um den Wert der Leistung (z. B. Zeit, Punkte)
+                        einzugeben.</li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Speichern:</strong> Speichert die eingegebene Leistung.</li>
+                    <li><strong>Abbrechen:</strong> Bricht die Eingabe ab und kehrt zur Leistungsübersicht zurück.</li>
+                </ul>
             </div>
         </div>
     </div>
 
+    <!-- Leistung Massenerstellung -->
     <div class="container my-5">
-        <div class="p-5  bg-body-tertiary rounded-3">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="leistungserstellenBulk" class="help-section">
+                <h2 class="text-dark text-center mb-5">Leistungen Massenerstellung <em>(LeistungErstellenBulk.html)</em>
+                </h2>
+                <p>Auf dieser Seite können Leistungen für mehrere Sportler gleichzeitig über eine CSV-Datei erstellt
+                    werden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>CSV-Datei:</strong> Eingabefeld, um eine CSV-Datei mit den Leistungsdaten hochzuladen.
+                        Das Format der Datei muss den Vorgaben entsprechen:
+                        <code>Nachname,Vorname,Geschlecht(m,f,d),Geburtsjahr,Geburtstag,Übung,Kategorie,Datum,Ergebnis,Punkte</code>.
+                    </li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Speichern:</strong> Lädt die CSV-Datei hoch und erstellt die Leistungen in der
+                        Datenbank.</li>
+                    <li><strong>Abbrechen:</strong> Bricht den Vorgang ab und kehrt zur Startseite zurück.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schwimmnachweis erstellen -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="schwimmnachweis" class="help-section">
+                <h2 class="text-dark text-center mb-5">Schwimmnachweis <em>(SchwimmnachweisErstellen.html)</em></h2>
+                <p>Hier können Schwimmnachweise für Sportler hochgeladen und verwaltet werden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Nachweis hochladen:</strong> Eingabefeld, um eine Datei mit dem Schwimmnachweis
+                        hochzuladen.</li>
+                    <li><strong>Datum:</strong> Eingabefeld, um das Datum des Nachweises festzulegen.</li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Hochladen:</strong> Lädt den Schwimmnachweis hoch und speichert ihn in der Datenbank.
+                    </li>
+                    <li><strong>Abbrechen:</strong> Bricht den Upload ab und kehrt zur vorherigen Seite zurück.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Regeln übersicht -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="regelnuebersicht" class="help-section">
+                <h2 class="text-dark text-center mb-5">Regeln Übersicht <em>(RegelnUebersicht.html)</em></h2>
+                <p>Diese Seite bietet eine Übersicht über die aktuellen Regeln.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Kategorie:</strong> Dropdown-Menü, um die Kategorie der Regeln auszuwählen.</li>
+                    <li><strong>Übung:</strong> Dropdown-Menü, um die spezifische Übung auszuwählen.</li>
+                    <li><strong>Jahr:</strong> Eingabefeld, um das Jahr der Regeln festzulegen.</li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Regeln aktualisieren:</strong> Weiterleitung zur Seite
+                        <em>RegelnAktualisierung.html</em>, um Regeln per CSV-Datei zu aktualisieren.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Anmeldung -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
             <div id="anmelden" class="help-section">
                 <h2 class="text-dark text-center mb-5">Anmeldung <em>(Anmeldung.html)</em></h2>
-                <p>Auf dieser Seite kann man sich mit Email und Passwort anmelden.</p>
-                <p>Darüber hinaus kann man eine Checkbox aktivieren um automatisch angemeldet zu bleiben.</p>
-                <p>Wenn man noch kein Konto hat kann man zur Registrierungsseite wechseln.</p>
+                <p>Auf dieser Seite kann man sich mit E-Mail und Passwort anmelden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>E-Mail:</strong> Eingabefeld, um die E-Mail-Adresse einzugeben.</li>
+                    <li><strong>Passwort:</strong> Eingabefeld, um das Passwort einzugeben.</li>
+                    <li><strong>Angemeldet bleiben:</strong> Checkbox, um die Sitzung über einen längeren Zeitraum aktiv
+                        zu halten.</li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Anmelden:</strong> Meldet den Benutzer an und leitet zur Startseite weiter.</li>
+                </ul>
             </div>
         </div>
     </div>
 
+    <!-- Registrierung -->
     <div class="container my-5">
-        <div class="p-5  bg-body-tertiary rounded-3">
+        <div class="p-5 bg-body-tertiary rounded-3">
             <div id="registrieren" class="help-section">
                 <h2 class="text-dark text-center mb-5">Registrierung <em>(Registrierung.html)</em></h2>
-                <p>Auf dieser Seite kann man sich mit Email und Passwort registrieren.</p>
-                <p>Darüber hinaus kann man eine Checkbox aktivieren um automatisch angemeldet zu bleiben.</p>
-                <p>Wenn man schon ein Konto hat kann man zur Anmeldungsseite wechseln.</p>
+                <p>Auf dieser Seite kann man sich mit E-Mail und Passwort registrieren.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>E-Mail:</strong> Eingabefeld, um die E-Mail-Adresse einzugeben.</li>
+                    <li><strong>Passwort:</strong> Eingabefeld, um ein sicheres Passwort einzugeben.</li>
+                    <li><strong>Passwort bestätigen:</strong> Eingabefeld, um das Passwort erneut einzugeben.</li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Registrieren:</strong> Erstellt ein neues Benutzerkonto und leitet zur Anmeldeseite
+                        weiter.</li>
+                </ul>
             </div>
-
         </div>
     </div>
 
+    <!-- Backend nicht erreichbar -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="backenddown" class="help-section">
+                <h2 class="text-dark text-center mb-5">Server nicht erreichbar <em>(BackendDown.html)</em></h2>
+                <p>Diese Seite wird angezeigt, wenn der Server nicht erreichbar ist.</p>
+                <p><em>Funktionen:</em></p>
+                <ul>
+                    <li><strong>Warnmeldung:</strong> Zeigt eine Warnung an, dass der Server derzeit nicht erreichbar
+                        ist.</li>
+                    <li><strong>Automatische Weiterleitung:</strong> Falls der Server wieder verfügbar ist, wird der
+                        Benutzer automatisch zur Startseite weitergeleitet.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doku Backend -->
     <div class="container my-5">
         <div id="dokuBackend" class="p-5  bg-body-tertiary rounded-3">
             <h2 class="text-dark text-center mb-5">Technische Dokumentation des Backends</h2>
@@ -162,30 +339,23 @@
                 style="height: 500px; width: 100%;"></iframe>
         </div>
     </div>
-
 </body>
 
-</html>
-
 <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        try {
-            const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
-                { withCredentials: true });
-            // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
-        } catch (error) {
-            if (error.response) {
+  // Funktion, um nach oben zu scrollen
+  function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-            } else {
-                //Falls Server nicht erreichbar ist
-                if (error.code == "ERR_NETWORK") {
-                    console.log("Backend nicht erreichbar:" + error)
-                    window.location.href = "./BackendDown.html";
-                } else {
-                    // Andere Fehler
-                    console.log("Fehler: " + error)
-                }
-            }
-        }
-    });
+  // Zeigt oder versteckt den Button basierend auf der Scroll-Position
+  window.addEventListener('scroll', () => {
+      const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+      if (window.scrollY > 200) {
+          scrollToTopBtn.style.display = 'block';
+      } else {
+          scrollToTopBtn.style.display = 'none';
+      }
+  });
 </script>
+
+</html>
