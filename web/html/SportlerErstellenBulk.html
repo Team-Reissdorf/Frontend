@@ -59,7 +59,9 @@
         </div>
     </div>
 
+    <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
     <script>
+        const toast = window.toast;
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
@@ -127,7 +129,7 @@
                         fehlerModalFüllen(fehlerNachricht, error.message);
                     }
                 } else {
-                    alert("Bitte genau eine CSV-Datei auswählen.");
+                    toast.showToast("Bitte genau eine CSV-Datei auswählen!", { type: 'warn' });
                 }
             })
         });

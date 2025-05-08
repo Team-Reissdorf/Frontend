@@ -64,7 +64,9 @@
 </body>
 
 </html>
+<script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
 <script>
+    const toast = window.toast;
     document.addEventListener("DOMContentLoaded", async () => {
         // Überprüfung, ob User angemeldet ist
         try {
@@ -103,7 +105,7 @@
                         }
                         catch (error) {
                             console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
-                            alert("Fehler beim Füllen des Erfolgs-Modals!");
+                            toast.showToast("Fehler beim Füllen des Erfolgs-Modals!" , { type: 'danger' });
                         }
                     }
                 } catch (error) {
@@ -130,7 +132,7 @@
                     fehlerModalFüllen(fehlerNachricht, error.message);
                 }
             } else {
-                alert("Bitte eine CSV-Datei auswählen.");
+                toast.showToast("Bitte eine CSV-Datei auswählen.", { type: 'warning' });
             }
         })
     });

@@ -193,11 +193,14 @@
         </table>
       </div>
     </div>
+    </div>
 </body>
 
 </html>
 
-      <script>
+<script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
+<script>
+  const toast = window.toast;
         const athleteId = new URLSearchParams(window.location.search).get("id");
 
         // Activate tooltips
@@ -259,7 +262,7 @@
     }
     catch (error) {
       console.error("Fehler beim Laden der des Athleten:", error);
-      alert("Athlet existiert nicht.");
+      toast.showToast("Athlet existiert nicht.", { type: 'danger' });
       window.location.href = "../index.html"; //falsche athleteID in URL -> zurück zur Übersicht
     }
   })
@@ -291,7 +294,7 @@
 
         else {
           console.error("Fehler beim Abrufen der Performances:", error);
-          alert("Fehler beim Abrufen der Performance-Einträge.")
+          toast.showToast("Fehler beim Abrufen der Performance-Einträge.", { type: 'danger' });
         }
       }
     }
@@ -310,7 +313,7 @@
       }
       else {
         console.error("Fehler beim Abrufen der Disziplinen.", error)
-        alert("Fehler beim Abrufen der Disziplinen.")
+        toast.showToast("Fehler beim Abrufen der Disziplinen.", { type: 'danger' })
       }
     }
 
@@ -333,7 +336,7 @@
               window.location.href = "Anmeldung.html";
             }
             else {
-              alert("Fehler beim Abrufen der Übungen")
+              toast.showToast("Fehler beim Abrufen der Übungen", { type: 'danger' })
               console.error(`Fehler beim Abrufen der Übungen für ${element}:`, error);
             }
 
@@ -563,11 +566,11 @@
         window.location.href = "Anmeldung.html";
       }
       else if (error.response.status === 404) {
-        alert('Für diesen Athleten existieren noch keine Schwimmnachweise.');
+        toast.showToast('Für diesen Athleten existieren noch keine Schwimmnachweise.', { type: 'warn' });
       }
       else {
 
-        alert('Schwimmnachweise konnten nicht heruntergeladen werden!');
+        toast.showToast('Schwimmnachweise konnten nicht heruntergeladen werden!', { type: 'danger' });
       }
 
       console.error(error);
