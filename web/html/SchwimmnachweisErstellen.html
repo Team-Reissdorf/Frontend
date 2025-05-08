@@ -121,7 +121,7 @@
                                 toast.showToast("Einer order mehrere Sportler existieren bereits!", { type: 'danger' });
                             } else if (error.response.status === 500) {
                                 console.error("Internal Server Error");
-                                toast.show("Internal Server Error", { type: 'danger' });
+                                toast.showToast("Internal Server Error", { type: 'danger' });
                             }
                         } else {
                             // Andere Fehler
