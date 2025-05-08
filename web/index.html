@@ -454,6 +454,7 @@
             }
 
             renderCards(athletes);
+            toast.showToast("Der Sportler wurde erfolgreich gelöscht!", { type: 'success' });
           } catch (error) {
             console.error('Fehler beim Löschen des Sportlers:', error);
             toast.showToast('Löschen des Sportlers fehlgeschlagen.', { type: 'danger' });
