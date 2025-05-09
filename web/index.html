@@ -169,7 +169,14 @@
         console.error("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
       } else if (error.response) {
-        window.location.href = "html/Anmeldung.html";
+        if (error.response.status === 502) {
+          // fix für reverse proxy; NGINX timed nicht aus sondern returned 502 bad Gateway
+          console.error("gateway timeout, backend down?")
+          window.location.href = "html/BackendDown.html";
+        } else {
+          // normaler fluß
+          window.location.href = "html/Anmeldung.html";
+        }
       } else {
         // Andere Fehler
         console.error("Fehler: " + error)
