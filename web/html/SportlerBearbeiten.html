@@ -173,7 +173,7 @@
         if (error.response) {
           if (error.response.status === 400) {
             console.error("Invalid request body");
-            toast.showToast("Ungültiger Inhatl!", { type: 'danger' });
+            toast.showToast("Ungültiger Inhalt!", { type: 'danger' });
           } else if (error.response.status === 401) {
             console.error("The token is invalid");
             toast.showToast("Sitzung ist abgelaufen", { type: 'danger' });
