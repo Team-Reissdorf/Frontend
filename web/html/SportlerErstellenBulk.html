@@ -104,6 +104,13 @@
                             catch (error) {
                                 console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
                             }
+                        } else if (response.status === 202) {
+                            try {
+                                erfolgsModalFüllen(response.data);
+                            }
+                            catch (error) {
+                                console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
+                            }
                         }
                     } catch (error) {
                         console.error(error)
@@ -137,15 +144,16 @@
         function erfolgsModalFüllen(response) {
             const modalBody = document.getElementsByClassName("modal-body")[0];
             const modalTitle = document.getElementById("exampleModalLabel");
-
-            //bereits vorhandene Sportler anzeigen
-            let athleteListHTML = "<p>Folgende Sportler waren bereits vorhanden und wurden nicht erneut erstellt: </p>";
-            athleteListHTML += "<ul class='list-group'>";
-
+            let athleteListHTML = "";
             if (response.already_existing_athletes !== null) {
-                response.already_existing_athletes.forEach(athlete => {
-                    const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
-                    athleteListHTML += `
+                //bereits vorhandene Sportler anzeigen
+                athleteListHTML = "<p>Folgende Sportler waren bereits vorhanden und wurden nicht erneut erstellt: </p>";
+                athleteListHTML += "<ul class='list-group'>";
+                console.log(response)
+                if (response.already_existing_athletes !== null) {
+                    response.already_existing_athletes.forEach(athlete => {
+                        const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+                        athleteListHTML += `
                 <li class='list-group-item'>
                     <strong>${athlete.first_name} ${athlete.last_name}</strong> <br>
                     Geburtsdatum: ${birthdate} <br>
@@ -153,9 +161,13 @@
                     Geschlecht: ${athlete.sex.toUpperCase()} <br>
                 </li>
             `;
-                });
+                    });
+                }
+                athleteListHTML += "</ul>";
+            } else {
+                //bereits vorhandene Sportler anzeigen
+                athleteListHTML = "<p>Keine neuen Sportler erstellt, da alle schon vorhanden sind!</p>";
             }
-            athleteListHTML += "</ul>";
 
             // Setze den Inhalt im Modal
             modalTitle.innerHTML = "<strong>Sportler erfolgreich erstellt!</strong>";
