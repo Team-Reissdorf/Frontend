@@ -247,7 +247,7 @@
             window.location.href = "Anmeldung.html";
           } else if (error.response.status === 404) {
             console.error("Athlete or exercise does not exist");
-            toast.showToast("Athelet existiert nicht.", { type: 'danger' });
+            toast.showToast("Athlet existiert nicht.", { type: 'danger' });
           } else if (error.response.status === 409) {
             console.error("Performance limit reached");
             fehler409ModalFüllen();
