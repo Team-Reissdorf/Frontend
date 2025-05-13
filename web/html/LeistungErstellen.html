@@ -104,7 +104,7 @@
     let points = null;       // Punktewert zur Übergabe ans Backend
 
     // Lade alles notwendige vor
-    document.addEventListener("DOMContentLoaded", async message => {
+    document.addEventListener("DOMContentLoaded", async () => {
       let datum = document.getElementById("date");
       datum.value = getDateYearsAgo();
       // Überprüfung, ob User angemeldet ist
