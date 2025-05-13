@@ -39,13 +39,13 @@ async function setupNavbarLogic() {
             //Anfrage an Logout-Endpoint
             //TODO 
             await axios.post('http://localhost:8080/v1/user/logout', {}, { withCredentials: true });
-            alert("Abgemeldet.");
-
+            sessionStorage.setItem('toastMessage', 'Erfolgreich abgemeldet');
+            sessionStorage.setItem('toastType', 'success');
             //Weiterleitung zur Anmeldeseite
             window.location.href = "http://localhost:8081/html/Anmeldung.html";
         } catch (error) {
             console.error("Logout fehlgeschlagen.");
-            alert("Irgendwas ist schiefgelaufen.");
+            toast.showToast("Irgendwas ist schiefgelaufen.", { type: "danger" });
         }
     });
 

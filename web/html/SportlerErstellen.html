@@ -80,7 +80,9 @@
     </form>
 
   </div><!-- /.container -->
+  <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
   <script>
+    const toast = window.toast;
     // Activate tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
@@ -140,23 +142,23 @@
         // ToDo: Response auswerten
         if (response.status === 201) {
           console.log("Users created successfully");
-          alert("Sportler erstellt!");
+          toast.showToast("Sportler erstellt!", { type: 'success' });
           window.location.href = "../index.html";
         }
       } catch (error) {
         if (error.response) {
           if (error.response.status === 400) {
             console.error("Invalid request body");
-            alert("Invalid request body");
+            toast.showToast("Ungültiger Inhalt", { type: 'danger' });
           } else if (error.response.status === 401) {
             console.error("The token is invalid");
-            alert("The token is invalid");
+            toast.showToast("Session abgelaufen", { type: 'danger' });
           } else if (error.response.status === 409) {
             console.error("Athlete already exists");
-            alert("Sportler existiert bereits!");
+            toast.showToast("Sportler existiert bereits!", { type: 'warning' });
           } else if (error.response.status === 500) {
             console.error("Internal Server Error");
-            alert("Internal Server Error");
+            toast.showToast("Internal Server Error", { type: 'danger' });
           }
         } else {
           // Andere Fehler

@@ -92,8 +92,9 @@
       </div>
     </div>
   </div>
+  <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
   <script>
-    // Activate tooltips
+    const toast = window.toast;    // Activate tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
@@ -164,7 +165,7 @@
 
       } catch (error) {
         console.error("Fehler beim Laden der Daten:", error);
-        alert("Athlet konnte nicht geladen werden.");
+        toast.showToast("Athlet konnte nicht geladen werden.", { type: 'danger' });
         //window.location.href = "../index.html";
       }
 
@@ -187,7 +188,7 @@
         }
       } catch (error) {
         console.error("Fehler beim Laden der Kategorien:", error);
-        alert("Kategorien konnten nicht geladen werden.");
+        toast.showToast("Kategorien konnten nicht geladen werden.", {type: 'danger'});
       }
 
       // Event Listener für Kategorieänderung
@@ -239,18 +240,20 @@
         if (error.response) {
           if (error.response.status === 400) {
             console.error("Invalid request body");
-            alert("Invalid request body");
+            toast.showToast("Ungültiger Inhalt", { type: 'danger' });
           } else if (error.response.status === 401) {
+            sessionStorage.setItem('toastMessage', 'Bitte melde dich zuerst an.');
+            sessionStorage.setItem('toastType', 'danger');
             window.location.href = "Anmeldung.html";
           } else if (error.response.status === 404) {
             console.error("Athlete or exercise does not exist");
-            alert("Athlete or exercise does not exist");
+            toast.showToast("Athlet existiert nicht.", { type: 'danger' });
           } else if (error.response.status === 409) {
             console.error("Performance limit reached");
             fehler409ModalFüllen();
           } else if (error.response.status === 500) {
             console.error("Internal Server Error");
-            alert("Internal Server Error");
+            toast.showToast("Internal Server Error", { type: 'danger' });
           }
         } else {
           // Andere Fehler
@@ -277,7 +280,7 @@
         }
       } catch (error) {
         console.error("Fehler beim Laden der Übungen:", error);
-        alert("Übungen konnten nicht geladen werden.");
+        toast.showToast("Übungen konnten nicht geladen werden.", { type: 'danger' });
       }
     }
 
@@ -432,17 +435,17 @@
           if (error.response) {
             if (error.response.status === 400) {
               console.error("Invalid request body. Error: " + error);
-              alert("Invalid request body!");
+              toast.showToast("Ungültiger Eintrag", { type: 'danger' });
             } else if (error.response.status === 404) {
               console.error("Performance entry or goals not found. Error: " + error);
-              alert("Performance entry or goals not found!");
+              toast.showToast("Eintrag existiert nicht", { type: 'danger' });
             } else {
               console.error("Internal server error. Error: " + error);
-              alert("Internal server error");
+              toast.showToast("Internal server error", { type: 'danger' });
             }
           } else {
             console.error("Error:" + error);
-            alert("Unexpected error");
+            toast.showToast("Unexpected error", { type: 'danger' });
             window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
           }
         }
@@ -450,14 +453,14 @@
         if (error.response) {
           if (error.response.status === 404) {
             console.error("Athlete does not exists. Error: " + error);
-            alert("Athlet existiert nicht!");
+            toast.showToast("Athlet existiert nicht", { type: 'danger' });
           } else {
             console.error("Internal server error. Error: " + error);
-            alert("Unerwarteter Fehler!");
+            toast.showToast("Unerwarteter Fehler!", { type: 'danger' });
           }
         } else {
           console.error("Fehler bei Leistungsabruf! Error:" + error);
-          alert("Fehler bei Leistungsabruf");
+          toast.showToast("Fehler bei Leistungsabruf", { type: 'danger' });
           //window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
         }
       }
