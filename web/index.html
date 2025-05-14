@@ -82,6 +82,7 @@
 
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../node_modules/axios/dist/axios.js"></script>
+  <script src="/js/Toast.js"></script> <!-- Toast-Framework laden -->
 </head>
 
 <body>
@@ -162,6 +163,22 @@
 </html>
 
 <script>
+  const toast = window.toast;
+  document.addEventListener("DOMContentLoaded", async () => {
+    const message = sessionStorage.getItem('toastMessage');
+    const type = sessionStorage.getItem('toastType');
+
+    if (message) {
+      // Zeige den Toast (je nach Toast-Framework – Beispiel mit eigener Funktion)
+      toast.showToast(message, { type: type });
+
+      // Einmal anzeigen, dann entfernen
+      sessionStorage.removeItem('toastMessage');
+      sessionStorage.removeItem('toastType');
+    }})
+</script>
+
+<script>
   // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
 
   document.addEventListener("DOMContentLoaded", async () => {
@@ -196,7 +213,8 @@
       modalFüllen(athletes);
     } catch (error) {
       console.error("Athletes could not load");
-      alert("Sportler konnten nicht geladen werden");
+      sessionStorage.setItem('toastMessage', 'Athleten konnten nicht geladen werden');
+      sessionStorage.setItem('toastType', 'danger');
       window.location.reload();
     }
 
@@ -217,7 +235,7 @@
 
         if (athletes.length == 0) {
           console.error("Es wurden keine Sportler ausgewählt!");
-          alert("Es wurden keine Sportler ausgewählt!");
+          toast.showToast("Es wurden keine Sportler ausgewählt!", { type: 'danger' });
           return
         } else {
           // POST-Anfrage an Backend senden
@@ -246,18 +264,20 @@
           // ToDo: Response auswerten i1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseume
           if (error.response.status === 400) {
             console.error("Invalid request body");
-            alert("Invalid request body");
+            toast.showToast("Ungültiger Inhalt", { type: 'danger' });
           } else if (error.response.status === 401) {
+            sessionStorage.setItem('toastMessage', 'Session abgelaufen');
+            sessionStorage.setItem('toastType', 'danger');
             window.location.href = "Anmeldung.html";
           } else if (error.response.status === 404) {
             console.error("Athlete or exercise does not exist");
-            alert("Athlete or exercise does not exist");
+            toast.showToast("Athlet existiert nicht!", { type: 'danger' });
           } else if (error.response.status === 409) {
             console.error("Performance limit reached");
             fehler409ModalFüllen();
           } else if (error.response.status === 500) {
             console.error("Internal Server Error");
-            alert("Internal Server Error");
+            toast.showToast("Internal Server Error", { type: 'danger' });
           }
         } else {
           // Andere Fehler
@@ -441,9 +461,10 @@
             }
 
             renderCards(athletes);
+            toast.showToast("Der Sportler wurde erfolgreich gelöscht!", { type: 'success' });
           } catch (error) {
             console.error('Fehler beim Löschen des Sportlers:', error);
-            alert('Löschen des Sportlers fehlgeschlagen.');
+            toast.showToast('Löschen des Sportlers fehlgeschlagen.', { type: 'danger' });
           }
         }
       });
@@ -528,7 +549,7 @@
       const response = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
       return response.data.discipline_names;
     } catch (error) {
-      alert("Etwas ist schief gelaufen!");
+      toast.showToast("Etwas ist schief gelaufen!", { type: 'danger' });
       console.error("Get disciplines went wrong");
       return [];
     }

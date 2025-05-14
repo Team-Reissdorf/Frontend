@@ -68,7 +68,9 @@
     </div>
   </div> <!-- /.container -->
 
+  <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
   <script>
+    const toast = window.toast;
     // Überprüfung, ob User angemeldet ist
     document.addEventListener("DOMContentLoaded", async () => {
       try{
@@ -79,7 +81,7 @@
         window.location.href = "../index.html";
       } catch(error) {
         //Falls Server nicht erreichbar ist
-        if(error.code == "ERR_NETWORK"){
+        if(error.code === "ERR_NETWORK"){
           console.error("Backend nicht erreichbar:" + error)
           window.location.href = "BackendDown.html";
         } else {
@@ -112,19 +114,21 @@
 
           // ToDo: Hier die Antwort verarbeiten
           if (response.status === 201) {
+            sessionStorage.setItem('toastMessage', 'Erfolgreich registriert');
+            sessionStorage.setItem('toastType', 'success');
             window.location.href = "../index.html";
           }
         } catch (error) {
           if (error.response) {
             if (error.response.status === 400) {
               console.error("Invalid request body");
-              alert("Invalid request body");
+              toast.showToast("Ungültiger Inhalt", { type: 'danger' });
             } else if (error.response.status === 409) {
               console.error("User already exists");
-              alert("Trainer existiert bereits");
+              toast.showToast("Trainer existiert bereits", { type: 'danger' });
             } else if (error.response.status === 500) {
               console.error("Internal Server Error");
-              alert("Internal Server Error");
+              toast.showToast("Internal Server Error", { type: 'danger' });
             }
           } else {
             // Andere Fehler
@@ -132,7 +136,7 @@
           }
         }
       } else {
-        alert("Passwort nicht gleich!")
+        toast.showToast("Passwörter stimmen nicht überein!", { type: 'danger' });
         console.error("Password not equal")
       }
     });
