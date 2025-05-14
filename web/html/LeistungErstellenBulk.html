@@ -18,14 +18,14 @@
             <p class="lead">Wähle eine gültige CSV-Datei aus, um Leistungen für mehrere Sportler auf einmal zu
                 erstellen.</p>
             <p class="lead">Gültiges Format:
-                Nachname;Vorname;Geschlecht(m,f,d);Geburtsjahr;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte</p>
+                Nachname; Vorname; Geschlecht(m,f,d); Geburtsjahr; Geburtstag; Übung; Kategorie; Datum; Ergebnis; Punkte</p>
         </div><!-- /.jumbotron -->
         <form id="submit-form">
             <div class="d-flex justify-content-center">
-                <div class="d-flex flex-column justify-content-center text-center m-4 col-md-6">
+                <div class="d-flex flex-column justify-content-center text-center m-4 col-md-6" data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Hier kann man die CSV-Datei hochladen, um mehrere Leistungen zu erstellen.">
                     <!-- CSV-Datei (File) -->
-                    <label for="csv" data-bs-toggle="tooltip" data-bs-placement="top"
-                        data-bs-title="Hier kann man die CSV-Datei hochladen, um mehrere Leistungen zu erstellen.">CSV-Datei
+                    <label for="csv" >CSV-Datei
                         mit den Leistungen der Athleten hier hochladen:</label>
                     <input type="file" class="form-control" id="csv" accept=".csv">
                 </div>
