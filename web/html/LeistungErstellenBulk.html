@@ -15,8 +15,10 @@
     <div class="container my-5">
         <div class="p-5 text-center bg-body-tertiary rounded-3">
             <h1 class="display-4">Leistungen Massenerstellung</h1>
-            <p class="lead">Wähle eine gültige CSV-Datei aus, um Leistungen für mehrere Sportler auf einmal zu erstellen.</p>
-            <p class="lead">Gültiges Format: Nachname,Vorname,Geschlecht(m,f,d),Geburtsjahr,Geburtstag,Übung,Kategorie,Datum,Ergebnis,Punkte</p> <!-- TODO -->
+            <p class="lead">Wähle eine gültige CSV-Datei aus, um Leistungen für mehrere Sportler auf einmal zu
+                erstellen.</p>
+            <p class="lead">Gültiges Format:
+                Nachname;Vorname;Geschlecht(m,f,d);Geburtsjahr;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte</p>
         </div><!-- /.jumbotron -->
         <form id="submit-form">
             <div class="d-flex justify-content-center">
@@ -53,7 +55,8 @@
                 <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light border border-2 ms-3"
-                        onclick="window.location.href = '../index.html';" data-bs-toggle="tooltip" data-bs-placement="top"
+                        onclick="window.location.href = '../index.html';" data-bs-toggle="tooltip"
+                        data-bs-placement="top"
                         data-bs-title="Rückmeldung schließen und zur Startseite zurückkehren.">Verstanden</button>
                 </div>
             </div>
@@ -64,7 +67,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
-                const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, 
+                const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
                     { withCredentials: true });
                 // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
             } catch (error) {
@@ -83,11 +86,11 @@
                 // Wenn eine file da ist, nur file senden
                 if (document.getElementById("csv").files.length > 0) {
                     const formData = new FormData();
-                    formData.append('Athletes', document.getElementById("csv").files[0]);
+                    formData.append('Performances', document.getElementById("csv").files[0]);
 
                     try {
                         const response = await axios.post(
-                            'http://localhost:8080/v1/athlete/bulk-create', // TODO
+                            'http://localhost:8080/v1/performance/bulk-create', // TODO
                             formData,
                             {
                                 withCredentials: true,
@@ -96,7 +99,7 @@
                         );
 
                         if (response.status === 201) {
-                            console.log("Users created successfully");
+                            console.log("Leistungen erfolgreich erstellt");
                             try {
                                 erfolgsModalFüllen(response.data);
                             }
@@ -110,25 +113,25 @@
                         if (error.response) { // TODO 
                             if (error.response.status === 400) {
                                 console.error("Invalid request body");
-                                fehlerNachricht = "Invalid request body";
+                                fehlerNachricht = "Invalid request body.";
                             } else if (error.response.status === 401) {
                                 console.error("The token is invalid");
-                                fehlerNachricht = "The token is invalid";
+                                fehlerNachricht = "The token is invalid.";
                             } else if (error.response.status === 409) {
-                                console.error("One or more athlete(s) already exist");
+                                console.error(error.response.data.error);
                                 fehlerNachricht = "Einer order mehrere Sportler existieren bereits!";
                             } else if (error.response.status === 500) {
-                                console.error("Internal Server Error");
+                                console.error("Internal Server Error.");
                                 fehlerNachricht = "Internal Server Error";
                             }
                         } else {
                             // Andere Fehler
-                            console.error("Netzwerkfehler:", error.message);
-                        }
-                        fehlerModalFüllen(fehlerNachricht, error.message); // TODO 
+                            console.error("Netzwerkfehler:", error.data.error);
+                        }                        
+                        fehlerModalFüllen(fehlerNachricht, error); // TODO 
                     }
                 } else {
-                    alert("Bitte genau eine CSV-Datei auswählen.");
+                    alert("Bitte genau eine CSV-Datei auswählen."); // TODO 
                 }
             })
         });
@@ -137,17 +140,39 @@
             const modalBody = document.getElementsByClassName("modal-body")[0];
             const modalTitle = document.getElementById("exampleModalLabel");
 
-            // TODO 
-            // bereits vorhandene Sportler anzeigen
-            let athleteListHTML = "<p>Folgende Sportler waren bereits vorhanden und wurden nicht erneut erstellt: </p>";
-            athleteListHTML += "<ul class='list-group'>";
-
-            
-
             // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Sportler erfolgreich erstellt!<strong>";
+            modalTitle.innerHTML = "<strong>Leistungen erfolgreich erstellt!<strong>";
             modalTitle.style.color = "green";
-            modalBody.innerHTML = athleteListHTML;
+
+            if (response.failed_entries !== null) {
+                // bereits vorhandene Leistungen anzeigen
+                let fehlerTable = "<p>Folgende Einträge führten zu einem Fehler und wurden nicht erstellt: </p>";
+                fehlerTable += "<table class='table'>";
+                fehlerTable += `
+                    <thead>
+                        <tr>
+                        <th scope="col">Zeile in CSV</th>
+                        <th scope="col">Fehlergrund</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+                response.failed_entries.forEach((entry) => {
+                    fehlerTable += `
+                        <tr class='list-group-item'>
+                            <td>${entry.row}</td>
+                            <td>${entry.reason}</td>
+                        </tr>
+                    `;
+                });
+
+                fehlerTable += "</tbody></table>";
+                const fehlerText = document.createElement("p");
+                fehlerText.innerHTML = "Folgende Einträge der CSV-Datei konnten aus folgenden Gründen nicht verwertet werden:"
+                modalBody.appendChild(fehlerText);
+                modalBody.appendChild(fehlerTable);
+            }
+
             // Zeige das Modal an
             const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
             modal.show();
@@ -160,7 +185,8 @@
             // Setze den Inhalt im Modal
             modalTitle.innerHTML = "<strong>Fehler bei der Erstellung der Leistungen!<strong>";
             modalTitle.style.color = "red";
-            modalBody.innerHTML = `<p>${nachricht}</p><p>${error}</p>`;
+            modalBody.innerHTML =   `<p>${nachricht}</p><p><em>${error.message}</em></p>
+                                    <p><em>${error.response.data.error}</em></p>`;
             // Zeige das Modal an
             const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
             modal.show();
