@@ -62,8 +62,9 @@
             </div>
         </div>
     </div>
-
+    <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
     <script>
+        const toast = window.toast;
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
@@ -131,7 +132,7 @@
                         fehlerModalFüllen(fehlerNachricht, error); // TODO 
                     }
                 } else {
-                    alert("Bitte genau eine CSV-Datei auswählen."); // TODO 
+                    toast.showToast("Bitte genau eine CSV-Datei auswählen!", { type: 'warning'});
                 }
             })
         });
@@ -141,7 +142,7 @@
             const modalTitle = document.getElementById("exampleModalLabel");
 
             // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Leistungen erfolgreich erstellt!<strong>";
+            modalTitle.innerHTML = "<strong>Leistungen erfolgreich erstellt!</strong>";
             modalTitle.style.color = "green";
 
             if (response.failed_entries !== null) {
@@ -183,7 +184,7 @@
             const modalTitle = document.getElementById("exampleModalLabel");
 
             // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Fehler bei der Erstellung der Leistungen!<strong>";
+            modalTitle.innerHTML = "<strong>Fehler bei der Erstellung der Leistungen!</strong>";
             modalTitle.style.color = "red";
             modalBody.innerHTML =   `<p>${nachricht}</p><p><em>${error.message}</em></p>
                                     <p><em>${error.response.data.error}</em></p>`;
