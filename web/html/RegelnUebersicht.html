@@ -187,7 +187,9 @@
 
 </html>
 
+<script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
 <script>
+    const toast = window.toast;
     document.addEventListener("DOMContentLoaded", async () => {
         try {
             const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
@@ -239,7 +241,7 @@
             }
         } catch (error) {
             console.error("Fehler beim Laden der Kategorien:", error);
-            alert("Kategorien konnten nicht geladen werden.");
+            toast.showToast("Kategorien konnten nicht geladen werden.", { type: 'danger' });
         }
 
         const value = document.getElementById("date").value;
@@ -292,7 +294,7 @@
             }
         } catch (error) {
             console.error("Fehler beim Laden der Übungen:", error);
-            alert("Übungen konnten nicht geladen werden.");
+            toast.showToast("Übungen konnten nicht geladen werden.", { type: 'danger' });
         }
     }
 
@@ -309,7 +311,7 @@
             fillRulesTables(response.data.ruleset_goals, unit);
         } catch (error) {
             console.error("Fehler beim Laden des Regelsets:", error);
-            alert("Fehler beim Laden des Regelsets");
+            toast.showToast("Fehler beim Laden des Regelsets", { type: 'danger' });
         }
     }
 

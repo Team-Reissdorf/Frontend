@@ -58,7 +58,9 @@
         </div>
     </div>
 
+    <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
     <script>
+        const toast = window.toast;
         const athleteId = new URLSearchParams(window.location.search).get("id");
         document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("abbrechenButton").addEventListener("click", function (event) {
@@ -101,7 +103,7 @@
                             }
                             catch (error) {
                                 console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
-                                alert("Fehler beim Füllen des Erfolgs-Modals!");
+                                toast.showToast("Fehler beim Füllen des Erfolgs-Modals!", { type: 'danger' });
                             }
                         }
                     } catch (error) {
@@ -110,16 +112,16 @@
                         if (error.response) {
                             if (error.response.status === 400) {
                                 console.error("Invalid request body");
-                                fehlerNachricht = "Invalid request body";
+                                toast.showToast("Ungültiger Inhalt!", { type: 'danger' });
                             } else if (error.response.status === 401) {
                                 console.error("The token is invalid");
-                                fehlerNachricht = "The token is invalid";
+                                toast.showToast("Session abgelaufen!", { type: 'danger' });
                             } else if (error.response.status === 409) {
                                 console.error("One or more athlete(s) already exist");
-                                fehlerNachricht = "Einer order mehrere Sportler existieren bereits!";
+                                toast.showToast("Einer oder mehrere Sportler existieren bereits!", { type: 'danger' });
                             } else if (error.response.status === 500) {
                                 console.error("Internal Server Error");
-                                fehlerNachricht = "Internal Server Error";
+                                toast.showToast("Internal Server Error", { type: 'danger' });
                             }
                         } else {
                             // Andere Fehler
@@ -127,7 +129,7 @@
                         }
                     }
                 } else {
-                    alert("Bitte eine PDF-Datei auswählen.");
+                    toast.showToast("Bitte eine PDF-Datei auswählen.", { type: 'danger' });
                 }
             })
         });

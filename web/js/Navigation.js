@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const navbarHtml = `
         <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
             <div class="container-fluid">
-                <a class="navbar-brand" id="navbar-brand-link" href="../index.html" style="color: white">ComPeteHub</a>
+                <a class="navbar-brand" id="navbar-brand-link" href="../index.html" style="color: white"><img src="../media/brandIcon.jpeg" height="auto" width="25" alt="Company Logo" /> ComPeteHub</a>
                 <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -38,14 +38,14 @@ async function setupNavbarLogic() {
         try {
             //Anfrage an Logout-Endpoint
             //TODO 
-            await axios.post('http://localhost:8081/backend/v1/user/logout', {}, { withCredentials: true });
-            alert("Abgemeldet.");
-
+            await axios.post('http://localhost:8080/v1/user/logout', {}, { withCredentials: true });
+            sessionStorage.setItem('toastMessage', 'Erfolgreich abgemeldet');
+            sessionStorage.setItem('toastType', 'success');
             //Weiterleitung zur Anmeldeseite
             window.location.href = "http://localhost:8081/html/Anmeldung.html";
         } catch (error) {
             console.error("Logout fehlgeschlagen.");
-            alert("Irgendwas ist schiefgelaufen.");
+            toast.showToast("Irgendwas ist schiefgelaufen.", { type: "danger" });
         }
     });
 
