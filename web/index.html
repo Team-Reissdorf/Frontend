@@ -97,6 +97,52 @@
         font-size: .875rem;
       }
     }
+
+    /*  — neuer Wrapper, der die Tabelle einengt —  */
+    .table-wrapper {
+      width: 100%;
+      /* füllt den verfügbaren Platz */
+      max-width: 100%;
+      /* nicht breiter werden */
+      overflow: hidden;
+      /* schneidet alles ab, was rausragt */
+    }
+
+    /*  — Tabelle proportional an den Container anpassen —  */
+    .responsive-table {
+      width: 100%;
+      /* skaliert runter, statt horizontal zu scrollen */
+      max-width: 100%;
+      table-layout: fixed;
+      /* verteilt Spaltenbreite gleichmäßig */
+    }
+
+    .responsive-table th,
+    .responsive-table td {
+      word-wrap: break-word;
+      /* lange Wörter umbrechen */
+      white-space: normal;
+      /* Zeilenumbruch erlauben */
+    }
+
+    /* 1) Name-Bereich immer 200px breit */
+    .name-container {
+      flex: 0 0 200px;
+      max-width: 200px;
+    }
+
+    /* 2) Table-Bereich nimmt Rest ein, darf aber schrumpfen */
+    .table-container {
+      flex: 1;
+      min-width: 0;
+      /* wichtig, damit das Flex-Item schrumpfen kann */
+    }
+
+    /* 3) Buttons-Bereich immer 150px breit */
+    .buttons-container {
+      flex: 0 0 150px;
+      max-width: 150px;
+    }
   </style>
 
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -120,8 +166,9 @@
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
-      <a href="html/RegelnUebersicht.html" style="padding-right: 0.5rem"><button class="btn btn-light border border-2 btn-responsive"
-          style="font-weight: bold;" id="regelButton" data-bs-toggle="tooltip" data-bs-placement="top"
+      <a href="html/RegelnUebersicht.html" style="padding-right: 0.5rem"><button
+          class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" id="regelButton"
+          data-bs-toggle="tooltip" data-bs-placement="top"
           data-bs-title="Hier kann man die Regeln anschauen und aktualisieren.">Regeln</button></a>
     </div>
 
@@ -412,15 +459,15 @@
               <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
                 
                 <!-- Name & Details -->
-                <div class="text-start mb-3 mb-md-0 flex-fill">
+                <div class="name-container text-start mb-3 mb-md-0">
                   <h4 class="mb-1">${athlete.first_name} ${athlete.last_name}</h4>
                   <h6 class="mb-0">${birthdate}  ${sex}</h6>
                 </div>
                 
                 <!-- Medaillen-Tabelle -->
-                <div class="mb-3 mb-md-0 flex-fill text-center table-responsive">
-                  <div class="table-responsive">
-                    <table class="mx-auto">
+                <div class="table-container mb-3 mb-md-0 text-center">
+                  <div class="table-wrapper" style="padding: 0.5rem">
+                    <table class="responsive-table mx-auto">
                       <thead>
                         <tr>
                           <th style="padding:8px;">DSA</th>
@@ -438,7 +485,7 @@
                 </div>
                 
                 <!-- Buttons -->
-                <div class="d-inline-flex flex-column align-items-stretch flex-fill">
+                <div class="buttons-container d-inline-flex flex-column align-items-stretch mb-3 mb-md-0">
                   <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" class="mb-2">
                     <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">
                       Bearbeiten
