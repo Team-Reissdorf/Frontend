@@ -7,6 +7,25 @@
   <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
 
   <style>
+    /* Standard: untereinander (column) */
+    .button-group {
+      flex-direction: column;
+    }
+
+    /* 576px–737.98px: nebeneinander (row) */
+    @media (min-width: 576px) and (max-width: 737.98px) {
+      .button-group {
+        flex-direction: column !important;
+      }
+    }
+
+    /* ab 738px: wieder untereinander (column) */
+    @media (min-width: 738px) {
+      .button-group {
+        flex-direction: row !important;
+      }
+    }
+
     /*--------------------------------------------------------------
       1. Shrink table cells on very small screens (≤575.98px)
         - Reduces padding and font-size in athlete-cards tables
@@ -90,7 +109,7 @@
   <script src="js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
 
   <!-- Sortieren Dropdown und Sportler erstellen Button -->
-  <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-sm-between align-items-center m-2">
+  <div class="d-flex flex-column button-group justify-content-center justify-content-sm-between align-items-center m-2">
     <!-- Sortieren Dropdown und Regel-Button -->
     <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
       <label for="sorter" class="me-2 mb-2 mb-sm-0" data-bs-toggle="tooltip" data-bs-placement="right"
@@ -101,7 +120,7 @@
         <option value="lname">Nachname (A-Z)</option>
         <option value="birthdate">Geburtstag (Aufsteigend)</option>
       </select>
-      <a href="html/RegelnUebersicht.html"><button class="btn btn-light border border-2 btn-responsive"
+      <a href="html/RegelnUebersicht.html" style="padding-right: 0.5rem"><button class="btn btn-light border border-2 btn-responsive"
           style="font-weight: bold;" id="regelButton" data-bs-toggle="tooltip" data-bs-placement="top"
           data-bs-title="Hier kann man die Regeln anschauen und aktualisieren.">Regeln</button></a>
     </div>
@@ -168,7 +187,8 @@
       // Einmal anzeigen, dann entfernen
       sessionStorage.removeItem('toastMessage');
       sessionStorage.removeItem('toastType');
-    }})
+    }
+  })
 </script>
 
 <script>
