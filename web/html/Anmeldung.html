@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>ComPeteHub</title>
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../node_modules/axios/dist/axios.js"></script>
+</head>
+<body> 
+  <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
+  
+  <div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <h1 class="text-body-emphasis">Anmelden</h1>
+      <p class="lead">Gib deine Email und dein Password unten ein, um dich als Trainer anzumelden!</p>
+    </div> <!-- /.jumbotron -->
+
+    <br>
+
+    <div class="row justify-content-md-center">
+      <div class="col-l-8 col-md-8 col-sm-12">
+
+        <!-- Login-Form -->
+        <form id="login-form">
+
+          <!-- Email -->
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" placeholder="Email" required autocomplete="email">
+          </div>
+
+          <!-- Passwort -->
+          <div class="form-group">
+            <label for="pwd">Passwort</label>
+            <input type="password" class="form-control" id="pwd" placeholder="Passwort" required
+              autocomplete="current-password">
+          </div>
+
+          <!-- Angemeldet bleiben (Checkbox) -->
+          <div class="form-group">
+            <label for="remember_me">Angemeldet bleiben?</label>
+            <input type="checkbox" name="remember_me" id="remember_me" value="True">
+          </div>
+          <div class="form-group">
+            <div class="row justify-content-md-center">
+              <button type="submit" class="btn btn-light" style="width: 150px; height: 40px">Anmelden</button>
+            </div>
+          </div>
+        </form> <!-- /.login-form -->
+
+        <!-- 'Kein Account?'-Abfrage -->
+        <hr class="my-4">
+
+        <div class="row justify-content-center align-items-center text-center">
+          <p style="margin-bottom: 16px;">Haben Sie noch kein Konto?</p>
+          <a href="Registrierung.html" style="width: 150px; height: 40px;"><button
+              class="btn btn-light">Registrieren</button></a>
+        </div>
+      </div>
+    </div>
+  </div> <!-- /.container -->
+  <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
+  <script>
+    const toast = window.toast;
+    document.addEventListener("DOMContentLoaded", async () => {
+
+      // Überprüfung, ob User angemeldet ist
+      try{
+        const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
+        {withCredentials: true});
+
+        // Wenn die Anfrage erfolgreich ist (200 OK), geh zur Overview-Seite
+        window.location.href = "../index.html";
+      } catch(error) {
+        if(error.code === "ERR_NETWORK"){
+          console.error("Backend nicht erreichbar:" + error)
+          window.location.href = "BackendDown.html";
+        } else {
+          // Andere Fehler
+          console.error("Fehler: " + error)
+        }
+      }
+      try{
+        const message = sessionStorage.getItem('toastMessage');
+        const type = sessionStorage.getItem('toastType');
+
+        if (message) {
+          // Zeige den Toast (je nach Toast-Framework – Beispiel mit eigener Funktion)
+          toast.showToast(message, { type: type });
+
+          // Einmal anzeigen, dann entfernen
+          sessionStorage.removeItem('toastMessage');
+          sessionStorage.removeItem('toastType');
+      }}
+      catch (error) {
+        console.error("Fehler beim Abrufen der Toast-Nachricht:", error);
+      }
+    });
+
+    // Event-Listener für das Formular
+    document.getElementById('login-form').addEventListener('submit', async function (event) {
+      event.preventDefault(); // Verhindert das Neuladen der Webseite
+
+      // Eingabewerte abrufen
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('pwd').value;
+      const remember_me = document.getElementById('remember_me').checked;
+      try {
+        // POST-Anfrage mit axios ans Backend senden
+        const response = await axios.post('http://localhost:8081/backend/v1/user/login', {
+          email: email,
+          password: password,
+          remember_me: remember_me,
+        },
+          {
+            withCredentials: true,
+          },);
+
+        // ToDo: Hier die Antwort verarbeiten
+        if (response.status === 200) {
+          sessionStorage.setItem('toastMessage', 'Erfolgreich angemeldet');
+          sessionStorage.setItem('toastType', 'success');
+          window.location.href = "../index.html";
+        }
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 400) {
+            console.error("Invalid request body");
+            toast.showToast("Ungültiger Inhalt", { type: 'danger' });
+          } else if (error.response.status === 401) {
+            console.error("Wrong credentials");
+            toast.showToast("Falsche E-Mail oder Passwort", { type: 'danger' });
+          } else if (error.response.status === 404) {
+            console.error("Trainer nicht gefunden");
+            toast.showToast("Trainer wurde nicht gefunden", { type: 'danger' });
+          } else if (error.response.status === 500) {
+            console.error("Internal Server Error");
+            toast.showToast("Internal Server Error", { type: 'danger' });
+          }
+        } else {
+          // Andere Fehler
+          console.error("Netzwerkfehler:", error.message);
+        }
+      }
+    });
+
+  </script>
+</body>
+
+</html>

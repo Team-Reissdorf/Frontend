@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>ComPeteHub</title>
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../node_modules/axios/dist/axios.js"></script>
+  <style>
+    .responsive-category-name {
+      font-size: clamp(1.5rem, 5vmin, 3rem);
+    }
+
+    .toggle-icon {
+      position: absolute;
+      right: 0rem;
+      top: 0rem;
+      font-size: 0.9rem;
+      transition: transform 0.4s ease;
+      pointer-events: none;
+    }
+
+    .toggle-icon.open {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+
+<body>
+  <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
+
+  <!--Überschrift + Beschreibung-->
+  <div class="container mt-5">
+    <div class="p-1 text-center bg-body-tertiary rounded-3">
+      <h1 class="display-6">Leistungsübersicht</h1>
+      <p class="lead"> Hier können aktuelle und vergangene Leistungen des ausgewählten Sportlers angesehen werden.
+        <br> Für Informationen zu einzelnen Leistungen auf die einzelnen Kategorien klicken!
+      </p>
+      </p>
+    </div>
+  </div>
+
+  <!--Sportlerinfos Name, etc.-->
+  <div class="Sportlerinfos">
+    <div class="container my-5">
+      <div class="text-center bg-body-tertiary rounded-3">
+        <h1 class="display-6" id="sportlerinfos-name"> <b> - </b> </h1>
+        <p class="lead" id="sportlerinfos-alter-ges"> - </p>
+      </div>
+    </div>
+  </div>
+
+  <!--Optionen-->
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-center gap-3 align-items-center m-auto">
+      <!-- Button: Leistungen eintragen -->
+      <a href="#" onclick="this.href='LeistungErstellen.html?id=' + athleteId" class="text-decoration-none">
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man eine neue Leistung des Sportlers anlegen.">Leistungen eintragen</button>
+      </a>
+
+      <label for="datenAbfragenAb" class="btn btn-light border border-2 fw-bold py-2 px-3 d-flex align-items-center gap-2"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man festlegen, ab wann die Leistungen eingesehen werden können.">
+        <span>Anzeigen ab</span>
+        <input type="date" id="datenAbfragenAb" class="border-0 bg-transparent fw-bold p-0" value="2025-01-01" max="9999-12-31" style="outline: none; box-shadow: none;"/>
+      </label>
+
+      <!-- Button: Schwimmnachweis eintragen -->
+      <a href="#" onclick="this.href='SchwimmnachweisErstellen.html?id=' + athleteId" class="text-decoration-none">
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man einen neuen Schwimmnachweis des Sportlers anlegen.">Schwimmnachweis eintragen</button>
+      </a>
+
+      <a href="#" onclick="downloadSchwimmnachweise()" class="text-decoration-none">
+        <button class="btn btn-light border border-2 fw-bold py-2 px-3"  data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hiermit kann man alle Schwimmnachweise des Sportlers herunterladen.">Schwimmnachweise Herunterladen</button>
+      </a>
+    </div>
+  </div>
+
+  <!--Kategorien + Aufklappbare Details-->
+
+  <div class="my-5">
+    <!--Kategorie 1 Ausdauer-->
+    <div class="container my-3">
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Ausdauer-tabelle')">
+        <div id="Ausdauer-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Ausdauer</h2>
+          <div id="Ausdauer-kopfzeile-lW"
+            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <div id="Ausdauer-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <span class="toggle-icon" id="icon-Ausdauer">&#x25BC;</span>
+        </div>
+        <table class="table d-none" id="Ausdauer-tabelle">
+          <tr>
+            <th>Übung</th>
+            <th>Datum</th>
+            <th>Wert</th>
+            <th>Medaille</th>
+          </tr>
+          <!-- wird mit passenden Einträgen befüllt-->
+        </table>
+      </div>
+    </div>
+
+    <!--Kategorie 2 Schnelligkeit-->
+    <div class="container my-3">
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Schnelligkeit-tabelle')">
+        <div id="Schnelligkeit-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Schnelligkeit</h2>
+          <div id="Schnelligkeit-kopfzeile-lW"
+            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <div id="Schnelligkeit-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <span class="toggle-icon" id="icon-Schnelligkeit">&#x25BC;</span>
+        </div>
+        <table class="table d-none" id="Schnelligkeit-tabelle">
+          <tr>
+            <th>Übung</th>
+            <th>Datum</th>
+            <th>Wert</th>
+            <th>Medaille</th>
+          </tr>
+          <!-- wird mit passenden Einträgen befüllt-->
+        </table>
+      </div>
+    </div>
+
+    <!--Kategorie 3 Kraft-->
+    <div class="container my-3">
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Kraft-tabelle')">
+        <div id="Kraft-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Kraft</h2>
+          <div id="Kraft-kopfzeile-lW" class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x"
+            style="width: 20vmin;">
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <div id="Kraft-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <span class="toggle-icon" id="icon-Kraft">&#x25BC;</span>
+        </div>
+        <table class="table d-none" id="Kraft-tabelle">
+          <tr>
+            <th>Übung</th>
+            <th>Datum</th>
+            <th>Wert</th>
+            <th>Medaille</th>
+          </tr>
+          <!-- wird mit passenden Einträgen befüllt-->
+        </table>
+      </div>
+    </div>
+
+    <!--Kategorie 4 Koordination-->
+    <div class="container my-3">
+      <div class="p-2 text-center bg-body-tertiary rounded-3" onclick="toggleDetails('Koordination-tabelle')">
+        <div id="Koordination-kopfzeile-gesamt"
+          class="d-flex mx-5 justify-content-between align-items-center position-relative">
+          <h2 class="display-4 responsive-category-name text-start">Koordination</h2>
+          <div id="Koordination-kopfzeile-lW"
+            class="flex-shrink-0 text-center position-absolute start-50 translate-middle-x" style="width: 20vmin;">
+            <h6 class="lead">letzter Wert</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <div id="Koordination-kopfzeile-m" class="flex-shrink-0" style="width: 20vmin;">
+            <h6 class="lead">letzte Medaille</h6>
+            <p class="wert" style="font-size: 3vmin;">-</p>
+          </div>
+          <span class="toggle-icon" id="icon-Koordination">&#x25BC;</span>
+        </div>
+        <table class="table d-none" id="Koordination-tabelle">
+          <tr>
+            <th>Übung</th>
+            <th>Datum</th>
+            <th>Wert</th>
+            <th>Medaille</th>
+          </tr>
+          <!-- wird mit passenden Einträgen befüllt-->
+        </table>
+      </div>
+    </div>
+    </div>
+</body>
+
+</html>
+
+<script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
+<script>
+  const toast = window.toast;
+        const athleteId = new URLSearchParams(window.location.search).get("id");
+
+        // Activate tooltips
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+        // Lade alles notwendige vor
+        document.addEventListener("DOMContentLoaded", async () => {
+          // Überprüfung, ob User angemeldet ist
+          try {
+            const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
+              { withCredentials: true });
+            // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
+          } catch (error) {
+            if (error.response) {
+              // Bei Fehler mit Response gehe zu Anmeldung.html
+              window.location.href = "Anmeldung.html";
+            } else {
+              //Falls Server nicht erreichbar ist
+              if(error.code == "ERR_NETWORK"){
+                console.error("Backend nicht erreichbar:" + error)
+                window.location.href = "BackendDown.html";
+              } else {
+                // Andere Fehler
+                console.error("Fehler: " + error)
+              }
+            }
+          }
+
+    try {
+      // Daten vom Backend abrufen & vorbereiten
+      const response = await axios.get(`http://localhost:8081/backend/v1/athlete/get/${athleteId}`, {
+        withCredentials: true,
+      });
+      const athlete = response.data.athlete;
+      var sex = "";
+      if (athlete.sex === "m") {
+        sex = 'Männlich';
+      } else if (athlete.sex === "f") {
+        sex = 'Weiblich';
+      } else if (athlete.sex === "d") {
+        sex = 'Divers';
+      }
+
+      //Alter berechnen
+      const currentDate = new Date().toJSON().slice(0, 10)
+      var age = currentDate.split('-')[0] - athlete.birth_date.split('T')[0].split('-')[0];
+      if ((currentDate.split('-')[1] < athlete.birth_date.split('T')[0].split('-')[1]) || (currentDate.split('-')[2] === athlete.birth_date.split('T')[0].split('-')[2])) {
+        age--;
+      }
+      const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+
+      //Sportlerinfos (Name, Alter, etc.) befüllen
+      const sportlerInfoDaten = { "vorname": athlete.first_name, "nachname": athlete.last_name, "geburtstag": birthdate, "alter": age, "geschlecht": sex };
+      sportlerInfosFüllen(sportlerInfoDaten);
+
+      //Tabellen aller Disziplinen füllen 
+      updateAlleKategorieTabellen();
+    }
+    catch (error) {
+      console.error("Fehler beim Laden der des Athleten:", error);
+      toast.showToast("Athlet existiert nicht.", { type: 'danger' });
+      window.location.href = "../index.html"; //falsche athleteID in URL -> zurück zur Übersicht
+    }
+  })
+
+  //Beim ändern des DatenabfragenAb-Input alle Tabellen aktualisieren
+  document.getElementById("datenAbfragenAb").addEventListener("input", async function () {
+    await updateAlleKategorieTabellen();
+  });
+
+  async function updateAlleKategorieTabellen() {
+    /*
+    Aktualisiert die 4 Tabellen + Kopfzeilen, wenn Datum Abfrage ab wann geändert wird. 
+    */
+
+    //Performance-Einträge ab dem Wert vom Dateinput abfragen
+    let performanceEinträge = [];
+    try {
+      const abrufenAb = document.getElementById("datenAbfragenAb").value;
+
+      const responsePerformance = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?since=${abrufenAb}`, {
+        withCredentials: true
+      });
+      performanceEinträge = responsePerformance.data.performance_entries
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          window.location.href = "Anmeldung.html";
+        }
+
+        else {
+          console.error("Fehler beim Abrufen der Performances:", error);
+          toast.showToast("Fehler beim Abrufen der Performance-Einträge.", { type: 'danger' });
+        }
+      }
+    }
+
+    //Kategorien für spätere Zuordnung bekommen
+    let alleKategorien = []
+    try {
+      const responseDisziplinen = await axios.get(`http://localhost:8081/backend/v1/discipline/get-all`, {
+        withCredentials: true
+      });
+      alleKategorien = responseDisziplinen.data.discipline_names
+    }
+    catch (error) {
+      if (error.response.status === 401) {
+        window.location.href = "Anmeldung.html";
+      }
+      else {
+        console.error("Fehler beim Abrufen der Disziplinen.", error)
+        toast.showToast("Fehler beim Abrufen der Disziplinen.", { type: 'danger' })
+      }
+    }
+
+    try {
+      //Alle Kategorien durchgehen und Kopfzeilen + Tabellen füllen
+      let alleExercisesFürAktKategorie = []
+      for (const aktKategorie of alleKategorien) {
+        try {
+          const responseExercises = await axios.get(`http://localhost:8081/backend/v1/exercise/get/${aktKategorie}`, {
+            withCredentials: true
+          });
+
+          alleExercisesFürAktKategorie = responseExercises.data.exercises
+
+        } catch (error) {
+          //irgendwas beim Abrufen und/oder Eintragen in Felder fehlgeschlagen
+
+          if (error.response) {
+            if (error.response.status === 401) {
+              window.location.href = "Anmeldung.html";
+            }
+            else {
+              toast.showToast("Fehler beim Abrufen der Übungen", { type: 'danger' })
+              console.error(`Fehler beim Abrufen der Übungen für ${element}:`, error);
+            }
+
+          }
+        }
+
+        //Tabelleninhalte leeren, um danach neu hinzuzufügen (sonst doppelte Einträge)         
+        let tab = document.getElementById(`${aktKategorie}-tabelle`)
+        tab.innerHTML = `<tr>
+            <th>Übung</th>
+            <th>Datum</th>
+            <th>Wert</th>
+            <th>Medaille</th>   
+          </tr>  `
+
+        //Leeren/Zurücksetzen der Kopfzeilen
+        const kopfZ = document.getElementById(`${aktKategorie}-kopfzeile-gesamt`)
+        const pWerte = kopfZ.getElementsByClassName("wert")
+        pWerte[0].innerHTML = "-"
+        pWerte[1].innerHTML = "-"
+
+        //Für jede Kategorie die Performanceeinträge durchgehen & wenn passende Exercise gefunden (weil Name + Einheit benötigt) alles eintragen
+        //So ein bisschen umständlich, da bei performances der Name + Einheit fehlt, aber gebraucht wird... 
+        let kopfzeileGefüllt = false;
+        for (let performance of performanceEinträge) {
+          for (let exercise of alleExercisesFürAktKategorie) {
+            if (exercise.exercise_id == performance.exercise_id) {
+              try {
+
+                const datum_formattiert = performance.date.split("T")[0].split('-')[2] + '.' + performance.date.split("T")[0].split('-')[1] + '.' + performance.date.split("T")[0].split('-')[0];
+                const unit = changeUnit(exercise.unit)
+                const points = changePoints(performance.points, exercise.unit)
+                let neueTabZeile = {
+                  "uebung": exercise.name, "datum": datum_formattiert,
+                  "wert": `${points} ${unit}`, "medaille": performance.medal
+                }
+                tabelleFüllen(`${aktKategorie}-tabelle`, [neueTabZeile]); //!!! schauen, ob Kategorien von backend mit Id von HTML-Elementen übereinstimmen
+
+                // Nur beim ersten Exercise die Kopfzeile füllen
+                if (!kopfzeileGefüllt) {
+                  kategorieKopfzeileFüllen(`${aktKategorie}-kopfzeile-gesamt`, {
+                    "wert": `${points} ${unit}`,
+                    "medaille": performance.medal
+                  });
+                  kopfzeileGefüllt = true; // Markiere, dass die Kopfzeile gefüllt wurde
+                }
+              }
+              catch (error) { } //Wenn Kategoriename nicht als Tabelle existiert/gefunden wurde...
+
+              break;
+            }
+          }
+        }
+      }
+    }
+    catch (error) {
+      console.error("Fehler beim Einsortieren der Performances.", error);
+    }
+
+  }
+
+  function sportlerInfosFüllen(daten) {
+    /*
+    Name, Alter, ... beim Laden der Seite füllen.
+    */
+    const divName = document.getElementById("sportlerinfos-name");
+    const divAlterGes = document.getElementById("sportlerinfos-alter-ges");
+
+    divName.innerHTML = `<b> ${daten["vorname"]} ${daten["nachname"]} </b>`;
+    divAlterGes.innerHTML = `<p> ${daten["geburtstag"]} - ${daten["alter"]} Jahre - ${daten["geschlecht"]}</p>`
+
+  }
+
+
+  function kategorieKopfzeileFüllen(id, daten) {
+    /*
+    Für die Kategorien die letzten Werte + Medaille befüllen.
+    */
+    const div = document.getElementById(id)
+
+    const pWerte = div.getElementsByClassName("wert")
+    pWerte[0].innerHTML = daten["wert"]
+
+    //Medaille zu Icon
+    let aktMed;
+    switch (daten["medaille"]) {
+      case "gold":
+        aktMed = "🥇";
+        break;
+      case "silver":
+        aktMed = "🥈";
+        break;
+      case "bronze":
+        aktMed = "🥉";
+        break
+      default:
+        aktMed = "❌";
+    }
+    pWerte[1].innerHTML = aktMed;
+  }
+
+
+  function toggleDetails(id) {
+    /*
+    Tabellen mit Infos anzeigen/verbergen
+    */
+    let details = document.getElementById(id);
+    details.classList.toggle("d-none");
+  }
+
+
+  function tabelleFüllen(id, daten) {
+    /*
+    Fügt den jeweiligen Kategorie-Tabellen die Daten hinzu.
+    */
+    const table = document.getElementById(id);
+
+    for (let i = 0; i < daten.length; i++) { //alle Daten durchgehen           
+      //in Zellen packen, die in eine Zeile und die dann am Ende in Tabelle
+      let row = table.insertRow(-1);
+      let cell1 = row.insertCell(0);
+      let cell2 = row.insertCell(1);
+      let cell3 = row.insertCell(2);
+      let cell4 = row.insertCell(3);
+
+      cell1.innerHTML = daten[i]["uebung"];
+      cell2.innerHTML = daten[i]["datum"];
+      cell3.innerHTML = daten[i]["wert"];
+
+
+      //Medaille von Text zu Emoji
+      let aktMed;
+      switch (daten[i]["medaille"]) {
+        case "gold":
+          aktMed = "🥇";
+          break;
+        case "silver":
+          aktMed = "🥈";
+          break;
+        case "bronze":
+          aktMed = "🥉";
+          break
+        default:
+          aktMed = "❌";
+
+      }
+      cell4.innerHTML = aktMed;
+
+    }
+  }
+
+  function changeUnit(unit) {
+    switch (unit) {
+      case "minute":
+        return "Min"
+      case "second":
+        return "Sek"
+      case "meter":
+        return "m"
+      case "centimeter":
+        return "cm"
+      case "point":
+        return "Punkte"
+      default:
+        return "Bestanden"
+    }
+  }
+
+  function changePoints(points, unit) {
+    switch (unit) {
+      case "minute":
+        // Umrechnung von Millisekunden in Sekunden
+        const totalSeconds = points / 1000;
+        // Ganze Minuten
+        const minutes = Math.floor(totalSeconds / 60);
+        // Restliche Sekunden
+        const seconds = Math.floor(totalSeconds % 60);
+        // Formatierung, sodass z.B. 3:05 statt 3:5 ausgegeben wird
+        return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+      case "second":
+        return points / 1000;
+      case "meter":
+        return points / 100;
+      case "centimeter":
+        return points;
+      default:
+        return points;
+    }
+  }
+
+  function toggleDetails(id) {
+    let details = document.getElementById(id);
+    details.classList.toggle("d-none");
+
+    const kategorieName = id.split("-")[0];
+    const icon = document.getElementById("icon-" + kategorieName);
+    if (icon) {
+      icon.classList.toggle("open");
+    }
+  }
+
+  async function downloadSchwimmnachweise() {
+    try {
+      const response = await axios.get(
+        `http://localhost:8081/backend/v1/swimCertificate/download-all/${athleteId}`,
+        {
+          responseType: 'blob',
+          withCredentials: true,
+        }
+      );
+
+      // ZIP-Datei aus dem response erzeugen
+      const blob = new Blob([response.data], { type: 'application/zip' });
+      const url = window.URL.createObjectURL(blob);
+
+      // zip für download erzeugen
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'schwimmnachweise.zip'); 
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
+    } catch (error) {
+      if (error.response.status === 401) {
+        window.location.href = "Anmeldung.html";
+      }
+      else if (error.response.status === 404) {
+        toast.showToast('Für diesen Athleten existieren noch keine Schwimmnachweise.', { type: 'warning' });
+      }
+      else {
+
+        toast.showToast('Schwimmnachweise konnten nicht heruntergeladen werden!', { type: 'danger' });
+      }
+
+      console.error(error);
+    }
+  }
+
+</script>

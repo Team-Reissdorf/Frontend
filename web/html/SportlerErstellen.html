@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>ComPeteHub</title>
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../node_modules/axios/dist/axios.js"></script>
+</head>
+
+<body>
+  <script src="../js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
+
+  <div class="container my-5">
+    <div class="p-5 text-center bg-body-tertiary rounded-3">
+      <h1 class="display-4">Sportlererstellung</h1>
+      <p class="lead">Gib Vorname, Nachname, Email, Geburtstag und Geschlecht ein um einen Sportler zu erstellen, oder
+        wähle eine gültige .csv-Datei aus, um mehrere Sportler zu erstellen</p>
+    </div><!-- /.jumbotron -->
+
+    <form id="submit-form">
+      <div class="row">
+        <!-- Vorname -->
+        <div class="form-group col-md-6 col-sm-12 col-lg-6">
+        <label for="fname" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man den Vornamen des Sportlers eingeben.">Vorname</label>
+        <input type="text" class="form-control" id="fname" placeholder="Vorname">
+        </div>
+
+        <!-- Nachname -->
+        <div class="form-group col-md-6 col-sm-12 col-lg-6">
+        <label for="lname" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man den Nachnamen des Sportlers eingeben.">Nachname</label>
+        <input type="text" class="form-control" id="lname" placeholder="Nachname">
+        </div>
+      </div>
+      <div class="row">
+        <!-- Email -->
+        <div class="form-group col-md-12 col-sm-12 col-lg-12">
+        <label for="email" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Hier kann man die E-Mail des Sportlers eingeben.">Email</label>
+        <input type="email" class="form-control" id="email" placeholder="Email">
+        </div>
+      </div>
+
+      <div class="row align-items-center">
+
+        <!-- Geburtstag -->
+        <div class="form-group col-md-6 col-lg-6 col-sm-12">
+        <label for="birthDate" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Hier kann man das Geburtsdatum des Sportlers eingeben.">Geburtstag</label>
+        <input type="date" class="form-control" id="birthDate">
+        </div>
+
+        <!-- Gender (Radio) -->
+        <div class="col-md-6 col-lg-6 col-sm-12">
+          <label class="form-label" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Hier kann man das Geschlecht des Sportlers eingeben.">Geschlecht:</label>
+          <div class="d-flex">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="male" value="m" required>
+              <label class="form-check-label" for="male">Männlich</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="female" value="f" required>
+              <label class="form-check-label" for="female">Weiblich</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="gender" id="divers" value="d" required>
+              <label class="form-check-label" for="divers">Divers</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row justify-content-center align-items-center text-center mt-4">
+        <div class="d-flex justify-content-between gap-3" style="width: 400px;">
+          <button type="submit" class="btn btn-light"
+            style="width: 150px; height: 40px; padding: 0px 20px;">Speichern</button>
+          <a href="../index.html"><button type="button" class="btn btn-light"
+              style="width: 150px; height: 40px; padding: 0px 20px;">Abbrechen</button></a>
+        </div>
+      </div>
+    </form>
+
+  </div><!-- /.container -->
+  <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
+  <script>
+    const toast = window.toast;
+    // Activate tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Überprüfung, ob User angemeldet ist
+      try {
+        const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
+          { withCredentials: true });
+        // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
+      } catch (error) {
+        if (error.response) {
+          // Bei Fehler mit Response gehe zu html/Anmeldung.html
+          window.location.href = "html/Anmeldung.html";
+        } else {
+          //Falls Server nicht erreichbar ist
+        if(error.code == "ERR_NETWORK"){
+          console.error("Backend nicht erreichbar:" + error)
+          window.location.href = "BackendDown.html";
+        } else {
+          // Andere Fehler
+          console.error("Fehler: " + error)
+        }
+        }
+      }
+
+      const player = document.getElementById("birthDate");
+      player.setAttribute("min", getDateYearsAgo(19, 1));
+      player.setAttribute("max", getDateYearsAgo(6));
+    });
+
+    document.getElementById('submit-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      // Eingabewerte für einzelnen Athleten abrufen
+      const firstName = document.getElementById("fname").value;
+      const lastName = document.getElementById("lname").value;
+      const email = document.getElementById("email").value;
+      const birthDate = document.getElementById("birthDate").value;
+      const sex = document.querySelector('input[name="gender"]:checked')?.value;
+
+      try {
+        // POST-Anfrage an Backend senden
+        const response = await axios.post('http://localhost:8081/backend/v1/athlete/create',
+          {
+            birth_date: birthDate,
+            email: email,
+            first_name: firstName,
+            last_name: lastName,
+            sex: sex
+          },
+          {
+            withCredentials: true,
+          },
+        );
+
+        // ToDo: Response auswerten
+        if (response.status === 201) {
+          console.log("Users created successfully");
+          toast.showToast("Sportler erstellt!", { type: 'success' });
+          window.location.href = "../index.html";
+        }
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 400) {
+            console.error("Invalid request body");
+            toast.showToast("Ungültiger Inhalt", { type: 'danger' });
+          } else if (error.response.status === 401) {
+            console.error("The token is invalid");
+            toast.showToast("Session abgelaufen", { type: 'danger' });
+          } else if (error.response.status === 409) {
+            console.error("Athlete already exists");
+            toast.showToast("Sportler existiert bereits!", { type: 'warning' });
+          } else if (error.response.status === 500) {
+            console.error("Internal Server Error");
+            toast.showToast("Internal Server Error", { type: 'danger' });
+          }
+        } else {
+          // Andere Fehler
+          console.error("Netzwerkfehler:", error.message);
+        }
+      }
+    });
+
+    function getDateYearsAgo(years, extraDays = 0) {
+      // Aktuelles Datum erstellen
+      let currentDate = new Date();
+
+      // Jahre subtrahieren
+      currentDate.setFullYear(currentDate.getFullYear() - years);
+
+      // Zusätzliche Tage hinzufügen
+      currentDate.setDate(currentDate.getDate() + extraDays);
+
+      // Jahr, Monat und Tag extrahieren
+      const year = currentDate.getFullYear();
+      let month = currentDate.getMonth() + 1;
+      let day = currentDate.getDate();
+
+      // Monat und Tag auf zwei Ziffern formatieren
+      month = month < 10 ? '0' + month : month;
+      day = day < 10 ? '0' + day : day;
+
+      // Datum im Format yyyy-mm-dd zurückgeben
+      return `${year}-${month}-${day}`;
+    }
+  </script>
+</body>
+
+</html>

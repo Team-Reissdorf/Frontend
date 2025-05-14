@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="utf-8">
+  <title>ComPeteHub</title>
+  <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+
+  <style>
+    /* Standard: untereinander (column) */
+    .button-group {
+      flex-direction: column;
+    }
+
+    /* 576px–769.98px: untereinander (column) */
+    @media (min-width: 576px) and (max-width: 869.98px) {
+      .button-group {
+        flex-direction: column !important;
+      }
+    }
+
+    /* ab 870px: wieder nebeneinander (row) */
+    @media (min-width: 870px) {
+      .button-group {
+        flex-direction: row !important;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      1. Shrink table cells on very small screens (≤575.98px)
+        - Reduces padding and font-size in athlete-cards tables
+    --------------------------------------------------------------*/
+    @media (max-width: 575.98px) {
+
+      .athlete-cards table th,
+      .athlete-cards table td {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      2. Shrink table cells on small-medium screens (768px–991.98px)
+        - Same adjustments as above for tablets and small laptops
+    --------------------------------------------------------------*/
+    @media (min-width: 768px) and (max-width: 991.98px) {
+
+      .athlete-cards table th,
+      .athlete-cards table td {
+        padding: 0.25rem 0.5rem !important;
+        font-size: 0.75rem !important;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      3. Enable horizontal scrolling on overflow tables
+        - Any <div class="table-responsive"> will scroll instead of breaking layout
+    --------------------------------------------------------------*/
+    .table-responsive {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      /* smooth scrolling on iOS */
+    }
+
+    /*--------------------------------------------------------------
+      4. Make buttons & selects “finger-friendly” on phones (≤575.98px)
+        - btn-responsive and form-select-responsive get default Bootstrap sizes to improve tap targets
+    --------------------------------------------------------------*/
+    @media (max-width: 575.98px) {
+      .btn-responsive {
+        /* default Bootstrap button padding & font-size */
+        padding: .375rem .75rem;
+        font-size: 1rem;
+      }
+
+      .form-select-responsive {
+        /* default Bootstrap select padding & font-size */
+        padding: .375rem .75rem;
+        font-size: 1rem;
+      }
+    }
+
+    /*--------------------------------------------------------------
+      5. Shrink buttons & selects to “.btn-sm” / “.form-select-sm” on larger screens (≥576px)
+        - Keeps controls compact once there’s enough room
+    --------------------------------------------------------------*/
+    @media (min-width: 576px) {
+      .btn-responsive {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+      }
+
+      .form-select-responsive {
+        padding: .25rem .5rem;
+        font-size: .875rem;
+      }
+    }
+
+    /*  — neuer Wrapper, der die Tabelle einengt —  */
+    .table-wrapper {
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    /*  — Tabelle proportional an den Container anpassen —  */
+    .responsive-table {
+      width: 100%;
+      max-width: 100%;
+      table-layout: fixed;
+    }
+
+    .responsive-table th,
+    .responsive-table td {
+      word-wrap: break-word;
+      white-space: normal;
+    }
+
+    /* 1) Name-Bereich immer 200px breit */
+    .name-container {
+      flex: 0 0 200px;
+      max-width: 200px;
+    }
+
+    /* 2) Table-Bereich nimmt Rest ein, darf aber schrumpfen */
+    .table-container {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* 3) Buttons-Bereich immer 150px breit */
+    .buttons-container {
+      flex: 0 0 150px;
+      max-width: 150px;
+    }
+  </style>
+
+  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../node_modules/axios/dist/axios.js"></script>
+  <script src="/js/Toast.js"></script> <!-- Toast-Framework laden -->
+</head>
+
+<body>
+
+  <script src="js/Navigation.js"></script> <!-- Navbar laden & einfügen -->
+
+  <!-- Sortieren Dropdown und Sportler erstellen Button -->
+  <div class="d-flex flex-column button-group justify-content-center justify-content-sm-between align-items-center m-2">
+    <!-- Sortieren Dropdown und Regel-Button -->
+    <div class="d-flex flex-column flex-sm-row align-items-center mb-2 mb-sm-0">
+      <label for="sorter" class="me-2 mb-2 mb-sm-0" data-bs-toggle="tooltip" data-bs-placement="right"
+        data-bs-title="Hier kann man die Sportler nach verschiedenen Kategorien sortieren.">Sortieren:</label>
+      <select id="sorter" class="form-select sorter form-select-responsive me-sm-2 mb-2 mb-sm-0" style="width: 200px;"
+        required>
+        <option value="fname">Vorname (A-Z)</option>
+        <option value="lname">Nachname (A-Z)</option>
+        <option value="birthdate">Geburtstag (Aufsteigend)</option>
+      </select>
+      <a href="html/RegelnUebersicht.html" style="padding-right: 0.5rem"><button
+          class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" id="regelButton"
+          data-bs-toggle="tooltip" data-bs-placement="top"
+          data-bs-title="Hier kann man die Regeln anschauen und aktualisieren.">Regeln</button></a>
+    </div>
+
+    <!-- Exportieren Button -->
+    <div class="d-flex flex-column flex-sm-row align-items-center">
+      <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
+        data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;" data-bs-toggle="tooltip"
+        data-bs-placement="left"
+        data-bs-title="Hier kann man die Leistungen von Sportlern exportieren.">Leistungsexport</button>
+
+      <!-- einzelnen Sportler erstellen-->
+      <a href="html/SportlerErstellen.html">
+        <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive" style="font-weight: bold;" data-bs-toggle="tooltip"
+          data-bs-placement="top" data-bs-title="Hier kann man einen neuen Sportler anlegen.">
+          Sportler erstellen</button>
+      </a>
+
+      <!-- Bulkcreate Sportler erstellen Button -->
+      <a href="html/SportlerErstellenBulk.html">
+        <button type="button" class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;" data-bs-toggle="tooltip"
+          data-bs-placement="top" data-bs-title="Hier kann man mehrere neuene Sportler anlegen.">
+          Sportler Massenerstellung</button>
+      </a>
+    </div>
+  </div>
+
+  <!-- Hier werden die Athleten angezeigt (Cards) -->
+  <div class="container my-2 athlete-cards">
+  </div>
+
+  <!-- Modal für Erfolg & bereits erstellte Sportler-->
+  <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header d-flex-row justify-content-center text-center">
+          <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Leistungsexport</strong></h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body"></div>
+        <div class="modal-footer">
+          <button class="btn btn-light border border-2 ms-3" style="font-weight: bold;" id="export">Leistungen
+            exportieren</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
+
+<script>
+  const toast = window.toast;
+  document.addEventListener("DOMContentLoaded", async () => {
+    const message = sessionStorage.getItem('toastMessage');
+    const type = sessionStorage.getItem('toastType');
+
+    if (message) {
+      // Zeige den Toast (je nach Toast-Framework – Beispiel mit eigener Funktion)
+      toast.showToast(message, { type: type });
+
+      // Einmal anzeigen, dann entfernen
+      sessionStorage.removeItem('toastMessage');
+      sessionStorage.removeItem('toastType');
+    }
+  })
+</script>
+
+<script>
+  // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
+
+  document.addEventListener("DOMContentLoaded", async () => {
+    // Überprüfung, ob User angemeldet ist
+    try {
+      const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
+        { withCredentials: true, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': ' GET, PUT, POST, DELETE, OPTIONS' } });
+      // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
+    } catch (error) {
+      //Falls Server nicht erreichbar ist
+      if (error.code == "ERR_NETWORK") {
+        console.error("Backend nicht erreichbar:" + error)
+        window.location.href = "html/BackendDown.html";
+      } else if (error.response) {
+        if (error.response.status === 502) {
+          // fix für reverse proxy; NGINX timed nicht aus sondern returned 502 bad Gateway
+          console.error("gateway timeout, backend down?")
+          window.location.href = "html/BackendDown.html";
+        } else {
+          // normaler fluß
+          window.location.href = "html/Anmeldung.html";
+        }
+      } else {
+        // Andere Fehler
+        console.error("Fehler: " + error)
+      }
+    }
+
+    let athletes = [];
+    try {
+      // Athleten vom Server abrufen
+      const response = await axios.get('http://localhost:8081/backend/v1/athlete/get-all', {
+        withCredentials: true,
+      });
+
+      athletes = response.data.athletes;
+      sortCards(athletes, "fname");
+      renderCards(athletes);
+      modalFüllen(athletes);
+    } catch (error) {
+      console.error("Athletes could not load");
+      sessionStorage.setItem('toastMessage', 'Athleten konnten nicht geladen werden');
+      sessionStorage.setItem('toastType', 'danger');
+      window.location.reload();
+    }
+
+    // Event Listener für Übungsänderung
+    document.querySelector(".sorter").addEventListener("change", function (event) {
+      const sortBy = event.target.value;
+      sortCards(athletes, sortBy);
+      renderCards(athletes);
+    });
+
+    // Event Listener für Export Button
+    document.getElementById("export").addEventListener("click", async function (event) {
+      const athletes = [];
+      try {
+        document.querySelectorAll(".athlete-checkbox:checked").forEach(checkbox => {
+          athletes.push(parseInt(checkbox.dataset.athleteid));
+        });
+
+        if (athletes.length == 0) {
+          console.error("Es wurden keine Sportler ausgewählt!");
+          toast.showToast("Es wurden keine Sportler ausgewählt!", { type: 'danger' });
+          return
+        } else {
+          // POST-Anfrage an Backend senden
+          const response = await axios.post('http://localhost:8081/backend/v1/performance/export',
+            {
+              athlete_ids: athletes,
+            },
+            {
+              withCredentials: true,
+              responseType: "blob",
+            });
+
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "performances.csv";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById("exampleModal"));
+        modal.hide();
+      } catch (error) {
+        if (error.response) {
+          // ToDo: Response auswerten i1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseumei1jadsdnöaseume
+          if (error.response.status === 400) {
+            console.error("Invalid request body");
+            toast.showToast("Ungültiger Inhalt", { type: 'danger' });
+          } else if (error.response.status === 401) {
+            sessionStorage.setItem('toastMessage', 'Session abgelaufen');
+            sessionStorage.setItem('toastType', 'danger');
+            window.location.href = "Anmeldung.html";
+          } else if (error.response.status === 404) {
+            console.error("Athlete or exercise does not exist");
+            toast.showToast("Athlet existiert nicht!", { type: 'danger' });
+          } else if (error.response.status === 409) {
+            console.error("Performance limit reached");
+            fehler409ModalFüllen();
+          } else if (error.response.status === 500) {
+            console.error("Internal Server Error");
+            toast.showToast("Internal Server Error", { type: 'danger' });
+          }
+        } else {
+          // Andere Fehler
+          console.error("Error:", error.message);
+        }
+      }
+    });
+
+    const selectAllCheckbox = document.getElementById("selectAll");
+    const checkboxes = document.querySelectorAll(".athlete-checkbox");
+
+    selectAllCheckbox.addEventListener("change", function () {
+      checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+    });
+
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener("change", function () {
+        selectAllCheckbox.checked = [...checkboxes].every(checkbox => checkbox.checked);
+      });
+    });
+
+    const today = new Date();
+    const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 7 * 4);
+    if (redOrNot) {
+      document.getElementById("regelButton").className = "btn btn-danger border border-2 btn-responsive";
+    } else {
+      document.getElementById("regelButton").className = "btn btn-light border border-2 btn-responsive";
+    }
+    initTooltips();
+  });
+
+  // Sortierfunktion
+  function sortCards(athletes, criterion) {
+    athletes.sort((a, b) => {
+      if (criterion === 'birthdate') {
+        return new Date(a.birth_date) - new Date(b.birth_date);
+      } else if (criterion === 'fname') {
+        return a.first_name.localeCompare(b.first_name);
+      } else if (criterion === 'lname') {
+        return a.last_name.localeCompare(b.last_name);
+      }
+    });
+  }
+
+  // Funktion zum Rendern der Karten
+  async function renderCards(athletes) {
+    const container = document.querySelector('.athlete-cards');
+    container.innerHTML = "";
+
+    const discipline_names = await getDisciplineNames();
+    if (!discipline_names || discipline_names.length === 0) {
+      console.error("Disziplinen konnten nicht geladen werden");
+      return;
+    }
+    const exercises = await getOrderedExercises(discipline_names);
+
+    for (const athlete of athletes) {
+      const sexMap = { m: "Männlich", f: "Weiblich", d: "Divers" };
+      const sex = sexMap[athlete.sex] || "";
+      const birthdate = new Date(athlete.birth_date).toLocaleDateString("de-DE");
+
+      const performanceEntries = await getPerformanceEntries(athlete.athlete_id);
+
+      // Punkte berechnen (bronze = 1, silber = 2, gold = 3)
+      let totalPoints = 0;
+      const medalCells = exercises.map(exerciseGroup => {
+        // Sammle alle Medaillen in dieser Disziplin
+        const medals = exerciseGroup.map(exercise => {
+          const perf = performanceEntries.find(p => p.exercise_id === exercise.exercise_id);
+          return perf?.medal || "none";
+        });
+
+        // Beste Medaille wählen: gold > silver > bronze > none
+        let bestMedal = "none";
+        if (medals.includes("gold")) bestMedal = "gold";
+        else if (medals.includes("silver")) bestMedal = "silver";
+        else if (medals.includes("bronze")) bestMedal = "bronze";
+
+        // Punkte dazu zählen
+        if (bestMedal === "gold") totalPoints += 3;
+        else if (bestMedal === "silver") totalPoints += 2;
+        else if (bestMedal === "bronze") totalPoints += 1;
+
+        return `<td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">
+          ${getMedalIcon(bestMedal)}
+        </td>`;
+      });
+
+      // Zähle wie viele gültige Medaillen vorhanden sind
+      const validMedalCount = medalCells.filter(cell =>
+        cell.includes("🥇") || cell.includes("🥈") || cell.includes("🥉")
+      ).length;
+
+      const enoughMedals = validMedalCount === 4;
+
+      // DSA-Medaille je nach Gesamtpunktzahl
+      let dsaMedal = "none";
+      let swimCert = athlete.swim_cert;
+      if (enoughMedals && swimCert) {
+        if (totalPoints >= 11) dsaMedal = "gold";
+        else if (totalPoints >= 8) dsaMedal = "silver";
+        else if (totalPoints >= 4) dsaMedal = "bronze";
+      }
+
+      const swimIcon = swimCert ? '✅' : '❌';
+
+      // Gesamte Zeile: DSA zuerst
+      const medalRow = `
+        <td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${getMedalIcon(dsaMedal)}</td>
+        ${medalCells.join("")}
+        <td style="padding: 8px 16px; font-size: 24px; min-width: 80px; text-align: center;">${swimIcon}</td>  
+      `;
+
+      const cardHTML = `
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="p-4 bg-body-tertiary rounded-4 border border-2">
+              <!-- Flex-Container: columns on xs, row ab md -->
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+                
+                <!-- Name & Details -->
+                <div class="name-container text-start mb-3 mb-md-0">
+                  <h4 class="mb-1">${athlete.first_name} ${athlete.last_name}</h4>
+                  <h6 class="mb-0">${birthdate}  ${sex}</h6>
+                </div>
+                
+                <!-- Medaillen-Tabelle -->
+                <div class="table-container mb-3 mb-md-0 text-center">
+                  <div class="table-wrapper" style="padding: 0.5rem">
+                    <table class="responsive-table mx-auto">
+                      <thead>
+                        <tr>
+                          <th style="padding:8px;">DSA</th>
+                          ${discipline_names.map(d => `<th style="padding:8px;">${d}</th>`).join('')}
+                          <th style="padding:8px;">Schwimmnachweis</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          ${medalRow}
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="buttons-container d-inline-flex flex-column align-items-stretch mb-3 mb-md-0">
+                  <a href="html/SportlerBearbeiten.html?id=${athlete.athlete_id}" class="mb-2">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hier kann man die Persönlichen Daten eines Sportlers bearbeiten.">
+                      Bearbeiten
+                    </button>
+                  </a>
+                  <a href="html/Leistungsuebersicht.html?id=${athlete.athlete_id}" class="mb-2">
+                    <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 fw-bold text-center" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hier kann man eine Übersicht der Leistungen dieses Sportlers sehen.">
+                      Leistungsübersicht
+                    </button>
+                  </a>
+                  <button class="btn btn-light btn-sm w-100 rounded-3 border border-2 delete-btn fw-bold text-center" data-athleteid="${athlete.athlete_id}" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Hiermit kann man den Sportler aus dem System entfernen.">Löschen</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      container.insertAdjacentHTML('beforeend', cardHTML);
+    }
+
+    // Event Listener fürs Löschen
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', async () => {
+        const athleteId = button.dataset.athleteid;
+
+        if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
+          try {
+            await axios.delete(`http://localhost:8081/backend/v1/athlete/delete/${athleteId}`, { withCredentials: true });
+
+            const athleteIndex = athletes.findIndex(a => a.athlete_id === parseInt(athleteId));
+            if (athleteIndex !== -1) {
+              athletes.splice(athleteIndex, 1);
+            }
+
+            renderCards(athletes);
+            toast.showToast("Der Sportler wurde erfolgreich gelöscht!", { type: 'success' });
+          } catch (error) {
+            console.error('Fehler beim Löschen des Sportlers:', error);
+            toast.showToast('Löschen des Sportlers fehlgeschlagen.', { type: 'danger' });
+          }
+        }
+      });
+    });
+    initTooltips();
+  }
+
+  function modalFüllen(response) {
+    const modalBody = document.getElementsByClassName("modal-body")[0];
+    const modalTitle = document.getElementById("exampleModalLabel");
+
+    //bereits vorhandene Sportler anzeigen
+    let athleteListHTML = `
+      <p>Wählen Sie bitte die Sportler aus, von denen Sie die Leistungen exportieren möchten!</p>
+      <p>Es wird eine CSV-Datei erstellt, die mit diesem Format:</p>
+      <p>Nachname, Vorname, Geschlecht, Geburtstag, Übung, Kategorie, Datum, Ergebnis, Punkte</p>
+    `;
+    athleteListHTML += `
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><input type="checkbox" id="selectAll"></th>
+              <th>Name</th>
+              <th>Geburtsdatum</th>
+              <th>E-Mail</th>
+              <th>Geschlecht</th>
+            </tr>
+          </thead>
+          <tbody>
+        </div>
+    `;
+    if (response !== null) {
+      id = 0
+      response.forEach(athlete => {
+        const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+        var sex = "";
+        if (athlete.sex === "m") {
+          sex = 'Männlich';
+        } else if (athlete.sex === "f") {
+          sex = 'Weiblich';
+        } else if (athlete.sex === "d") {
+          sex = 'Divers';
+        }
+        athleteListHTML += `
+          <tr>
+            <td><input type="checkbox" class="athlete-checkbox" value="1" data-athleteid=${athlete.athlete_id} id="helloWorld_${id}"></td>
+            <td><strong>${athlete.first_name} ${athlete.last_name}</strong></td>
+            <td>${birthdate}</td>
+            <td>${athlete.email}</td>
+            <td>${sex}</td>
+          </tr>
+        `;
+        id++;
+      });
+    }
+    athleteListHTML += `
+        </tbody>
+      </table>
+    `;
+
+    // Setze den Inhalt im Modal
+    modalTitle.innerHTML = "<strong>Leistungsexport<strong>";
+    modalBody.innerHTML = athleteListHTML;
+  }
+
+  async function getPerformanceEntries(athleteId) {
+    try {
+      const year = new Date().getFullYear();
+      const response = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?since=${year}-01-01`, {
+        withCredentials: true
+      });
+      return Array.isArray(response.data.performance_entries) ? response.data.performance_entries : [];
+    } catch (error) {
+      console.error(`Fehler beim Abrufen der Leistungen für Athlet ${athleteId}:`, error);
+      return [];
+    }
+  }
+
+  async function getDisciplineNames() {
+    try {
+      const response = await axios.get('http://localhost:8081/backend/v1/discipline/get-all', { withCredentials: true });
+      return response.data.discipline_names;
+    } catch (error) {
+      toast.showToast("Etwas ist schief gelaufen!", { type: 'danger' });
+      console.error("Get disciplines went wrong");
+      return [];
+    }
+  }
+
+  async function getExercises(discipline_name) {
+    try {
+      const response = await axios.get(`http://localhost:8081/backend/v1/exercise/get/${discipline_name}`, { withCredentials: true });
+      return response.data.exercises;
+    } catch (error) {
+      console.error("Fehler beim Abrufen der Übungen:", error);
+      return [];
+    }
+  }
+
+  function getMedalIcon(medal) {
+    const medalMap = {
+      gold: '🥇',
+      silver: '🥈',
+      bronze: '🥉',
+      none: '❌'
+    };
+    return medalMap[medal] || medalMap.none;
+  }
+
+  async function getOrderedExercises(disciplineNames) {
+    const exercises = [];
+
+    for (const name of disciplineNames) {
+      const list = await getExercises(name);
+      if (list.length > 0) {
+        exercises.push(list);
+      } else {
+        console.warn(`Keine Übung für Disziplin "${name}" gefunden`);
+      }
+    }
+
+    return exercises;
+  }
+
+  /**
+   * Initialisiert alle Bootstrap-Tooltips (ohne Duplikate).
+   * Verwendet entweder das title-Attribut oder – falls vorhanden – data-bs-title.
+  */
+  function initTooltips() {
+    document.querySelectorAll('[data-bs-title]').forEach(el => {
+      // schon initialisiert?
+      if (bootstrap.Tooltip.getInstance(el)) return;
+
+      // Tooltip-Text aus title oder data-bs-title ziehen
+      const title = el.getAttribute('title')
+        || el.getAttribute('data-bs-title')
+        || '';
+      new bootstrap.Tooltip(el, {
+        title,
+        placement: el.getAttribute('data-bs-placement') || 'top',
+        trigger: 'hover'
+      });
+    });
+  }
+</script>
