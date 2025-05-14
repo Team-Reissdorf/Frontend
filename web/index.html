@@ -12,14 +12,14 @@
       flex-direction: column;
     }
 
-    /* 576px–737.98px: nebeneinander (row) */
+    /* 576px–737.98px: untereinander (column) */
     @media (min-width: 576px) and (max-width: 737.98px) {
       .button-group {
         flex-direction: column !important;
       }
     }
 
-    /* ab 738px: wieder untereinander (column) */
+    /* ab 738px: wieder nebeneinander (row) */
     @media (min-width: 738px) {
       .button-group {
         flex-direction: row !important;
@@ -86,13 +86,11 @@
     --------------------------------------------------------------*/
     @media (min-width: 576px) {
       .btn-responsive {
-        /* Bootstrap’s btn-sm padding & font-size */
         padding: .25rem .5rem;
         font-size: .875rem;
       }
 
       .form-select-responsive {
-        /* Bootstrap’s form-select-sm padding & font-size */
         padding: .25rem .5rem;
         font-size: .875rem;
       }
@@ -101,28 +99,21 @@
     /*  — neuer Wrapper, der die Tabelle einengt —  */
     .table-wrapper {
       width: 100%;
-      /* füllt den verfügbaren Platz */
       max-width: 100%;
-      /* nicht breiter werden */
       overflow: hidden;
-      /* schneidet alles ab, was rausragt */
     }
 
     /*  — Tabelle proportional an den Container anpassen —  */
     .responsive-table {
       width: 100%;
-      /* skaliert runter, statt horizontal zu scrollen */
       max-width: 100%;
       table-layout: fixed;
-      /* verteilt Spaltenbreite gleichmäßig */
     }
 
     .responsive-table th,
     .responsive-table td {
       word-wrap: break-word;
-      /* lange Wörter umbrechen */
       white-space: normal;
-      /* Zeilenumbruch erlauben */
     }
 
     /* 1) Name-Bereich immer 200px breit */
@@ -135,7 +126,6 @@
     .table-container {
       flex: 1;
       min-width: 0;
-      /* wichtig, damit das Flex-Item schrumpfen kann */
     }
 
     /* 3) Buttons-Bereich immer 150px breit */
