@@ -38,7 +38,7 @@ async function setupNavbarLogic() {
         try {
             //Anfrage an Logout-Endpoint
             //TODO 
-            await axios.post('http://localhost:8080/v1/user/logout', {}, { withCredentials: true });
+            await axios.post('http://localhost:8081/backend/v1/user/logout', {}, { withCredentials: true });
             sessionStorage.setItem('toastMessage', 'Erfolgreich abgemeldet');
             sessionStorage.setItem('toastType', 'success');
             //Weiterleitung zur Anmeldeseite
