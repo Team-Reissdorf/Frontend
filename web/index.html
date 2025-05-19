@@ -137,7 +137,6 @@
 
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../node_modules/axios/dist/axios.js"></script>
-  <script src="/js/Toast.js"></script> <!-- Toast-Framework laden -->
 </head>
 
 <body>
@@ -211,7 +210,9 @@
 
 </html>
 
+<script src="./js/Toast.js"></script>
 <script>
+  // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
   const toast = window.toast;
   document.addEventListener("DOMContentLoaded", async () => {
     const message = sessionStorage.getItem('toastMessage');
@@ -226,11 +227,6 @@
       sessionStorage.removeItem('toastType');
     }
   })
-</script>
-
-<script>
-  // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
-
   document.addEventListener("DOMContentLoaded", async () => {
     // Überprüfung, ob User angemeldet ist
     try {
