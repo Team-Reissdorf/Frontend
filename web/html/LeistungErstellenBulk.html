@@ -17,9 +17,9 @@
             <h1 class="display-4">Leistungen Massenerstellung</h1>
             <p class="lead">Wähle eine gültige CSV-Datei aus, um Leistungen für mehrere Sportler auf einmal zu
                 erstellen.</p>
-            <p class="lead">Gültiges Format:
-                Nachname; Vorname; Geschlecht(m,f,d); Geburtsjahr; Geburtstag; Übung; Kategorie; Datum; Ergebnis; Punkte</p>
-        </div><!-- /.jumbotron -->
+            <p class="lead">Gültiges Format:</p> <!-- TODO -->
+            <p> Nachname; Vorname; Geschlecht(m,w,d); Geburtsjahr; Geburtstag; Übung; Kategorie; Datum; Ergebnis; Punkte</p>
+            </div><!-- /.jumbotron -->
         <form id="submit-form">
             <div class="d-flex justify-content-center">
                 <div class="d-flex flex-column justify-content-center text-center m-4 col-md-6" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -68,7 +68,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
-                const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+                const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, // TODO
                     { withCredentials: true });
                 // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
             } catch (error) {
@@ -109,27 +109,26 @@
                             }
                         }
                     } catch (error) {
-                        console.error(error)
                         let fehlerNachricht = "";
-                        if (error.response) { // TODO 
+                        if (error.response) {
                             if (error.response.status === 400) {
                                 console.error("Invalid request body");
-                                fehlerNachricht = "Invalid request body.";
+                                fehlerNachricht = "Falsches Format der Anfrage/Datei.";
                             } else if (error.response.status === 401) {
                                 console.error("The token is invalid");
-                                fehlerNachricht = "The token is invalid.";
+                                fehlerNachricht = "Die Anmeldung ist nicht mehr gültig.";
                             } else if (error.response.status === 409) {
                                 console.error(error.response.data.error);
-                                fehlerNachricht = "Einer order mehrere Sportler existieren bereits!";
+                                fehlerNachricht = "Keiner der Einträge der CSV konnten verarbeitet werden. Ist das Format gültig? Hat die CSV mindestens einen Eintrag?";
                             } else if (error.response.status === 500) {
                                 console.error("Internal Server Error.");
-                                fehlerNachricht = "Internal Server Error";
+                                fehlerNachricht = "Interner Fehler des Servers.";
                             }
                         } else {
                             // Andere Fehler
                             console.error("Netzwerkfehler:", error.data.error);
                         }                        
-                        fehlerModalFüllen(fehlerNachricht, error); // TODO 
+                        fehlerModalFüllen(fehlerNachricht, error);
                     }
                 } else {
                     toast.showToast("Bitte genau eine CSV-Datei auswählen!", { type: 'warning'});
@@ -138,14 +137,15 @@
         });
 
         function erfolgsModalFüllen(response) {
-            const modalBody = document.getElementsByClassName("modal-body")[0];
-            const modalTitle = document.getElementById("exampleModalLabel");
-
+            const modalBody = document.querySelector(".modal-body");
+            const modalTitle = document.querySelector("#exampleModalLabel");
+            
+            modalBody.innerHTML = "";
             // Setze den Inhalt im Modal
             modalTitle.innerHTML = "<strong>Leistungen erfolgreich erstellt!</strong>";
             modalTitle.style.color = "green";
 
-            if (response.failed_entries !== null) {
+            if (response.failed_entries) {
                 // bereits vorhandene Leistungen anzeigen
                 let fehlerTable = "<p>Folgende Einträge führten zu einem Fehler und wurden nicht erstellt: </p>";
                 fehlerTable += "<table class='table'>";
@@ -160,7 +160,7 @@
                 `;
                 response.failed_entries.forEach((entry) => {
                     fehlerTable += `
-                        <tr class='list-group-item'>
+                        <tr class=''>
                             <td>${entry.row}</td>
                             <td>${entry.reason}</td>
                         </tr>
@@ -168,10 +168,15 @@
                 });
 
                 fehlerTable += "</tbody></table>";
-                const fehlerText = document.createElement("p");
-                fehlerText.innerHTML = "Folgende Einträge der CSV-Datei konnten aus folgenden Gründen nicht verwertet werden:"
-                modalBody.appendChild(fehlerText);
-                modalBody.appendChild(fehlerTable);
+                const fehlerTableDiv = document.createElement("div");
+                fehlerTableDiv.innerHTML = fehlerTable;
+                modalBody.appendChild(fehlerTableDiv);
+            }
+            else{
+                // Wenn keine Fehler - damit Modalbody nicht leer ist:
+                const erfolgsNachricht = document.createElement("p");
+                erfolgsNachricht.innerHTML = "Alle Leistungen dieser CSV wurden erfolgreich eingetragen.";
+                modalBody.appendChild(erfolgsNachricht);
             }
 
             // Zeige das Modal an
