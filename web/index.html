@@ -584,7 +584,7 @@
   async function getPerformanceEntries(athleteId) {
     try {
       const year = new Date().getFullYear();
-      const response = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${year}-01-01`, {
+      const response = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${year}-01-01&best=true`, {
         withCredentials: true
       });
       return Array.isArray(response.data.performance_entries) ? response.data.performance_entries : [];
