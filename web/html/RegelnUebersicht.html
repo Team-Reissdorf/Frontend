@@ -251,9 +251,10 @@
         });
 
         document.getElementById("date").addEventListener("blur", async () => {
-            document.getElementById("date").reportValidity();
-            if (document.getElementById("date").reportValidity()) {
-                await loadTable(parseInt(document.getElementById("date").value.substring(0, 4)), document.getElementById("exercise").value)
+            const dateElement = document.getElementById("date");
+            dateElement.reportValidity();
+            if (dateElement.reportValidity()) {
+                await loadTable(parseInt(dateElement.value.substring(0, 4)), document.getElementById("exercise").value)
             }
         });
 
