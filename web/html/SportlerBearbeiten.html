@@ -89,7 +89,7 @@
     document.addEventListener("DOMContentLoaded", async () => {
       // Überprüfung, ob User angemeldet ist
       try {
-        const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+        const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
           { withCredentials: true });
         // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
       } catch (error) {
@@ -111,7 +111,7 @@
       try {
         // Daten vom Backend abrufen
         const athleteId = new URLSearchParams(window.location.search).get("id");
-        const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
+        const response = await axios.get(`http://localhost:8081/backend/v1/athlete/get/${athleteId}`, {
           withCredentials: true,
         });
 
@@ -149,7 +149,7 @@
 
       try {
         // PUT-Anfrage an Backend senden
-        const response = await axios.put('http://localhost:8080/v1/athlete/edit',
+        const response = await axios.put('http://localhost:8081/backend/v1/athlete/edit',
           {
             athlete_id: parseInt(athleteId),
             birth_date: birthDate,

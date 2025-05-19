@@ -65,7 +65,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
-                const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+                const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
                     { withCredentials: true });
                 // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
             } catch (error) {
@@ -88,7 +88,7 @@
 
                     try {
                         const response = await axios.post(
-                            'http://localhost:8080/v1/athlete/bulk-create',
+                            'http://localhost:8081/backend/v1/athlete/bulk-create',
                             formData,
                             {
                                 withCredentials: true,
@@ -165,8 +165,7 @@
                 }
                 athleteListHTML += "</ul>";
             } else {
-                //bereits vorhandene Sportler anzeigen
-                athleteListHTML = "<p>Keine neuen Sportler erstellt, da alle schon vorhanden sind!</p>";
+                athleteListHTML = "<p>Alle Sportler wurden erstellt!</p>";
             }
 
             // Setze den Inhalt im Modal

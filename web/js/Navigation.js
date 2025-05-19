@@ -55,7 +55,7 @@ async function setupNavbarLogic() {
 
     // Überprüfung, ob Benutzer angemeldet ist - ggf. Navbar anpassen (logOut-Button ausblenden)
         try{
-            const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, {withCredentials: true});                   
+            const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {}, {withCredentials: true});                   
         } 
         catch(error) {
             //Fehler = angemeldet -> Button nicht anzeigen & Link von Logo entfernen

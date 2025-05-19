@@ -192,7 +192,7 @@
     const toast = window.toast;
     document.addEventListener("DOMContentLoaded", async () => {
         try {
-            const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+            const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
                 { withCredentials: true });
             // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
         } catch (error) {
@@ -225,7 +225,7 @@
         // GET Kategorien und Dropdowns auffüllen
         try {
             // Kategorie-Daten vom Backend abrufen
-            const categoryResponse = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+            const categoryResponse = await axios.get('http://localhost:8081/backend/v1/discipline/get-all', { withCredentials: true });
             const disciplines = categoryResponse.data.discipline_names;
 
             // Kategorien Dropdown befüllen
@@ -272,7 +272,7 @@
         try {
             const datum = document.getElementById("date").value;
             const exerciseResponse = await axios.get(
-                `http://localhost:8080/v1/exercise/get/${category}?performance-date=${datum}`,
+                `http://localhost:8081/backend/v1/exercise/get/${category}?performance-date=${datum}`,
                 { withCredentials: true }
             );
 
@@ -304,7 +304,7 @@
     async function loadTable(year, exercise_id) {
         try {
             const response = await axios.get(
-                `http://localhost:8080/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
+                `http://localhost:8081/backend/v1/ruleset/get?year=${year}&exercise_id=${exercise_id}`,
                 { withCredentials: true }
             );
             const unit = exerciseUnits[exercise_id];
