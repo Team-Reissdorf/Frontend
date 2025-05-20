@@ -17,16 +17,17 @@
             <h1 class="display-4">Leistungen Massenerstellung</h1>
             <p class="lead">Wähle eine gültige CSV-Datei aus, um Leistungen für mehrere Sportler auf einmal zu
                 erstellen.</p>
-            <p class="lead">Gültiges Format:</p> <!-- TODO -->
-            <p> Nachname; Vorname; Geschlecht(m,w,d); Geburtsjahr; Geburtstag; Übung; Kategorie; Datum; Ergebnis; Punkte</p>
-            </div><!-- /.jumbotron -->
+            <p class="lead">Gültiges Format:</p> 
+            <p> Nachname; Vorname; Geschlecht; Geburtsjahr; Geburtstag; Übung; Kategorie; Datum; Ergebnis; Punkte</p>
+            <p class="lead">Gültige Einheiten: </p>
+            <p> Geschlecht: m, w, d | Geburtstag/Datum: dd.mm.yyyy | Ergebnis (abhängig von Übung): Distanzen (m, cm); Punkte (ganze Zahlen); Bestanden (0 = nein, 1 = ja): 0, 1; Zeiten (M = Minuten, S = Sekunden): MM:SS, M:SS, SS, S | Punkte: 0-3</p>
+        </div><!-- /.jumbotron -->
         <form id="submit-form">
             <div class="d-flex justify-content-center">
                 <div class="d-flex flex-column justify-content-center text-center m-4 col-md-6" data-bs-toggle="tooltip" data-bs-placement="top"
                         data-bs-title="Hier kann man die CSV-Datei hochladen, um mehrere Leistungen zu erstellen.">
                     <!-- CSV-Datei (File) -->
-                    <label for="csv" >CSV-Datei
-                        mit den Leistungen der Athleten hier hochladen:</label>
+                    <label for="csv" >CSV-Datei mit den Leistungen der Athleten hier hochladen:</label>
                     <input type="file" class="form-control" id="csv" accept=".csv">
                 </div>
             </div>
@@ -119,7 +120,7 @@
                                 fehlerNachricht = "Die Anmeldung ist nicht mehr gültig.";
                             } else if (error.response.status === 409) {
                                 console.error(error.response.data.error);
-                                fehlerNachricht = "Keiner der Einträge der CSV konnten verarbeitet werden. Ist das Format gültig? Hat die CSV mindestens einen Eintrag?";
+                                fehlerNachricht = "Keiner der Einträge der CSV konnte verarbeitet werden.<br> Ist das Format gültig? Hat die CSV mindestens einen Eintrag?";
                             } else if (error.response.status === 500) {
                                 console.error("Internal Server Error.");
                                 fehlerNachricht = "Interner Fehler des Servers.";
