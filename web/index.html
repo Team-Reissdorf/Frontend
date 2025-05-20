@@ -181,7 +181,7 @@
       <a href="html/SportlerErstellenBulk.html">
         <button type="button" class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;"
           data-bs-toggle="tooltip" data-bs-placement="top"
-          data-bs-title="Hier kann man mehrere neuene Sportler anlegen.">
+          data-bs-title="Hier kann man mehrere neue Sportler anlegen.">
           Sportler Massenerstellung</button>
       </a>
     </div>
@@ -589,7 +589,7 @@
   async function getPerformanceEntries(athleteId) {
     try {
       const year = new Date().getFullYear();
-      const response = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?since=${year}-01-01`, {
+      const response = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?since=${year}-01-01&best=true`, {
         withCredentials: true
       });
       return Array.isArray(response.data.performance_entries) ? response.data.performance_entries : [];

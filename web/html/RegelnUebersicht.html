@@ -23,33 +23,31 @@
                     data-bs-placement="top" data-bs-title="Hier können die Regeln aktualisiert werden.">Regeln
                     aktualisieren</button></a>
         </div>
-
         <div class="row">
             <!-- Kategorie -->
             <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                <label for="category" data-bs-toggle="tooltip"
-                data-bs-placement="top" data-bs-title="Hier kann die Kategorie für die angezeigten Regeln ausgewählt werden.">Kategorie</label>
+                <label for="category" data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-title="Hier kann die Kategorie für die angezeigten Regeln ausgewählt werden.">Kategorie</label>
                 <select id="category" class="form-select kategorien" required>
                 </select>
             </div>
 
             <!-- Datum -->
             <div class="form-group col-md-6 col-lg-6 col-sm-12">
-                <label for="date" data-bs-toggle="tooltip"
-                data-bs-placement="left" data-bs-title="Hier kann das Datum für die angezeigten Regeln verändert werden.">Datum</label>
+                <label for="date" data-bs-toggle="tooltip" data-bs-placement="left"
+                    data-bs-title="Hier kann das Datum für die angezeigten Regeln verändert werden.">Datum</label>
                 <input type="date" class="form-control datum" id="date" min="2020-01-01" required>
             </div>
         </div>
         <div class="row">
             <!-- Übung -->
             <div class="form-group col-md-6 col-sm-12 col-lg-6">
-                <label for="exercise" data-bs-toggle="tooltip"
-                data-bs-placement="left" data-bs-title="Hier kann die Übung für die angezeigten Regeln ausgewählt werden.">Übung</label>
+                <label for="exercise" data-bs-toggle="tooltip" data-bs-placement="left"
+                    data-bs-title="Hier kann die Übung für die angezeigten Regeln ausgewählt werden.">Übung</label>
                 <select id="exercise" class="form-select uebungen" required>
                 </select>
             </div>
         </div>
-
         <br>
 
         <div class="d-flex justify-content-center m-2">
@@ -213,6 +211,7 @@
 
         let exerciseUnits = {};
         document.getElementById("date").value = new Date().getFullYear() + "-01-01";
+        document.getElementById("date").max = new Date().getFullYear() + "-12-31";
 
         const today = new Date();
         const redOrNot = today >= new Date(today.getFullYear(), 0, 1) && today < new Date(today.getFullYear(), 0, 1, 7 * 4);
@@ -244,24 +243,24 @@
             toast.showToast("Kategorien konnten nicht geladen werden.", { type: 'danger' });
         }
 
-        const value = document.getElementById("date").value;
-
         // Event Listener für Kategorieänderung
         document.querySelector(".kategorien").addEventListener("change", async (event) => {
             //const category = document.getElementById("category").value;
             await loadExercises(event.target.value);
-            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+            await loadTable(parseInt(document.getElementById("date").value.substring(0, 4)), document.getElementById("exercise").value);
         });
 
-        // Event Listener für Datumsänderung
-        document.querySelector(".datum").addEventListener("change", async (event) => {
-            document.getElementById("date").value = value[0] + value[1] + value[2] + value[3] + "-01-01";
-            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+        document.getElementById("date").addEventListener("blur", async () => {
+            const dateElement = document.getElementById("date");
+            dateElement.reportValidity();
+            if (dateElement.reportValidity()) {
+                await loadTable(parseInt(dateElement.value.substring(0, 4)), document.getElementById("exercise").value)
+            }
         });
 
         // Event Listener für Übungsänderung
         document.querySelector(".uebungen").addEventListener("change", async (event) => {
-            await loadTable(parseInt(value[0] + value[1] + value[2] + value[3]), document.getElementById("exercise").value);
+            await loadTable(parseInt(document.getElementById("date").value.substring(0, 4)), document.getElementById("exercise").value);
         });
     });
 
@@ -445,6 +444,37 @@
                 return points;
         }
     }
+
+    /**
+     * Calculates a date that is a specified number of years and optional extra days in the past.
+     * 
+     * @param {number} years - The number of years to subtract from the current date.
+     * @param {number} [extraDays=0] - Optional additional days to add to the calculated date.
+     * @returns {string} - The calculated date in the format 'yyyy-mm-dd'.
+     */
+    function getDateYearsAgo(years, extraDays = 0) {
+        // Aktuelles Datum erstellen
+        let currentDate = new Date();
+
+        // Jahre subtrahieren
+        currentDate.setFullYear(currentDate.getFullYear() - years);
+
+        // Zusätzliche Tage hinzufügen
+        currentDate.setDate(currentDate.getDate() + extraDays);
+
+        // Jahr, Monat und Tag extrahieren
+        const year = currentDate.getFullYear();
+        let month = currentDate.getMonth() + 1;
+        let day = currentDate.getDate();
+
+        // Monat und Tag auf zwei Ziffern formatieren
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+
+        // Datum im Format yyyy-mm-dd zurückgeben
+        return `${year}-${month}-${day}`;
+    }
+
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>
