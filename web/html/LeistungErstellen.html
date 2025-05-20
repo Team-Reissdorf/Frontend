@@ -430,6 +430,8 @@
             { withCredentials: true });
             
             // Wenn überschrieben wurde dann wechsel zur Leistungsuebersicht
+            sessionStorage.setItem('toastMessage', 'Erfolgreich Leistung erstellt!');
+            sessionStorage.setItem('toastType', 'success');
             window.location.href = `Leistungsuebersicht.html?id=${athleteId}`
         } catch (error) {
           if (error.response) {
