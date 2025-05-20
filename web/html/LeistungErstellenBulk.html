@@ -14,20 +14,20 @@
 
     <div class="container my-5">
         <div class="p-5 text-center bg-body-tertiary rounded-3">
-            <h1 class="display-4">Sportler Massenerstellung</h1>
-            <p class="lead">Wähle eine gültige CSV-Datei aus, um mehrere Sportler auf einmal zu erstellen.</p>
-            <p class="lead">Gültiges Format:</p>
-            <p>Vorname; Nachname; Email; Geburtsdatum; Geschlecht</p>
+            <h1 class="display-4">Leistungen Massenerstellung</h1>
+            <p class="lead">Wähle eine gültige CSV-Datei aus, um Leistungen für mehrere Sportler auf einmal zu
+                erstellen.</p>
+            <p class="lead">Gültiges Format:</p> 
+            <p> Nachname; Vorname; Geschlecht; Geburtsjahr; Geburtstag; Übung; Kategorie; Datum; Ergebnis; Punkte</p>
             <p class="lead">Gültige Einheiten: </p>
-            <p> Geschlecht: m, w, d | Geburtstag: dd.mm.yyyy</p>
+            <p> Geschlecht: m, w, d | Geburtstag/Datum: dd.mm.yyyy | Ergebnis (abhängig von Übung): Distanzen (m, cm); Punkte (ganze Zahlen); Bestanden (0 = nein, 1 = ja): 0, 1; Zeiten (M = Minuten, S = Sekunden): MM:SS, M:SS, SS, S | Punkte: 0-3</p>
         </div><!-- /.jumbotron -->
         <form id="submit-form">
             <div class="d-flex justify-content-center">
-                <div class="d-flex flex-column justify-content-center text-center m-4 col-md-6">
+                <div class="d-flex flex-column justify-content-center text-center m-4 col-md-6" data-bs-toggle="tooltip" data-bs-placement="top"
+                        data-bs-title="Hier kann man die CSV-Datei hochladen, um mehrere Leistungen zu erstellen.">
                     <!-- CSV-Datei (File) -->
-                    <label for="csv" data-bs-toggle="tooltip" data-bs-placement="top"
-                        data-bs-title="Hier kann man die CSV-Datei hochladen, um mehrere Sportler zu erstellen.">CSV-Datei
-                        mit Sportlern hier hochladen:</label>
+                    <label for="csv" >CSV-Datei mit den Leistungen der Athleten hier hochladen:</label>
                     <input type="file" class="form-control" id="csv" accept=".csv">
                 </div>
             </div>
@@ -44,31 +44,32 @@
         </form>
     </div><!-- /.container -->
 
-    <!-- Modal für Erfolg & bereits erstellte Sportler-->
+    <!-- Modal für Erfolg -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header d-flex-row justify-content-center text-center">
-                    <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Sportler erfolgreich
+                    <h1 class="modal-title fs-5 display-4 " id="exampleModalLabel"><strong>Leistungen erfolgreich
                             erstellt!</strong></h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light border border-2 ms-3"
-                        onclick="window.location.href = '../index.html';">Verstanden</button>
+                        onclick="window.location.href = '../index.html';" data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Rückmeldung schließen und zur Startseite zurückkehren.">Verstanden</button>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
     <script>
         const toast = window.toast;
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
-                const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+                const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, // TODO
                     { withCredentials: true });
                 // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
             } catch (error) {
@@ -87,11 +88,11 @@
                 // Wenn eine file da ist, nur file senden
                 if (document.getElementById("csv").files.length > 0) {
                     const formData = new FormData();
-                    formData.append('Athletes', document.getElementById("csv").files[0]);
+                    formData.append('Performances', document.getElementById("csv").files[0]);
 
                     try {
                         const response = await axios.post(
-                            'http://localhost:8080/v1/athlete/bulk-create',
+                            'http://localhost:8080/v1/performance/bulk-create', // TODO
                             formData,
                             {
                                 withCredentials: true,
@@ -100,14 +101,7 @@
                         );
 
                         if (response.status === 201) {
-                            console.log("Users created successfully");
-                            try {
-                                erfolgsModalFüllen(response.data);
-                            }
-                            catch (error) {
-                                console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
-                            }
-                        } else if (response.status === 202) {
+                            console.log("Leistungen erfolgreich erstellt");
                             try {
                                 erfolgsModalFüllen(response.data);
                             }
@@ -116,66 +110,76 @@
                             }
                         }
                     } catch (error) {
-                        console.error(error)
                         let fehlerNachricht = "";
                         if (error.response) {
                             if (error.response.status === 400) {
                                 console.error("Invalid request body");
-                                fehlerNachricht = "Invalid request body";
+                                fehlerNachricht = "Falsches Format der Anfrage/Datei.";
                             } else if (error.response.status === 401) {
                                 console.error("The token is invalid");
-                                fehlerNachricht = "The token is invalid";
+                                fehlerNachricht = "Die Anmeldung ist nicht mehr gültig.";
                             } else if (error.response.status === 409) {
-                                console.error("One or more athlete(s) already exist");
-                                fehlerNachricht = "Einer oder mehrere Sportler existieren bereits!";
+                                console.error(error.response.data.error);
+                                fehlerNachricht = "Keiner der Einträge der CSV konnte verarbeitet werden.<br> Ist das Format gültig? Hat die CSV mindestens einen Eintrag?";
                             } else if (error.response.status === 500) {
-                                console.error("Internal Server Error");
-                                fehlerNachricht = "Internal Server Error";
+                                console.error("Internal Server Error.");
+                                fehlerNachricht = "Interner Fehler des Servers.";
                             }
                         } else {
                             // Andere Fehler
-                            console.error("Netzwerkfehler:", error.message);
-                        }
-                        fehlerModalFüllen(fehlerNachricht, error.message);
+                            console.error("Netzwerkfehler:", error.data.error);
+                        }                        
+                        fehlerModalFüllen(fehlerNachricht, error);
                     }
                 } else {
-                    toast.showToast("Bitte genau eine CSV-Datei auswählen!", { type: 'warning' });
+                    toast.showToast("Bitte genau eine CSV-Datei auswählen!", { type: 'warning'});
                 }
             })
         });
 
         function erfolgsModalFüllen(response) {
-            const modalBody = document.getElementsByClassName("modal-body")[0];
-            const modalTitle = document.getElementById("exampleModalLabel");
-            let athleteListHTML = "";
-            if (response.already_existing_athletes !== null) {
-                //bereits vorhandene Sportler anzeigen
-                athleteListHTML = "<p>Folgende Sportler waren bereits vorhanden und wurden nicht erneut erstellt: </p>";
-                athleteListHTML += "<ul class='list-group'>";
-                console.log(response)
-                if (response.already_existing_athletes !== null) {
-                    response.already_existing_athletes.forEach(athlete => {
-                        const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
-                        athleteListHTML += `
-                <li class='list-group-item'>
-                    <strong>${athlete.first_name} ${athlete.last_name}</strong> <br>
-                    Geburtsdatum: ${birthdate} <br>
-                    E-Mail: ${athlete.email} <br>
-                    Geschlecht: ${athlete.sex.toUpperCase()} <br>
-                </li>
-            `;
-                    });
-                }
-                athleteListHTML += "</ul>";
-            } else {
-                //bereits vorhandene Sportler anzeigen
-                athleteListHTML = "<p>Keine neuen Sportler erstellt, da alle schon vorhanden sind!</p>";
+            const modalBody = document.querySelector(".modal-body");
+            const modalTitle = document.querySelector("#exampleModalLabel");
+            
+            modalBody.innerHTML = "";
+            // Setze den Inhalt im Modal
+            modalTitle.innerHTML = "<strong>Leistungen erfolgreich erstellt!</strong>";
+            modalTitle.style.color = "green";
+
+            if (response.failed_entries) {
+                // bereits vorhandene Leistungen anzeigen
+                let fehlerTable = "<p>Folgende Einträge führten zu einem Fehler und wurden nicht erstellt: </p>";
+                fehlerTable += "<table class='table'>";
+                fehlerTable += `
+                    <thead>
+                        <tr>
+                        <th scope="col">Zeile in CSV</th>
+                        <th scope="col">Fehlergrund</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+                response.failed_entries.forEach((entry) => {
+                    fehlerTable += `
+                        <tr class=''>
+                            <td>${entry.row}</td>
+                            <td>${entry.reason}</td>
+                        </tr>
+                    `;
+                });
+
+                fehlerTable += "</tbody></table>";
+                const fehlerTableDiv = document.createElement("div");
+                fehlerTableDiv.innerHTML = fehlerTable;
+                modalBody.appendChild(fehlerTableDiv);
+            }
+            else{
+                // Wenn keine Fehler - damit Modalbody nicht leer ist:
+                const erfolgsNachricht = document.createElement("p");
+                erfolgsNachricht.innerHTML = "Alle Leistungen dieser CSV wurden erfolgreich eingetragen.";
+                modalBody.appendChild(erfolgsNachricht);
             }
 
-            // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Sportler erfolgreich erstellt!</strong>";
-            modalTitle.style.color = "green";
-            modalBody.innerHTML = athleteListHTML;
             // Zeige das Modal an
             const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
             modal.show();
@@ -186,9 +190,10 @@
             const modalTitle = document.getElementById("exampleModalLabel");
 
             // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Fehler bei Sportler-Erstellung!<strong>";
+            modalTitle.innerHTML = "<strong>Fehler bei der Erstellung der Leistungen!</strong>";
             modalTitle.style.color = "red";
-            modalBody.innerHTML = `<p>${nachricht}</p><p>${error}</p>`;
+            modalBody.innerHTML =   `<p>${nachricht}</p><p><em>${error.message}</em></p>
+                                    <p><em>${error.response?.data?.error ?? "Unbekannter Fehler"}</em></p>`;
             // Zeige das Modal an
             const modal = new bootstrap.Modal(document.getElementById("exampleModal"));
             modal.show();
