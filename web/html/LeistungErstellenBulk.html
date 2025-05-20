@@ -69,7 +69,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
-                const response = await axios.post('http://localhost:8080/v1/user/start-session', {}, // TODO
+                const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {}, // TODO
                     { withCredentials: true });
                 // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
             } catch (error) {
@@ -92,7 +92,7 @@
 
                     try {
                         const response = await axios.post(
-                            'http://localhost:8080/v1/performance/bulk-create', // TODO
+                            'http://localhost:8081/backend/v1/performance/bulk-create', // TODO
                             formData,
                             {
                                 withCredentials: true,
