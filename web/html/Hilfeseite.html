@@ -11,7 +11,8 @@
 </head>
 <style>
     .help-section {
-        scroll-margin-top: 200px; /*Damit Links korrekt auf Überschriften zeigen (wg. Navbar)*/
+        scroll-margin-top: 200px;
+        /*Damit Links korrekt auf Überschriften zeigen (wg. Navbar)*/
     }
 </style>
 
@@ -21,7 +22,7 @@
     <!-- an Anfang zurück scrollen Button-->
     <button onclick="scrollToTop()" id="scrollToTopBtn" class="btn btn-secondary "
         style="position: fixed; bottom: 20px; right: 20px; display: none; z-index: 1000;">
-        ↑ Anfang
+        ↑ zum Anfang ↑
     </button>
 
     <div class="container my-5">
@@ -36,8 +37,7 @@
                 <ul class="text-start">
                     <li><a class="scroll-link" href="#index">Index.html</a> – Übersicht über alle Sportler des Trainers.
                     </li>
-                    <li><a class="scroll-link" href="#leistungsuebersicht">Leistungsuebersicht.html</a> – Zeigt die
-                        Leistungen eines Sportlers.</li>
+
                     <li><a class="scroll-link" href="#sportlererstellen">SportlerErstellen.html</a> – Erstellung neuer
                         Sportler.</li>
                     <li><a class="scroll-link" href="#sportlermassenerstellung">SportlerErstellenBulk.html</a> –
@@ -49,10 +49,14 @@
                     <li><a class="scroll-link" href="#leistungserstellenBulk">LeistungErstellenBulk.html</a> – Erfassung
                         neuer
                         Leistungen mehrerer Sportler per CSV.</li>
+                    <li><a class="scroll-link" href="#leistungsuebersicht">Leistungsuebersicht.html</a> – Zeigt die
+                        Leistungen eines Sportlers.</li>
                     <li><a class="scroll-link" href="#schwimmnachweis">SchwimmnachweisErstellen.html</a> – Verwaltung
                         von Schwimmnachweisen.</li>
                     <li><a class="scroll-link" href="#regelnuebersicht">RegelnUebersicht.html</a> – Übersicht und
                         Aktualisierung der Regeln.</li>
+                    <li><a class="scroll-link" href="#regelnaktualisierung">RegelnAktualisierung.html</a> – Regeln per
+                        CSV-Datei aktualisieren.</li>
                     <li><a class="scroll-link" href="#anmelden">Anmeldung.html</a> – Anmeldungsseite.</li>
                     <li><a class="scroll-link" href="#registrieren">Registrierung.html</a> – Registrierungsseite.</li>
                     <li><a class="scroll-link" href="#backenddown">BackendDown.html</a> – Anzeige bei Serverproblemen.
@@ -82,31 +86,39 @@
                     <li><strong>Sportler Massenerstellung:</strong> Button, um mehrere Sportler per CSV-Datei
                         hinzuzufügen.</li>
                 </ul>
+                <h5 class="mt-4">Leistungsexport (CSV)</h5>
+                <p>Mit dem Button <strong>Leistungsexport</strong> können die Leistungen ausgewählter Sportler als
+                    CSV-Datei exportiert werden.</p>
+                <ul>
+                    <li>Nach Klick öffnet sich ein Modal, in dem alle Sportler aufgelistet sind.</li>
+                    <li>Sie können einzelne oder alle Sportler auswählen, deren Leistungen exportiert werden sollen.
+                    </li>
+                    <li>Nach Klick auf <strong>Leistungen exportieren</strong> wird eine CSV-Datei mit folgendem Format
+                        erstellt:</li>
+                </ul>
+                <code>Nachname;Vorname;Geschlecht;Geburtsjahr;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte</code>
+                <p class="lead">Gültige Werte:</p>
+                <ul>
+                    <li><strong>Geschlecht:</strong> m, w, d</li>
+                    <li><strong>Geburtsjahr:</strong> yyyy</li>
+                    <li><strong>Geburtstag/Datum:</strong> dd.mm.yyyy</li>
+                    <li><strong>Ergebnis:</strong> abhängig von der Übung:
+                        <ul>
+                            <li>Distanzen: Meter (m), Zentimeter (cm)</li>
+                            <li>Punkte: Ganze Zahlen</li>
+                            <li>Bestanden: 0 = nein, 1 = ja</li>
+                            <li>Zeit: MM:SS, M:SS, SS, S</li>
+                        </ul>
+                    </li>
+                    <li><strong>Punkte:</strong> 0-3</li>
+                </ul>
+                <p><em>Das Modal zeigt eine Tabelle mit allen Sportlern, Checkboxen zur Auswahl und einen Export-Button.
+                        Nach dem Export wird die CSV-Datei automatisch heruntergeladen.</em></p>
             </div>
         </div>
     </div>
 
-    <!-- Leistungsuebersicht.html -->
-    <div class="container my-5">
-        <div class="p-5 bg-body-tertiary rounded-3">
-            <div id="leistungsuebersicht" class="help-section">
-                <h2 class="text-dark text-center mb-5">Leistungsübersicht <em>(Leistungsuebersicht.html)</em></h2>
-                <p>Hier sind die Leistungen eines Sportlers in den Kategorien <strong>Ausdauer, Schnelligkeit,
-                        Kraft</strong> und <strong>Koordination</strong> einsehbar.</p>
-                <p><em>Buttons und Funktionen:</em></p>
-                <ul>
-                    <li><strong>Leistungen eintragen:</strong> Button, um eine neue Leistung für den Sportler zu
-                        erfassen.</li>
-                    <li><strong>Anzeigen ab:</strong> Eingabefeld, um das Startdatum für die angezeigten Leistungen
-                        festzulegen.</li>
-                    <li><strong>Schwimmnachweis eintragen:</strong> Button, um einen neuen Schwimmnachweis hochzuladen.
-                    </li>
-                    <li><strong>Schwimmnachweise herunterladen:</strong> Button, um alle Schwimmnachweise des Sportlers
-                        als ZIP-Datei herunterzuladen.</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- SportlerErstellen.html -->
     <div class="container my-5">
@@ -139,20 +151,30 @@
             <div id="sportlermassenerstellung" class="help-section">
                 <h2 class="text-dark text-center mb-5">Sportler Massenerstellung <em>(SportlerErstellenBulk.html)</em>
                 </h2>
-                <p>Hier können neue Sportler über den Upload einer CSV-Datei hinzugefügt werden.</p>
+                <p>Auf dieser Seite können mehrere Sportler gleichzeitig über eine CSV-Datei erstellt werden.</p>
                 <p><em>Inputfelder und Funktionen:</em></p>
                 <ul>
-                    <li><strong>CSV-Datei:</strong> Eingabefeld, um eine CSV-Datei mit den Sportlerdaten hochzuladen.
-                        Das Format der Datei muss den Vorgaben entsprechen:
-                        <code>Vorname,Nachname,Email,Geburtsdatum(y-m-d),Geschlecht(m,f,d)</code>.
+                    <li>
+                        <strong>CSV-Datei:</strong> Eingabefeld, um eine CSV-Datei mit den Sportlerdaten
+                        hochzuladen.<br>
+                        Das Format der Datei muss den Vorgaben entsprechen:<br>
+                        <code>Vorname;Nachname;Email;Geburtsdatum;Geschlecht</code>
                     </li>
+                </ul>
+                <p><em>Gültige Werte:</em></p>
+                <ul>
+                    <li><strong>Geschlecht:</strong> m, w, d</li>
+                    <li><strong>Geburtsdatum:</strong> dd.mm.yyyy</li>
+                    <li><strong>Email:</strong> gültige E-Mail-Adresse</li>
                 </ul>
                 <p><em>Buttons:</em></p>
                 <ul>
-                    <li><strong>Hochladen:</strong> Lädt die CSV-Datei hoch und erstellt die Sportler in der Datenbank.
+                    <li><strong>Speichern:</strong> Lädt die CSV-Datei hoch und erstellt die Sportler in der Datenbank.
                     </li>
-                    <li><strong>Abbrechen:</strong> Bricht den Upload ab und kehrt zur Startseite zurück.</li>
+                    <li><strong>Abbrechen:</strong> Bricht den Vorgang ab und kehrt zur Startseite zurück.</li>
                 </ul>
+                <p>Nach dem Hochladen wird eine Rückmeldung angezeigt, ob alle Sportler erfolgreich eingetragen wurden
+                    oder welche Einträge Fehler enthielten.</p>
             </div>
         </div>
     </div>
@@ -213,10 +235,26 @@
                     werden.</p>
                 <p><em>Inputfelder und Funktionen:</em></p>
                 <ul>
-                    <li><strong>CSV-Datei:</strong> Eingabefeld, um eine CSV-Datei mit den Leistungsdaten hochzuladen.
-                        Das Format der Datei muss den Vorgaben entsprechen:
-                        <code>Nachname,Vorname,Geschlecht(m,f,d),Geburtsjahr,Geburtstag,Übung,Kategorie,Datum,Ergebnis,Punkte</code>.
+                    <li>
+                        <strong>CSV-Datei:</strong> Eingabefeld, um eine CSV-Datei mit den Leistungsdaten
+                        hochzuladen.<br>
+                        Das Format der Datei muss den Vorgaben entsprechen:<br>
+                        <code>Nachname;Vorname;Geschlecht;Geburtsjahr;Geburtstag;Übung;Kategorie;Datum;Ergebnis;Punkte</code>
                     </li>
+                </ul>
+                <p><em>Gültige Werte:</em></p>
+                <ul>
+                    <li><strong>Geschlecht:</strong> m, w, d</li>
+                    <li><strong>Geburtstag/Datum:</strong> dd.mm.yyyy</li>
+                    <li><strong>Ergebnis:</strong> abhängig von der Übung:
+                        <ul>
+                            <li>Distanzen: Meter (m), Zentimeter (cm)</li>
+                            <li>Punkte: Ganze Zahlen</li>
+                            <li>Bestanden: 0 = nein, 1 = ja</li>
+                            <li>Zeit: MM:SS, M:SS, SS, S</li>
+                        </ul>
+                    </li>
+                    <li><strong>Punkte:</strong> 0-3</li>
                 </ul>
                 <p><em>Buttons:</em></p>
                 <ul>
@@ -224,6 +262,50 @@
                         Datenbank.</li>
                     <li><strong>Abbrechen:</strong> Bricht den Vorgang ab und kehrt zur Startseite zurück.</li>
                 </ul>
+                <p>Nach dem Hochladen wird eine Rückmeldung angezeigt, ob alle Leistungen erfolgreich eingetragen wurden
+                    oder welche Einträge Fehler enthielten.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leistungsuebersicht.html -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="leistungsuebersicht" class="help-section">
+                <h2 class="text-dark text-center mb-5">Leistungsübersicht <em>(Leistungsuebersicht.html)</em></h2>
+                <p>Hier sind die Leistungen eines Sportlers in den Kategorien <strong>Ausdauer, Schnelligkeit,
+                        Kraft</strong> und <strong>Koordination</strong> einsehbar.</p>
+                <p><em>Buttons und Funktionen:</em></p>
+                <ul>
+                    <li><strong>Leistungen eintragen:</strong> Button, um eine neue Leistung für den Sportler zu
+                        erfassen.</li>
+                    <li><strong>Anzeigen ab:</strong> Eingabefeld, um das Startdatum für die angezeigten Leistungen
+                        festzulegen.</li>
+                    <li><strong>Schwimmnachweis eintragen:</strong> Button, um einen neuen Schwimmnachweis hochzuladen.
+                    </li>
+                    <li><strong>Schwimmnachweise herunterladen:</strong> Button, um alle Schwimmnachweise des Sportlers
+                        als ZIP-Datei herunterzuladen.</li>
+                </ul>
+                <p><em>Kategorien und Tabellen:</em></p>
+                <ul>
+                    <li>Die Seite zeigt für jede Kategorie (<strong>Ausdauer, Schnelligkeit, Kraft,
+                            Koordination</strong>) einen eigenen Abschnitt an.</li>
+                    <li>Jede Kategorie kann durch Klick auf die Überschrift aufgeklappt oder zugeklappt werden, um die
+                        zugehörigen Leistungen anzuzeigen oder auszublenden.</li>
+                    <li>In den Tabellen werden folgende Informationen zu den einzelnen Leistungen angezeigt:
+                        <ul>
+                            <li><strong>Übung:</strong> Name der absolvierten Übung</li>
+                            <li><strong>Datum:</strong> Datum der Leistung</li>
+                            <li><strong>Wert:</strong> Erzieltes Ergebnis (z. B. Zeit, Punkte, Distanz)</li>
+                            <li><strong>Medaille:</strong> Erreichte Medaille (Gold, Silber, Bronze oder kein Erfolg)
+                            </li>
+                        </ul>
+                    </li>
+                    <li>In der Kopfzeile jeder Kategorie werden zusätzlich der letzte Wert und die zuletzt erreichte
+                        Medaille angezeigt.</li>
+                </ul>
+                <p><em>Hinweis:</em> Durch das Auf- und Zuklappen der Kategorien behalten Sie die Übersicht und können
+                    gezielt die gewünschten Leistungsdaten einsehen.</p>
             </div>
         </div>
     </div>
@@ -268,6 +350,39 @@
                         <em>RegelnAktualisierung.html</em>, um Regeln per CSV-Datei zu aktualisieren.
                     </li>
                 </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Regeln aktualisieren -->
+    <div class="container my-5">
+        <div class="p-5 bg-body-tertiary rounded-3">
+            <div id="regelnaktualisierung" class="help-section">
+                <h2 class="text-dark text-center mb-5">Regeln aktualisieren <em>(RegelnAktualisierung.html)</em></h2>
+                <p>Auf dieser Seite können die Regeln des Systems per CSV-Datei aktualisiert werden.</p>
+                <p><em>Inputfelder und Funktionen:</em></p>
+                <ul>
+                    <li><strong>CSV-Datei:</strong> Eingabefeld, um eine CSV-Datei mit den neuen oder aktualisierten
+                        Regeln hochzuladen.
+                        Das Format der Datei muss den Vorgaben entsprechen:
+                        <code>Regelwerk Jahr; Disziplin Name; Übung Name; Einheit; Geschlecht; Altersgruppe Start; Altersgruppe Ende; Bronze; Silber; Gold; Beschreibung</code>
+                    </li>
+                </ul>
+                <p><em>Hinweise zum Format:</em></p>
+                <ul>
+                    <li><strong>Einheit:</strong> meter, centimeter, second, minute, bool, point</li>
+                    <li><strong>Geschlecht:</strong> m, w, d</li>
+                    <li><strong>Bronze/Silber/Gold:</strong> abhängig von der Übung (z. B. Distanzen in cm, Punkte als
+                        ganze Zahlen, Bestanden als 0/1, Zeiten in ms)</li>
+                </ul>
+                <p><em>Buttons:</em></p>
+                <ul>
+                    <li><strong>Aktualisieren:</strong> Lädt die CSV-Datei hoch und aktualisiert die Regeln im System.
+                    </li>
+                    <li><strong>Abbrechen:</strong> Bricht den Vorgang ab und kehrt zur Regelübersicht zurück.</li>
+                </ul>
+                <p>Nach dem Hochladen wird eine Rückmeldung angezeigt, ob die Regeln erfolgreich aktualisiert wurden
+                    oder ob Fehler aufgetreten sind.</p>
             </div>
         </div>
     </div>
@@ -339,6 +454,11 @@
                 style="height: 500px; width: 100%;"></iframe>
         </div>
     </div>
+
+    <div class="container my-5 text-center" >
+        <p>Stand: 21.05.2025</p>
+    </div>
+
 </body>
 
 <script>
