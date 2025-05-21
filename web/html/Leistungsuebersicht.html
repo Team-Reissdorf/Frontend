@@ -201,6 +201,20 @@
 <script src="../js/Toast.js"></script> <!-- Toast-Framework laden -->
 <script>
   const toast = window.toast;
+  document.addEventListener("DOMContentLoaded", async () => {
+    const message = sessionStorage.getItem('toastMessage');
+    const type = sessionStorage.getItem('toastType');
+
+    if (message) {
+      // Zeige den Toast (je nach Toast-Framework – Beispiel mit eigener Funktion)
+      toast.showToast(message, { type: type });
+
+      // Einmal anzeigen, dann entfernen
+      sessionStorage.removeItem('toastMessage');
+      sessionStorage.removeItem('toastType');
+    }
+  })
+  const toast = window.toast;
         const athleteId = new URLSearchParams(window.location.search).get("id");
 
         // Activate tooltips
@@ -262,7 +276,8 @@
     }
     catch (error) {
       console.error("Fehler beim Laden der des Athleten:", error);
-      toast.showToast("Athlet existiert nicht.", { type: 'danger' });
+      sessionStorage.setItem('toastMessage', 'Fehler beim Laden des Athleten!');
+      sessionStorage.setItem('toastType', 'danger');
       window.location.href = "../index.html"; //falsche athleteID in URL -> zurück zur Übersicht
     }
   })
