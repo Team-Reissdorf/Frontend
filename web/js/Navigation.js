@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const navbarHtml = `
         <nav class="navbar sticky-top navbar-expand-lg" style="background-color: #292c33;">
             <div class="container-fluid">
-                <a class="navbar-brand" id="navbar-brand-link" href="../index.html" style="color: white"><img src="../media/brandIcon.jpeg" height="auto" width="25" alt="Company Logo" /> ComPeteHub</a>
+                <a class="navbar-brand" id="navbar-brand-link" href="../index.html" style="color: white">ComPeteHub</a>
                 <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                     aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
