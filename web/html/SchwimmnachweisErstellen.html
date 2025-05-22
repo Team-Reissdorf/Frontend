@@ -68,7 +68,7 @@
             })
             // Überprüfung, ob User angemeldet ist
             try {
-                const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+                const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
                     { withCredentials: true });
                 // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
             } catch (error) {
@@ -93,7 +93,7 @@
                     formData.append('file', document.getElementById("pdf").files[0]);
 
                     try {
-                        const response = await axios.post(`http://localhost:8080/v1/swimCertificate/create/${athleteId}`, formData,
+                        const response = await axios.post(`http://localhost:8081/backend/v1/swimCertificate/create/${athleteId}`, formData,
                             { withCredentials: true, headers: { 'Content-Type': 'multipart/form-data' } });
 
                         if (response.status === 200) {

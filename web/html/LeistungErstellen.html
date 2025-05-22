@@ -109,7 +109,7 @@
       datum.value = getDateYearsAgo();
       // Überprüfung, ob User angemeldet ist
       try {
-        const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+        const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
           { withCredentials: true });
         // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
       } catch (error) {
@@ -131,7 +131,7 @@
       try {
         // Daten vom Backend abrufen
         const athleteId = new URLSearchParams(window.location.search).get("id");
-        const response = await axios.get(`http://localhost:8080/v1/athlete/get/${athleteId}`, {
+        const response = await axios.get(`http://localhost:8081/backend/v1/athlete/get/${athleteId}`, {
           withCredentials: true,
         });
         athlete = response.data.athlete;
@@ -172,7 +172,7 @@
       // GET Kategorien und Dropdowns auffüllen
       try {
         // Kategorie-Daten vom Backend abrufen
-        const categoryResponse = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+        const categoryResponse = await axios.get('http://localhost:8081/backend/v1/discipline/get-all', { withCredentials: true });
         const disciplines = categoryResponse.data.discipline_names;
 
         // Kategorien Dropdown befüllen
@@ -221,7 +221,7 @@
       const points = preparePointsForBackend();
       try {
         // POST-Anfrage an Backend senden
-        const response = await axios.post('http://localhost:8080/v1/performance/create',
+        const response = await axios.post('http://localhost:8081/backend/v1/performance/create',
           {
             athlete_id: parseInt(athleteId),
             exercise_id: exerciseId,
@@ -266,7 +266,7 @@
       try {
         const athleteId = new URLSearchParams(window.location.search).get("id");
         const datum = document.getElementById("date").value;
-        const exerciseResponse = await axios.get(`http://localhost:8080/v1/exercise/get/${category}?athlete-id=${athleteId}&performance-date=${datum}`, { withCredentials: true });
+        const exerciseResponse = await axios.get(`http://localhost:8081/backend/v1/exercise/get/${category}?athlete-id=${athleteId}&performance-date=${datum}`, { withCredentials: true });
         exercisesList = exerciseResponse.data.exercises;  // Übungen speichern
         // Übungen Dropdown befüllen
         const uebungen = document.querySelector('.uebungen');
@@ -416,11 +416,11 @@
     async function Ueberschreiben(exercise_id) {
       performanceId = "";
       try {
-        const performanceResponse = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
+        const performanceResponse = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?date=${document.getElementById("date").value}`, { withCredentials: true })
         performanceId = performanceResponse.data.performance_entries[0].performance_id;
         points = preparePointsForBackend();
         try {
-          const response = await axios.put("http://localhost:8080/v1/performance/edit",
+          const response = await axios.put("http://localhost:8081/backend/v1/performance/edit",
             {
               date: document.getElementById("date").value,
               exercise_id: parseInt(document.getElementById("exercise").value),
@@ -430,6 +430,8 @@
             { withCredentials: true });
             
             // Wenn überschrieben wurde dann wechsel zur Leistungsuebersicht
+            sessionStorage.setItem('toastMessage', 'Erfolgreich Leistung erstellt!');
+            sessionStorage.setItem('toastType', 'success');
             window.location.href = `Leistungsuebersicht.html?id=${athleteId}`
         } catch (error) {
           if (error.response) {

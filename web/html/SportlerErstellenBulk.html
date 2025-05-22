@@ -65,7 +65,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
             // Überprüfung, ob User angemeldet ist
             try {
-                const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
+                const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
                     { withCredentials: true });
                 // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
             } catch (error) {
@@ -88,7 +88,7 @@
 
                     try {
                         const response = await axios.post(
-                            'http://localhost:8080/v1/athlete/bulk-create',
+                            'http://localhost:8081/backend/v1/athlete/bulk-create',
                             formData,
                             {
                                 withCredentials: true,
@@ -153,7 +153,11 @@
                     Geschlecht: ${athlete.sex.toUpperCase()} <br>
                 </li>
             `;
-                });
+                    });
+                }
+                athleteListHTML += "</ul>";
+            } else {
+                athleteListHTML = "<p>Alle Sportler wurden erstellt!</p>";
             }
             athleteListHTML += "</ul>";
 
