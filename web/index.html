@@ -118,7 +118,6 @@
 
     /* 1) Name-Bereich immer 200px breit */
     .name-container {
-      flex: 0 0 200px;
       max-width: 200px;
     }
 
@@ -163,7 +162,7 @@
     </div>
 
     <!-- Exportieren Button -->
-    <div class="d-flex flex-column flex-sm-row align-items-center">
+    <div class="d-flex flex-column flex-sm-row align-items-stretch">
       <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
         data-bs-toggle="modal" data-bs-target="#exampleModal" style="font-weight: bold;" data-bs-toggle="tooltip"
         data-bs-placement="left"
@@ -179,14 +178,14 @@
       <!-- einzelnen Sportler erstellen-->
       <a href="html/SportlerErstellen.html">
         <button type="button" class="btn btn-light border border-2 me-sm-2 mb-2 mb-sm-0 btn-responsive"
-          style="font-weight: bold;" data-bs-toggle="tooltip" data-bs-placement="top"
+          style="font-weight: bold; width: 100%; height: 100%;" data-bs-toggle="tooltip" data-bs-placement="top"
           data-bs-title="Hier kann man einen neuen Sportler anlegen.">
           Sportler erstellen</button>
       </a>
 
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
-        <button type="button" class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;"
+        <button type="button" class="btn btn-light border border-2 btn-responsive" style="font-weight: bold; width: 100%;"
           data-bs-toggle="tooltip" data-bs-placement="top"
           data-bs-title="Hier kann man mehrere neue Sportler anlegen.">
           Sportler Massenerstellung</button>
