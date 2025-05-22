@@ -220,6 +220,7 @@
 <script src="../node_modules/axios/dist/axios.js"></script>
 <script src="./js/Toast.js"></script>
 <script>
+  // ToDo: Check the structure and content of the response from the backend and handle it appropriately.
   const toast = window.toast;
   document.addEventListener("DOMContentLoaded", async () => {
     const message = sessionStorage.getItem('toastMessage');
@@ -234,16 +235,11 @@
       sessionStorage.removeItem('toastType');
     }
   })
-</script>
-
-<script>
-  // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
-
   document.addEventListener("DOMContentLoaded", async () => {
     // Überprüfung, ob User angemeldet ist
     try {
-      const response = await axios.post('http://localhost:8080/v1/user/start-session', {},
-        { withCredentials: true });
+      const response = await axios.post('http://localhost:8081/backend/v1/user/start-session', {},
+        { withCredentials: true, headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': ' GET, PUT, POST, DELETE, OPTIONS' } });
       // Wenn die Anfrage erfolgreich ist (200 OK), mache weiter
     } catch (error) {
       //Falls Server nicht erreichbar ist
@@ -251,7 +247,14 @@
         console.error("Backend nicht erreichbar:" + error)
         window.location.href = "html/BackendDown.html";
       } else if (error.response) {
-        window.location.href = "html/Anmeldung.html";
+        if (error.response.status === 502) {
+          // fix für reverse proxy; NGINX timed nicht aus sondern returned 502 bad Gateway
+          console.error("gateway timeout, backend down?")
+          window.location.href = "html/BackendDown.html";
+        } else {
+          // normaler fluß
+          window.location.href = "html/Anmeldung.html";
+        }
       } else {
         // Andere Fehler
         console.error("Fehler: " + error)
@@ -261,7 +264,7 @@
     let athletes = [];
     try {
       // Athleten vom Server abrufen
-      const response = await axios.get('http://localhost:8080/v1/athlete/get-all', {
+      const response = await axios.get('http://localhost:8081/backend/v1/athlete/get-all', {
         withCredentials: true,
       });
 
@@ -297,7 +300,7 @@
           return
         } else {
           // POST-Anfrage an Backend senden
-          const response = await axios.post('http://localhost:8080/v1/performance/export',
+          const response = await axios.post('http://localhost:8081/backend/v1/performance/export',
             {
               athlete_ids: athletes,
             },
@@ -511,7 +514,7 @@
 
         if (confirm('Möchten Sie diesen Sportler wirklich löschen?')) {
           try {
-            await axios.delete(`http://localhost:8080/v1/athlete/delete/${athleteId}`, { withCredentials: true });
+            await axios.delete(`http://localhost:8081/backend/v1/athlete/delete/${athleteId}`, { withCredentials: true });
 
             const athleteIndex = athletes.findIndex(a => a.athlete_id === parseInt(athleteId));
             if (athleteIndex !== -1) {
@@ -594,7 +597,7 @@
   async function getPerformanceEntries(athleteId) {
     try {
       const year = new Date().getFullYear();
-      const response = await axios.get(`http://localhost:8080/v1/performance/get/${athleteId}?since=${year}-01-01&best=true`, {
+      const response = await axios.get(`http://localhost:8081/backend/v1/performance/get/${athleteId}?since=${year}-01-01&best=true`, {
         withCredentials: true
       });
       return Array.isArray(response.data.performance_entries) ? response.data.performance_entries : [];
@@ -606,7 +609,7 @@
 
   async function getDisciplineNames() {
     try {
-      const response = await axios.get('http://localhost:8080/v1/discipline/get-all', { withCredentials: true });
+      const response = await axios.get('http://localhost:8081/backend/v1/discipline/get-all', { withCredentials: true });
       return response.data.discipline_names;
     } catch (error) {
       toast.showToast("Etwas ist schief gelaufen!", { type: 'danger' });
@@ -617,7 +620,7 @@
 
   async function getExercises(discipline_name) {
     try {
-      const response = await axios.get(`http://localhost:8080/v1/exercise/get/${discipline_name}`, { withCredentials: true });
+      const response = await axios.get(`http://localhost:8081/backend/v1/exercise/get/${discipline_name}`, { withCredentials: true });
       return response.data.exercises;
     } catch (error) {
       console.error("Fehler beim Abrufen der Übungen:", error);
