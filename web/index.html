@@ -134,10 +134,6 @@
       max-width: 150px;
     }
   </style>
-
-  <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="../node_modules/axios/dist/axios.js"></script>
-  <script src="/js/Toast.js"></script> <!-- Toast-Framework laden -->
 </head>
 
 <body>
@@ -169,12 +165,13 @@
         data-bs-placement="left"
         data-bs-title="Hier kann man die Leistungen von Sportlern exportieren.">Leistungsexport</button>
 
-        <!-- Bulkcreate Leistungen erstellen Button -->
-        <a href="html/LeistungErstellenBulk.html">
-          <button class="btn btn-light border border-2 btn-responsive me-sm-2 mb-2 mb-sm-0" style="font-weight: bold;" data-bs-toggle="tooltip"
-            data-bs-placement="top" data-bs-title="Hier kann man mehrere Leistungen zu unterschiedlichen Sportlern eintragen.">
-            Leistungen Massenerstellung</button>
-        </a>
+      <!-- Bulkcreate Leistungen erstellen Button -->
+      <a href="html/LeistungErstellenBulk.html">
+        <button class="btn btn-light border border-2 btn-responsive me-sm-2 mb-2 mb-sm-0" style="font-weight: bold;"
+          data-bs-toggle="tooltip" data-bs-placement="top"
+          data-bs-title="Hier kann man mehrere Leistungen zu unterschiedlichen Sportlern eintragen.">
+          Leistungen Massenerstellung</button>
+      </a>
 
       <!-- einzelnen Sportler erstellen-->
       <a href="html/SportlerErstellen.html">
@@ -187,8 +184,7 @@
       <!-- Bulkcreate Sportler erstellen Button -->
       <a href="html/SportlerErstellenBulk.html">
         <button type="button" class="btn btn-light border border-2 btn-responsive" style="font-weight: bold;"
-          data-bs-toggle="tooltip" data-bs-placement="top"
-          data-bs-title="Hier kann man mehrere neue Sportler anlegen.">
+          data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Hier kann man mehrere neue Sportler anlegen.">
           Sportler Massenerstellung</button>
       </a>
     </div>
@@ -220,6 +216,9 @@
 
 </html>
 
+<script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../node_modules/axios/dist/axios.js"></script>
+<script src="./js/Toast.js"></script>
 <script>
   const toast = window.toast;
   document.addEventListener("DOMContentLoaded", async () => {
