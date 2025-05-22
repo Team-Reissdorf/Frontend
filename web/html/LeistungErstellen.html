@@ -104,7 +104,7 @@
     let points = null;       // Punktewert zur Übergabe ans Backend
 
     // Lade alles notwendige vor
-    document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("DOMContentLoaded", async message => {
       let datum = document.getElementById("date");
       datum.value = getDateYearsAgo();
       // Überprüfung, ob User angemeldet ist
@@ -247,7 +247,7 @@
             window.location.href = "Anmeldung.html";
           } else if (error.response.status === 404) {
             console.error("Athlete or exercise does not exist");
-            toast.showToast("Athlet existiert nicht.", { type: 'danger' });
+            toast.showToast("Athelet existiert nicht.", { type: 'danger' });
           } else if (error.response.status === 409) {
             console.error("Performance limit reached");
             fehler409ModalFüllen();
@@ -460,7 +460,7 @@
           }
         } else {
           console.error("Fehler bei Leistungsabruf! Error:" + error);
-          toast.showToast("Fehler bei Leistungsabruf", { type: 'danger' });
+          toast.showToast("Fehler bei Leistungsaufruf", { type: 'danger' });
           //window.location.href = "Leistungsuebersicht.html?id=" + athleteId;
         }
       }

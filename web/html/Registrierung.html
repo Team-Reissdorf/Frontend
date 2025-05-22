@@ -81,7 +81,7 @@
         window.location.href = "../index.html";
       } catch(error) {
         //Falls Server nicht erreichbar ist
-        if(error.code === "ERR_NETWORK"){
+        if(error.code == "ERR_NETWORK"){
           console.error("Backend nicht erreichbar:" + error)
           window.location.href = "BackendDown.html";
         } else {
@@ -136,7 +136,7 @@
           }
         }
       } else {
-        toast.showToast("Passwörter stimmen nicht überein!", { type: 'danger' });
+        toast.showToast("Passwort nicht gleich!", { type: 'danger' });
         console.error("Password not equal")
       }
     });

@@ -16,10 +16,7 @@
         <div class="p-5 text-center bg-body-tertiary rounded-3">
             <h1 class="display-4">Sportler Massenerstellung</h1>
             <p class="lead">Wähle eine gültige CSV-Datei aus, um mehrere Sportler auf einmal zu erstellen.</p>
-            <p class="lead">Gültiges Format:</p>
-            <p>Vorname; Nachname; Email; Geburtsdatum; Geschlecht</p>
-            <p class="lead">Gültige Werte: </p>
-            <p>Geschlecht: m, w, d | Geburtstag: dd.mm.yyyy</p>
+            <p class="lead">Gültiges Format: Vorname,Nachname,Email,Geburtsdatum(y-m-d),Geschlecht(m,f,d)</p>
         </div><!-- /.jumbotron -->
         <form id="submit-form">
             <div class="d-flex justify-content-center">
@@ -107,13 +104,6 @@
                             catch (error) {
                                 console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
                             }
-                        } else if (response.status === 202) {
-                            try {
-                                erfolgsModalFüllen(response.data);
-                            }
-                            catch (error) {
-                                console.error("Fehler beim Füllen des Erfolgs-Modals: ", error);
-                            }
                         }
                     } catch (error) {
                         console.error(error)
@@ -127,7 +117,7 @@
                                 fehlerNachricht = "The token is invalid";
                             } else if (error.response.status === 409) {
                                 console.error("One or more athlete(s) already exist");
-                                fehlerNachricht = "Einer oder mehrere Sportler existieren bereits!";
+                                fehlerNachricht = "Einer order mehrere Sportler existieren bereits!";
                             } else if (error.response.status === 500) {
                                 console.error("Internal Server Error");
                                 fehlerNachricht = "Internal Server Error";
@@ -139,7 +129,7 @@
                         fehlerModalFüllen(fehlerNachricht, error.message);
                     }
                 } else {
-                    toast.showToast("Bitte genau eine CSV-Datei auswählen!", { type: 'warning' });
+                    toast.showToast("Bitte genau eine CSV-Datei auswählen!", { type: 'warn' });
                 }
             })
         });
@@ -147,16 +137,15 @@
         function erfolgsModalFüllen(response) {
             const modalBody = document.getElementsByClassName("modal-body")[0];
             const modalTitle = document.getElementById("exampleModalLabel");
-            let athleteListHTML = "";
+
+            //bereits vorhandene Sportler anzeigen
+            let athleteListHTML = "<p>Folgende Sportler waren bereits vorhanden und wurden nicht erneut erstellt: </p>";
+            athleteListHTML += "<ul class='list-group'>";
+
             if (response.already_existing_athletes !== null) {
-                //bereits vorhandene Sportler anzeigen
-                athleteListHTML = "<p>Folgende Sportler waren bereits vorhanden und wurden nicht erneut erstellt: </p>";
-                athleteListHTML += "<ul class='list-group'>";
-                console.log(response)
-                if (response.already_existing_athletes !== null) {
-                    response.already_existing_athletes.forEach(athlete => {
-                        const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
-                        athleteListHTML += `
+                response.already_existing_athletes.forEach(athlete => {
+                    const birthdate = athlete.birth_date.split("T")[0].split('-')[2] + '.' + athlete.birth_date.split("T")[0].split('-')[1] + '.' + athlete.birth_date.split("T")[0].split('-')[0];
+                    athleteListHTML += `
                 <li class='list-group-item'>
                     <strong>${athlete.first_name} ${athlete.last_name}</strong> <br>
                     Geburtsdatum: ${birthdate} <br>
@@ -164,16 +153,12 @@
                     Geschlecht: ${athlete.sex.toUpperCase()} <br>
                 </li>
             `;
-                    });
-                }
-                athleteListHTML += "</ul>";
-            } else {
-                //bereits vorhandene Sportler anzeigen
-                athleteListHTML = "<p>Keine neuen Sportler erstellt, da alle schon vorhanden sind!</p>";
+                });
             }
+            athleteListHTML += "</ul>";
 
             // Setze den Inhalt im Modal
-            modalTitle.innerHTML = "<strong>Sportler erfolgreich erstellt!</strong>";
+            modalTitle.innerHTML = "<strong>Sportler erfolgreich erstellt!<strong>";
             modalTitle.style.color = "green";
             modalBody.innerHTML = athleteListHTML;
             // Zeige das Modal an

@@ -130,7 +130,7 @@
             toast.showToast("Ungültiger Inhalt", { type: 'danger' });
           } else if (error.response.status === 401) {
             console.error("Wrong credentials");
-            toast.showToast("Falsche E-Mail oder Passwort", { type: 'danger' });
+            toast.showToast("Falsche Email/ oderPasswort", { type: 'danger' });
           } else if (error.response.status === 404) {
             console.error("Trainer nicht gefunden");
             toast.showToast("Trainer wurde nicht gefunden", { type: 'danger' });

@@ -137,7 +137,6 @@
 
   <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../node_modules/axios/dist/axios.js"></script>
-  <script src="/js/Toast.js"></script> <!-- Toast-Framework laden -->
 </head>
 
 <body>
@@ -220,6 +219,11 @@
 
 </html>
 
+<script src="/js/Toast.js"></script> <!-- Toast-Framework laden -->
+<script>
+
+</script>
+
 <script>
   const toast = window.toast;
   document.addEventListener("DOMContentLoaded", async () => {
@@ -241,6 +245,22 @@
   // ToDo: Schauen wie response vom Backend ist ajdoiasidjaspidpiuwapwupodaksäödlaksädlökalskdlöasjdlkasökldjklöasjdklöjasödjaklsöjdköasjdöajsökdjasökdkölasj
 
   document.addEventListener("DOMContentLoaded", async () => {
+    try {
+      document.addEventListener("DOMContentLoaded", async () => {
+        const toast = window.toast;
+        const message = sessionStorage.getItem('toastMessage');
+        const type = sessionStorage.getItem('toastType');
+
+        if (message) {
+          // Zeige den Toast (je nach Toast-Framework – Beispiel mit eigener Funktion)
+          toast.showToast(message, { type: type });
+
+          // Einmal anzeigen, dann entfernen
+          sessionStorage.removeItem('toastMessage');
+          sessionStorage.removeItem('toastType');
+    }})} catch (error) {
+      console.error("Fehler beim Laden des Toast", error);
+    }
     // Überprüfung, ob User angemeldet ist
     try {
       const response = await axios.post('http://localhost:8080/v1/user/start-session', {},

@@ -111,6 +111,7 @@
 
       const player = document.getElementById("birthDate");
       player.setAttribute("min", getDateYearsAgo(19, 1));
+      const player2 = document.getElementById("birthDate");
       player.setAttribute("max", getDateYearsAgo(6));
     });
 
@@ -155,7 +156,7 @@
             toast.showToast("Session abgelaufen", { type: 'danger' });
           } else if (error.response.status === 409) {
             console.error("Athlete already exists");
-            toast.showToast("Sportler existiert bereits!", { type: 'warning' });
+            toast.showToast("Sportler existiert bereits!", { type: 'warn' });
           } else if (error.response.status === 500) {
             console.error("Internal Server Error");
             toast.showToast("Internal Server Error", { type: 'danger' });
